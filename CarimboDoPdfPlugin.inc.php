@@ -1,6 +1,7 @@
 <?php
 
 import('lib.pkp.classes.plugins.GenericPlugin');
+
 class CarimboDoPdfPlugin extends GenericPlugin {
 
 	public function register($category, $path, $mainContextId = NULL) {
@@ -21,8 +22,19 @@ class CarimboDoPdfPlugin extends GenericPlugin {
 		return 'CarimboDoPdfPlugin';
 	}
 
-	public function carimbarPdf($hookName, $args) {
-		error_log($hookName);		
-		error_log('carimbarPdf no passo ' . $args[0]);
+	public function carimbarPdf($nomeDoGancho, $args) {
+		error_log($nomeDoGancho);		
+		
+		$passo = $args[0];
+		error_log('carimbarPdf no passo ' . $passo);
+
+		if ($passo == 2) {
+			$submissão = $args[1];
+			$arquivos = $submissão->getGalleys();
+			$arquivo = $arquivos[0]->getFile();
+			$caminhoDoPdf = $arquivo->getFilePath();
+
+			error_log('já posso pegar o arquivo da submissão de tipo: ' . $arquivo->getFilePath());
+		}
 	}
 }
