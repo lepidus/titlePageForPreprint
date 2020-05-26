@@ -32,14 +32,15 @@ class CarimboDoPdfPlugin extends GenericPlugin {
 		if ($passo == 2) {
 			$submissão = $args[1];
 			$arquivos = $submissão->getGalleys();
-			$arquivo = $arquivos[0]->getFile();
-			$caminhoDoPdf = $arquivo->getFilePath(); 
-
-			error_log('já posso pegar o arquivo da submissão de tipo: ' . $arquivo->getFilePath());
 			
-			$path = "plugins/generic/carimbo-do-pdf/pdfcpu/";
-
-			error_log(shell_exec($path .'pdfcpu pages insert -pages 1 -mode before '.$arquivo->getFilePath()));
+			foreach ($arquivos as $arquivo) {
+				$documento = $arquivo->getFile();
+				$caminhoDoPdf = $documento->getFilePath(); 
+								
+				$path = "plugins/generic/carimbo-do-pdf/pdfcpu/";
+	
+				shell_exec($path .'pdfcpu pages insert -pages 1 -mode before '. $caminhoDoPdf);
+			}
 			
 		}
 
