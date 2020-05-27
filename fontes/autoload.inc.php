@@ -7,7 +7,8 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'folhaderosto' => '/FolhaDeRosto.inc.php'
+                'folhaderosto' => '/FolhaDeRosto.inc.php',
+                'pdf' => '/Pdf.inc.php'
             );
         }
         $cn = strtolower($class);
