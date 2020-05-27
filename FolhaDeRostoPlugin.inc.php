@@ -2,31 +2,31 @@
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 
-class CarimboDoPdfPlugin extends GenericPlugin {
+class FolhaDeRostoPlugin extends GenericPlugin {
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
 		if ($success && $this->getEnabled()) {
 			// Display the publication statement on the article details page
-			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'carimbarPdf']);
+			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRosto']);
 		}
 		return $success;
 	}
 
 	public function getDisplayName() {
-		return 'CarimboDoPdfPlugin';
+		return 'FolhaDeRostoPlugin';
 	}
 
 	public function getDescription() {
-		return 'CarimboDoPdfPlugin';
+		return 'FolhaDeRostoPlugin';
 	}
 
-	public function carimbarPdf($nomeDoGancho, $args) {
-		error_log($nomeDoGancho);		
+	public function inserirFolhaDeRosto($nomeDoGancho, $args) {
+		error_log($nomeDoGancho);
 		
 		$passo = $args[0];
 
-		error_log('carimbarPdf no passo ' . $passo);
+		error_log('inserida folha de rosto no passo ' . $passo);
 
 
 		if ($passo == 2) {
