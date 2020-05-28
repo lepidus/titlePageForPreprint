@@ -32,6 +32,7 @@ class FolhaDeRosto {
 
     public function inserir(pdf $pdf): pdf {
         shell_exec(self::CAMINHO_DO_PDFCPU .'pdfcpu pages insert -pages 1 -mode before '. $pdf->obterCaminho());
+        shell_exec(self::CAMINHO_DO_PDFCPU .'pdfcpu stamp add -pages 1 -mode text \'umCarimboQualquer\' \'rot:0, pos:tc\' '. $pdf->obterCaminho());
         return $pdf;
     }
 }
