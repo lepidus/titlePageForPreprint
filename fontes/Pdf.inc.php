@@ -11,4 +11,8 @@ class Pdf {
         $paginasComoTexto = explode(":", $linhaDaContagemDePáginas);
         return (int)$paginasComoTexto[1];
     }
+
+    public function obterCaminho(): string {
+        return $this->caminho;
+    }
 }
