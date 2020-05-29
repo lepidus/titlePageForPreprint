@@ -2,6 +2,7 @@
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 
+
 class FolhaDeRostoPlugin extends GenericPlugin {
 
 	public function register($category, $path, $mainContextId = NULL) {
@@ -36,12 +37,13 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 			foreach ($arquivos as $arquivo) {
 				$documento = $arquivo->getFile();
 				$caminhoDoPdf = $documento->getFilePath(); 
-								
-				$path = "plugins/generic/carimbo-do-pdf/pdfcpu/";
-	
-				shell_exec($path .'pdfcpu pages insert -pages 1 -mode before '. $caminhoDoPdf);
+				
+				$pdf = new PDF($caminhoDoPdf);
+				//inserção
+				//carimbação
+				
 			}
-			
+
 		}
 
 	}

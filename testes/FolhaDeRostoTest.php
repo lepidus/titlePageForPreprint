@@ -39,13 +39,11 @@ final class FolhaDeRostoTest extends TestCase {
         copy($caminhoDoPdfTeste, $cópiaDoPdfTesteParaRestaurar);
 
         $pdf = new Pdf($caminhoDoPdfTeste);
-        $pdf = $folhaDeRosto->inserir($pdf);
+        $folhaDeRosto->inserir($pdf);
         $this->assertEquals(2, $pdf->obterNúmeroDePáginas());
         
         unlink($caminhoDoPdfTeste);
         rename($cópiaDoPdfTesteParaRestaurar, $caminhoDoPdfTeste);
     }
-
-    //será que tem como validar conteúdo do PDF?
 }
 ?>

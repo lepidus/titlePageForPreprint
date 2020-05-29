@@ -7,7 +7,7 @@ class Pdf {
     }
 
     public function obterNúmeroDePáginas(): int {
-        $linhaDaContagemDePáginas = shell_exec("pdfcpu/pdfcpu info ". $this->caminho ." | grep 'Page count'");
+        $linhaDaContagemDePáginas = shell_exec("pdfinfo ". $this->caminho ." | grep 'Pages'");
         $paginasComoTexto = explode(":", $linhaDaContagemDePáginas);
         return (int)$paginasComoTexto[1];
     }

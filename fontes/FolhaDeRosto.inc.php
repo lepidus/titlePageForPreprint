@@ -1,11 +1,13 @@
 <?php
-class FolhaDeRosto {
+
+require __DIR__ . '/tc-lib-pdf-develop/vendor/autoload.php';
+
+class FolhaDeRosto { 
 
     private $statusDaSubmissão;
     private $doi;
     private $logo;
     private $checklist;
-    const CAMINHO_DO_PDFCPU = __DIR__. DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR. "pdfcpu" . DIRECTORY_SEPARATOR;
 
     public function __construct(string $status, string $doi, string $logo, array $checklist) {
         $this->statusDaSubmissão = $status;
@@ -30,9 +32,27 @@ class FolhaDeRosto {
         return $this->checklist;
     }
 
-    public function inserir(pdf $pdf): pdf {
-        shell_exec(self::CAMINHO_DO_PDFCPU .'pdfcpu pages insert -pages 1 -mode before '. $pdf->obterCaminho());
-        return $pdf;
+    public function inserir(pdf $pdf): void {
+
+        $folhaDeRosto = new \Com\Tecnick\Pdf\Tcpdf();
+        $folhaDeRosto->page->add();
+        $conteudoDoDocumento = $folhaDeRosto->getOutPDFString();
+
+        $diretorioDeSaida = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
+        $arquivoDaFolhaDeRosto = $diretorioDeSaida . 'folhaDeRosto.pdf';
+        file_put_contents($arquivoDaFolhaDeRosto, $conteudoDoDocumento);
+        
+        $arquivoOriginal =  $diretorioDeSaida . "arquivo_original.pdf";
+        copy($pdf->obterCaminho(), $arquivoOriginal);
+        
+        $arquivoModificado = $diretorioDeSaida . "comFolhaDeRosto.pdf";
+        
+        $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $arquivoOriginal . ' ' . $arquivoModificado;
+
+        shell_exec($comandoParaJuntar);
+        
+        rename($arquivoModificado, $pdf->obterCaminho());
+        unlink($arquivoDaFolhaDeRosto);
     }
 }
 ?>
