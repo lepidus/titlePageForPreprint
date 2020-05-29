@@ -2,7 +2,6 @@
 use PHPUnit\Framework\TestCase;
 
 final class FolhaDeRostoTest extends TestCase {
-    
     private $status = "STATUS_QUEUED";
     private $doi = "10.1000/182";
     private $logo =  DIRECTORY_SEPARATOR . "caminho-logo"  . DIRECTORY_SEPARATOR . "logo.png"; 
@@ -10,6 +9,13 @@ final class FolhaDeRostoTest extends TestCase {
     
     private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
         return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist);
+    }
+
+    private function arquivosSãoIdênticos($a, $b) {
+        // Check if filesize is different
+        if (filesize($a) !== filesize($b))
+            return false;
+
     }
 
     public function testeTemStatusDeSubmissão(): void {
@@ -32,7 +38,7 @@ final class FolhaDeRostoTest extends TestCase {
         $this->assertEquals($this->checklist, $folhaDeRosto->obterChecklist());
     }
 
-    public function testeInserçãoEmPdfExistente(): void {
+    public function testeInserçãoEmPdfExistenteCriaNovaPágina(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
         $cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
@@ -42,8 +48,26 @@ final class FolhaDeRostoTest extends TestCase {
         $folhaDeRosto->inserir($pdf);
         $this->assertEquals(2, $pdf->obterNúmeroDePáginas());
         
-        unlink($caminhoDoPdfTeste);
+        $this->assertTrue(unlink($caminhoDoPdfTeste));
         rename($cópiaDoPdfTesteParaRestaurar, $caminhoDoPdfTeste);
     }
+
+    // public function testeInserçãoEmPdfExistenteCarimbaFolhaDeRosto(): void { //fatorar!
+    //     $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+    //     $caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
+    //     $cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
+    //     copy($caminhoDoPdfTeste, $cópiaDoPdfTesteParaRestaurar);
+    //     $pdfEsperado = "testes" . DIRECTORY_SEPARATOR . "testePdfComFolhaDeRosto.pdf";
+
+    //     $pdf = new Pdf($caminhoDoPdfTeste);
+    //     $folhaDeRosto->inserir($pdf);
+
+    //     shell_exec("pdftotext ". $pdf->obterCaminho());
+    //     $procuraDoCarimbo = shell_exec("grep 'umCarimboQualquer' testes/testeUmaPagina.txt");
+    //     $this->assertEquals("umCarimboQualquer\n", $procuraDoCarimbo);
+
+    //     $this->assertTrue(unlink($caminhoDoPdfTeste));
+    //     rename($cópiaDoPdfTesteParaRestaurar, $caminhoDoPdfTeste);
+    // }
 }
 ?>

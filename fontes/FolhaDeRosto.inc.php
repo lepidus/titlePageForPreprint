@@ -36,10 +36,13 @@ class FolhaDeRosto {
 
         $folhaDeRosto = new \Com\Tecnick\Pdf\Tcpdf();
         $folhaDeRosto->page->add();
+        // $folhaDeRosto->Write(0, "umCarimboQualquer", '', 0, 'C', true, 0, false, false, 0);
+        
         $conteudoDoDocumento = $folhaDeRosto->getOutPDFString();
 
         $diretorioDeSaida = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
         $arquivoDaFolhaDeRosto = $diretorioDeSaida . 'folhaDeRosto.pdf';
+        
         file_put_contents($arquivoDaFolhaDeRosto, $conteudoDoDocumento);
         
         $arquivoOriginal =  $diretorioDeSaida . "arquivo_original.pdf";
@@ -53,6 +56,7 @@ class FolhaDeRosto {
         
         rename($arquivoModificado, $pdf->obterCaminho());
         unlink($arquivoDaFolhaDeRosto);
+
     }
 }
 ?>
