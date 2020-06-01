@@ -7,15 +7,24 @@ final class FolhaDeRostoTest extends TestCase {
     private $logo =  DIRECTORY_SEPARATOR . "caminho-logo"  . DIRECTORY_SEPARATOR . "logo.png"; 
     private $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     
-    private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
-        return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist);
+    protected function setUp(): void {
+        $this->caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
+        $this->cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
+        copy($this->caminhoDoPdfTeste, $this->cópiaDoPdfTesteParaRestaurar);
+        $pdfEsperado = "testes" . DIRECTORY_SEPARATOR . "testePdfComFolhaDeRosto.pdf";
+        $this->pdfComoTexto = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.txt";
+    }
+    
+    protected function tearDown(): void {
+        $this->assertTrue(unlink($this->caminhoDoPdfTeste));
+        rename($this->cópiaDoPdfTesteParaRestaurar, $this->caminhoDoPdfTeste);
+        if (file_exists($this->pdfComoTexto)) {
+            unlink($this->pdfComoTexto);
+        }
     }
 
-    private function arquivosSãoIdênticos($a, $b) {
-        // Check if filesize is different
-        if (filesize($a) !== filesize($b))
-            return false;
-
+    private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
+        return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist);
     }
 
     public function testeTemStatusDeSubmissão(): void {
@@ -40,34 +49,50 @@ final class FolhaDeRostoTest extends TestCase {
 
     public function testeInserçãoEmPdfExistenteCriaNovaPágina(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
-        $caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
-        $cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
-        copy($caminhoDoPdfTeste, $cópiaDoPdfTesteParaRestaurar);
 
-        $pdf = new Pdf($caminhoDoPdfTeste);
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
         $folhaDeRosto->inserir($pdf);
         $this->assertEquals(2, $pdf->obterNúmeroDePáginas());
-        
-        $this->assertTrue(unlink($caminhoDoPdfTeste));
-        rename($cópiaDoPdfTesteParaRestaurar, $caminhoDoPdfTeste);
     }
 
-    // public function testeInserçãoEmPdfExistenteCarimbaFolhaDeRosto(): void { //fatorar!
-    //     $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
-    //     $caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
-    //     $cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
-    //     copy($caminhoDoPdfTeste, $cópiaDoPdfTesteParaRestaurar);
-    //     $pdfEsperado = "testes" . DIRECTORY_SEPARATOR . "testePdfComFolhaDeRosto.pdf";
+    public function testeInserçãoEmPdfExistenteCarimbaFolhaDeRostoComStatusDeSubmissão(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        shell_exec("pdftotext ". $pdf->obterCaminho());
+        $procuraDoCarimbo = shell_exec("grep '$this->status' ". $this->pdfComoTexto);
+        $this->assertEquals($this->status, trim($procuraDoCarimbo));
+    }
 
-    //     $pdf = new Pdf($caminhoDoPdfTeste);
-    //     $folhaDeRosto->inserir($pdf);
+    public function testeInserçãoEmPdfExistenteCarimbaDoi(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        shell_exec("pdftotext ". $pdf->obterCaminho());
+   
+        $procuraDoCarimbo = shell_exec("grep '$this->doi' ". $this->pdfComoTexto);
+        $this->assertEquals($this->doi, trim($procuraDoCarimbo));
+       
+    }
 
-    //     shell_exec("pdftotext ". $pdf->obterCaminho());
-    //     $procuraDoCarimbo = shell_exec("grep 'umCarimboQualquer' testes/testeUmaPagina.txt");
-    //     $this->assertEquals("umCarimboQualquer\n", $procuraDoCarimbo);
-
-    //     $this->assertTrue(unlink($caminhoDoPdfTeste));
-    //     rename($cópiaDoPdfTesteParaRestaurar, $caminhoDoPdfTeste);
-    // }
+    public function testeInserçãoEmPdfExistenteCarimbaChecklist(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        shell_exec("pdftotext ". $pdf->obterCaminho());
+        $this->pdfComoTexto = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.txt";
+        $primeiroItem = $this->checklist[0];
+        $procuraPrimeiroItemDaChecklist = shell_exec("grep '$primeiroItem' ". $this->pdfComoTexto);
+        $this->assertEquals($primeiroItem, trim($procuraPrimeiroItemDaChecklist));
+        $segundoItem = $this->checklist[1];
+        $procuraSegundoItemDaChecklist = shell_exec("grep '$segundoItem' ". $this->pdfComoTexto);
+        $this->assertEquals($segundoItem, trim($procuraSegundoItemDaChecklist));
+    }    
 }
 ?>

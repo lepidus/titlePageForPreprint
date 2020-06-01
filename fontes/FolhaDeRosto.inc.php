@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/TCPDF/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 class FolhaDeRosto { 
 
@@ -8,6 +8,7 @@ class FolhaDeRosto {
     private $doi;
     private $logo;
     private $checklist;
+    const DIRETORIO_DE_SAIDA = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
 
     public function __construct(string $status, string $doi, string $logo, array $checklist) {
         $this->statusDaSubmissão = $status;
@@ -32,28 +33,38 @@ class FolhaDeRosto {
         return $this->checklist;
     }
 
-    public function inserir(pdf $pdf): void {
-
+    private function gerarFolhaDeRosto(): string {
         $folhaDeRosto = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $folhaDeRosto->AddPage();
-        
-        $diretorioDeSaida = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
-        $arquivoDaFolhaDeRosto = $diretorioDeSaida . 'folhaDeRosto.pdf';
-        
+        $folhaDeRosto->SetFont('times', 'BI', 20);
+        $folhaDeRosto->Write(0, $this->statusDaSubmissão, '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->doi, '', 0, 'C', true, 0, false, false, 0);
+        foreach ($this->checklist as $item) {
+            $folhaDeRosto->Write(0, $item, '', 0, 'C', true, 0, false, false, 0);
+        }
+        $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
-        
-        $arquivoOriginal =  $diretorioDeSaida . "arquivo_original.pdf";
-        copy($pdf->obterCaminho(), $arquivoOriginal);
-        
-        $arquivoModificado = $diretorioDeSaida . "comFolhaDeRosto.pdf";
-        
-        $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $arquivoOriginal . ' ' . $arquivoModificado;
+        return $arquivoDaFolhaDeRosto;
+    }
 
+    private function concatenarFolhaDeRosto(string $arquivoDaFolhaDeRosto, pdf $pdf): void {
+        $copiaArquivoOriginal = self::DIRETORIO_DE_SAIDA . "copia_arquivo_original.pdf";
+        copy($pdf->obterCaminho(), $copiaArquivoOriginal);
+        $arquivoModificado = self::DIRETORIO_DE_SAIDA . "comFolhaDeRosto.pdf";
+        $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $copiaArquivoOriginal . ' ' . $arquivoModificado;
         shell_exec($comandoParaJuntar);
-        
         rename($arquivoModificado, $pdf->obterCaminho());
-        // unlink($arquivoDaFolhaDeRosto);
-
+        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
+    }
+    
+    private function removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal) {
+        unlink($arquivoDaFolhaDeRosto);
+        unlink($copiaArquivoOriginal);
+    }
+//caí
+    public function inserir(pdf $pdf): void {
+        $arquivoDaFolhaDeRosto = $this->gerarFolhaDeRosto();
+        $this->concatenarFolhaDeRosto($arquivoDaFolhaDeRosto, $pdf);
     }
 }
 ?>
