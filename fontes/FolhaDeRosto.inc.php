@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/tc-lib-pdf-develop/vendor/autoload.php';
+require __DIR__ . '/TCPDF/vendor/autoload.php';
 
 class FolhaDeRosto { 
 
@@ -34,16 +34,13 @@ class FolhaDeRosto {
 
     public function inserir(pdf $pdf): void {
 
-        $folhaDeRosto = new \Com\Tecnick\Pdf\Tcpdf();
-        $folhaDeRosto->page->add();
-        // $folhaDeRosto->Write(0, "umCarimboQualquer", '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $folhaDeRosto->AddPage();
         
-        $conteudoDoDocumento = $folhaDeRosto->getOutPDFString();
-
         $diretorioDeSaida = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
         $arquivoDaFolhaDeRosto = $diretorioDeSaida . 'folhaDeRosto.pdf';
         
-        file_put_contents($arquivoDaFolhaDeRosto, $conteudoDoDocumento);
+        $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
         
         $arquivoOriginal =  $diretorioDeSaida . "arquivo_original.pdf";
         copy($pdf->obterCaminho(), $arquivoOriginal);
@@ -55,7 +52,7 @@ class FolhaDeRosto {
         shell_exec($comandoParaJuntar);
         
         rename($arquivoModificado, $pdf->obterCaminho());
-        unlink($arquivoDaFolhaDeRosto);
+        // unlink($arquivoDaFolhaDeRosto);
 
     }
 }
