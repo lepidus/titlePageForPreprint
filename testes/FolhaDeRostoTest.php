@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 final class FolhaDeRostoTest extends TestCase {
     private $status = "STATUS_QUEUED";
     private $doi = "10.1000/182";
-    private $logo =  DIRECTORY_SEPARATOR . "caminho-logo"  . DIRECTORY_SEPARATOR . "logo.png"; 
+    private $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png"; 
     private $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     
     protected function setUp(): void {
@@ -93,6 +93,23 @@ final class FolhaDeRostoTest extends TestCase {
         $segundoItem = $this->checklist[1];
         $procuraSegundoItemDaChecklist = shell_exec("grep '$segundoItem' ". $this->pdfComoTexto);
         $this->assertEquals($segundoItem, trim($procuraSegundoItemDaChecklist));
+    }
+
+    public function testeInserçãoEmPdfExistenteCarimbaLogo(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $caminhoDaImageExtraida = "testes" . DIRECTORY_SEPARATOR;
+        $resultado = shell_exec("pdfimages -f 1 -png ". $pdf->obterCaminho() . " " . $caminhoDaImageExtraida);
+        $imagemExtraida = $caminhoDaImageExtraida . DIRECTORY_SEPARATOR . "-000.png";
+        
+        $imagemExtraidaDoPDF = new imagick($imagemExtraida);
+        $imagemDaLogo = new imagick($this->logo);
+        $diferenca = $imagemDaLogo->compareImages($imagemExtraidaDoPDF, Imagick::METRIC_MEANSQUAREERROR);
+        $this->assertSame(0.0, $diferenca[1]);
+        unlink($imagemExtraida);
     }    
 }
 ?>

@@ -42,6 +42,7 @@ class FolhaDeRosto {
         foreach ($this->checklist as $item) {
             $folhaDeRosto->Write(0, $item, '', 0, 'C', true, 0, false, false, 0);
         }
+        $folhaDeRosto->Image($this->logo, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
         return $arquivoDaFolhaDeRosto;
@@ -61,7 +62,7 @@ class FolhaDeRosto {
         unlink($arquivoDaFolhaDeRosto);
         unlink($copiaArquivoOriginal);
     }
-//caí
+
     public function inserir(pdf $pdf): void {
         $arquivoDaFolhaDeRosto = $this->gerarFolhaDeRosto();
         $this->concatenarFolhaDeRosto($arquivoDaFolhaDeRosto, $pdf);
