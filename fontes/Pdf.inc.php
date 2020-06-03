@@ -3,6 +3,9 @@ class Pdf {
     private $caminho;
     
     public function __construct(string $caminho){
+        if (mime_content_type($caminho) != "application/pdf") {
+            throw new InvalidArgumentException('arquivo não é um PDF'); 
+        }
         $this->caminho = $caminho;
     }
 
