@@ -11,7 +11,6 @@ final class FolhaDeRostoTest extends TestCase {
         $this->caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
         $this->cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
         copy($this->caminhoDoPdfTeste, $this->cópiaDoPdfTesteParaRestaurar);
-        $pdfEsperado = "testes" . DIRECTORY_SEPARATOR . "testePdfComFolhaDeRosto.pdf";
         $this->pdfComoTexto = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.txt";
     }
     
@@ -27,17 +26,32 @@ final class FolhaDeRostoTest extends TestCase {
         return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist);
     }
 
-    private function obterDiferençaImagens(string $caminho1, string $caminho2, int $tipo): array{
-        $imagem1 = new imagick($caminho1);
-        $imagem2 = new imagick($caminho2);
+    private function converterPdfEmImagem(string $caminhoDoPdf, $caminhoDaImagem): imagick {
+        $imagem = new imagick($caminhoDoPdf);
+        $imagem->setImageFormat('jpeg');  
+        $imagem->writeImage($caminhoDaImagem);
+        return $imagem;
+    }
+    
+    private function imagensSãoIguais(imagick $imagem1, imagick $imagem2): void {
+        $diferençaEntreElas = $imagem1->compareImages($imagem2, Imagick::METRIC_MEANSQUAREERROR);
+        $this->assertEquals(0.0, $diferençaEntreElas[1]);
+    }
 
-        if($tipo == 1){
-            $imagem1->setImageFormat('jpeg');  
-            $imagem1->writeImage('imagem_pdf_original.jpg');
-            $imagem2->setImageFormat('jpeg');    
-            $imagem2->writeImage('imagem_pdf_folhaderosto.jpg'); 
-        }
-        return $imagem1->compareImages($imagem2, Imagick::METRIC_MEANSQUAREERROR);
+    private function extrairImagemDePdf(pdf $pdf): string {
+        $caminhoDaImageExtraida = "testes" . DIRECTORY_SEPARATOR;
+        $resultado = shell_exec("pdfimages -f 1 -png ". $pdf->obterCaminho() . " " . $caminhoDaImageExtraida);
+        $imagemExtraida = $caminhoDaImageExtraida . DIRECTORY_SEPARATOR . "-000.png";
+        return $imagemExtraida;
+    }
+
+    private function converterPdfEmTexto(pdf $pdf): void {
+        shell_exec("pdftotext ". $pdf->obterCaminho() . " " . $this->pdfComoTexto);
+    }
+
+    private function procurarEmArquivoDeTexto($textoProcurado, $caminhoDoArquivo): string {
+        $resultadoDaProcura = shell_exec("grep '$textoProcurado' ". $caminhoDoArquivo);
+        return trim($resultadoDaProcura);
     }
 
     public function testeTemStatusDeSubmissão(): void {
@@ -74,9 +88,9 @@ final class FolhaDeRostoTest extends TestCase {
         
         $folhaDeRosto->inserir($pdf);
         
-        shell_exec("pdftotext ". $pdf->obterCaminho());
-        $procuraDoCarimbo = shell_exec("grep '$this->status' ". $this->pdfComoTexto);
-        $this->assertEquals($this->status, trim($procuraDoCarimbo));
+        $this->converterPdfEmTexto($pdf);
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($this->status, $this->pdfComoTexto);
+        $this->assertEquals($this->status, $resultadoDaProcura);
     }
 
     public function testeInserçãoEmPdfExistenteCarimbaDoi(): void {
@@ -85,10 +99,9 @@ final class FolhaDeRostoTest extends TestCase {
         
         $folhaDeRosto->inserir($pdf);
         
-        shell_exec("pdftotext ". $pdf->obterCaminho());
-   
-        $procuraDoCarimbo = shell_exec("grep '$this->doi' ". $this->pdfComoTexto);
-        $this->assertEquals($this->doi, trim($procuraDoCarimbo));
+        $this->converterPdfEmTexto($pdf);
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($this->doi, $this->pdfComoTexto);
+        $this->assertEquals($this->doi, $resultadoDaProcura);
        
     }
 
@@ -98,14 +111,13 @@ final class FolhaDeRostoTest extends TestCase {
         
         $folhaDeRosto->inserir($pdf);
         
-        shell_exec("pdftotext ". $pdf->obterCaminho());
-        $this->pdfComoTexto = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.txt";
+        $this->converterPdfEmTexto($pdf);
         $primeiroItem = $this->checklist[0];
-        $procuraPrimeiroItemDaChecklist = shell_exec("grep '$primeiroItem' ". $this->pdfComoTexto);
-        $this->assertEquals($primeiroItem, trim($procuraPrimeiroItemDaChecklist));
+        $resultadoDaProcuraPrimeiroItemDaChecklist = $this->procurarEmArquivoDeTexto($primeiroItem, $this->pdfComoTexto);
+        $this->assertEquals($primeiroItem, $resultadoDaProcuraPrimeiroItemDaChecklist);
         $segundoItem = $this->checklist[1];
-        $procuraSegundoItemDaChecklist = shell_exec("grep '$segundoItem' ". $this->pdfComoTexto);
-        $this->assertEquals($segundoItem, trim($procuraSegundoItemDaChecklist));
+        $resultadoDaProcuraSegundoItemDaChecklist = $this->procurarEmArquivoDeTexto($segundoItem, $this->pdfComoTexto);
+        $this->assertEquals($segundoItem, $resultadoDaProcuraSegundoItemDaChecklist);
     }
 
     public function testeInserçãoEmPdfExistenteCarimbaLogo(): void {
@@ -114,21 +126,24 @@ final class FolhaDeRostoTest extends TestCase {
         
         $folhaDeRosto->inserir($pdf);
         
-        $caminhoDaImageExtraida = "testes" . DIRECTORY_SEPARATOR;
-        $resultado = shell_exec("pdfimages -f 1 -png ". $pdf->obterCaminho() . " " . $caminhoDaImageExtraida);
-        $imagemExtraida = $caminhoDaImageExtraida . DIRECTORY_SEPARATOR . "-000.png";        
-        $diferenca = $this->obterDiferençaImagens($this->logo, $imagemExtraida, 0);
-        $this->assertSame(0.0, $diferenca[1]);
+        $imagemExtraida = $this->extrairImagemDePdf($pdf);
+        $this->imagensSãoIguais(new imagick($this->logo), new imagick($imagemExtraida));
         unlink($imagemExtraida);
     }    
 
-    public function testeInserçãoEmPdfExistentePdfOriginal(): void{
+    public function testeInserçãoEmPdfExistenteNãoModificaPdfOriginal(): void{
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdfNovo = new Pdf($this->caminhoDoPdfTeste);
         $folhaDeRosto->inserir($pdfNovo);
         $pdfOriginal = new Pdf($this->cópiaDoPdfTesteParaRestaurar);
-        $diferenca = $this->obterDiferençaImagens($pdfOriginal->obterCaminho().'[0]', $pdfNovo->obterCaminho().'[1]', 1);
-        $this->assertSame(0.0, $diferenca[1]);
+
+        $arquivoDaImagemDoPdfOriginal = 'imagem_pdf_original.jpg';
+        $arquivoDaImagemDoPdfComFolhaDeRosto = 'imagem_pdf_folhaderosto.jpg';
+        $imagemDoPdfOriginal = $this->converterPdfEmImagem($pdfOriginal->obterCaminho().'[0]', $arquivoDaImagemDoPdfOriginal);
+        $imagemDoPdfComFolhaDeRosto = $this->converterPdfEmImagem($pdfNovo->obterCaminho().'[1]', $arquivoDaImagemDoPdfComFolhaDeRosto);
+        $this->imagensSãoIguais($imagemDoPdfOriginal, $imagemDoPdfComFolhaDeRosto);
+        unlink($arquivoDaImagemDoPdfOriginal);
+        unlink($arquivoDaImagemDoPdfComFolhaDeRosto);
     }
 }
 ?>
