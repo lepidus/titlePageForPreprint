@@ -1,27 +1,12 @@
 <?php
-use PHPUnit\Framework\TestCase;
+require_once ("ManipulacaoDePdfTest.php");
 
-final class FolhaDeRostoTest extends TestCase {
+final class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     private $status = "STATUS_QUEUED";
     private $doi = "10.1000/182";
     private $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png"; 
     private $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     
-    protected function setUp(): void {
-        $this->caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
-        $this->cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
-        copy($this->caminhoDoPdfTeste, $this->cópiaDoPdfTesteParaRestaurar);
-        $this->pdfComoTexto = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.txt";
-    }
-    
-    protected function tearDown(): void {
-        $this->assertTrue(unlink($this->caminhoDoPdfTeste));
-        rename($this->cópiaDoPdfTesteParaRestaurar, $this->caminhoDoPdfTeste);
-        if (file_exists($this->pdfComoTexto)) {
-            unlink($this->pdfComoTexto);
-        }
-    }
-
     private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
         return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist);
     }

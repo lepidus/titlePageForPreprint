@@ -1,18 +1,7 @@
 <?php
-use PHPUnit\Framework\TestCase;
+require_once ("ManipulacaoDePdfTest.php");
 
-final class PrensaDeSubmissoesTest extends TestCase {
-
-    protected function setUp(): void {
-        $this->caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
-        $this->cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
-        copy($this->caminhoDoPdfTeste, $this->cópiaDoPdfTesteParaRestaurar);
-    }
-
-    protected function tearDown(): void {
-        $this->assertTrue(unlink($this->caminhoDoPdfTeste));
-        rename($this->cópiaDoPdfTesteParaRestaurar, $this->caminhoDoPdfTeste);
-    }
+final class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
 
     public function testeComSomenteUmPdfFolhaDeRostoDeveSerIncluida() {
         $logoParaFolhaDeRosto = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png";
