@@ -3,11 +3,11 @@ class Submissao {
 
     public $status;
     public $doi;
-    public $caminhoDaComposição;
+    public $composições;
 
-    public function __construct(string $status, string $doi, string $caminho) {
+    public function __construct(string $status, string $doi, array $composições) {
         $this->status = $status;
         $this->doi = $doi;
-        $this->caminhoDaComposição = $caminho;
+        $this->composições = $composições;
     }
 }

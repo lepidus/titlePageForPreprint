@@ -3,21 +3,20 @@ class PrensaDeSubmissoes {
 
     private $logoParaFolhaDeRosto;
     private $checklist;
-    private $submissões;
+    private $submissão;
 
-    public function __construct(string $logoParaFolhaDeRosto, array $checklist, array $submissões) {
+    public function __construct(string $logoParaFolhaDeRosto, array $checklist, Submissao $submissão) {
         $this->logoParaFolhaDeRosto = $logoParaFolhaDeRosto;
         $this->checklist = $checklist;
-        $this->submissões = $submissões;
+        $this->submissão = $submissão;
     }
 
     public function inserirFolhasDeRosto(): void {
-       foreach($this->submissões as $submissão){
-           $folhaDeRosto = new FolhaDeRosto($submissão->status, $submissão->doi, $this->logoParaFolhaDeRosto, $this->checklist);
-           $caminhoDaComposição = $submissão->caminhoDaComposição;
-           
-           if (Pdf::éPdf($caminhoDaComposição)) {
-               $pdf = new Pdf($caminhoDaComposição);
+       foreach($this->submissão->composições as $composição){
+           $folhaDeRosto = new FolhaDeRosto($this->submissão->status, $this->submissão->doi, $this->logoParaFolhaDeRosto, $this->checklist);
+
+           if (Pdf::éPdf($composição)) {
+               $pdf = new Pdf($composição);
                $folhaDeRosto->inserir($pdf);
            }
        }
