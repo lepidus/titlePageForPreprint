@@ -1,11 +1,7 @@
 <?php
 require_once ("ManipulacaoDePdfTest.php");
 
-final class FolhaDeRostoTest extends ManipulacaoDePdfTest {
-    private $status = "STATUS_QUEUED";
-    private $doi = "10.1000/182";
-    private $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png"; 
-    private $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
+class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     
     private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
         return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist);

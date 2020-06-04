@@ -2,6 +2,11 @@
 use PHPUnit\Framework\TestCase;
 
 class ManipulacaoDePdfTest extends TestCase {
+
+    protected $status = "STATUS_QUEUED";
+    protected $doi = "10.1000/182";
+    protected $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png"; 
+    protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     
     protected function setUp(): void {
         $this->caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";

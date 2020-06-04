@@ -20,8 +20,4 @@ class PrensaDeSubmissoes {
        }
        
     }
-
-    public function obterSubmissões(): array {
-        return $this->submissões;
-    }
 }
