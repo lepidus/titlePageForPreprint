@@ -2,6 +2,7 @@
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 
+const CAMINHO_LOGO = "/plugins/themes/scielo-theme/styles/img/preprint_pilot.png";
 
 class FolhaDeRostoPlugin extends GenericPlugin {
 
@@ -30,41 +31,31 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		error_log('inserida folha de rosto no passo ' . $passo);
 
 		$submissão = $args[1];
+		$formulário = $args[2];
 
 		if ($passo == 2) {
 			$arquivos = $submissão->getGalleys();
 			$doi = $submissão->getStoredPubId('doi');
 			$status = $submissão->getStatusKey();
+			$logo = CAMINHO_LOGO;
+			$checklist = $formulário->context->getLocalizedData('submissionChecklist');
 			
 			foreach ($arquivos as $arquivo) {
 				$documento = $arquivo->getFile();
 				$caminhoDoPdf = $documento->getFilePath(); 
-				$locale = $arquivo->getLocale();
 			}
-			$checklist = $submissão->getLocalizedData('submissionChecklist'); //se conseguir pegar o context dá pra usar esse método
+
 			error_log('Doi '. $doi);
 			error_log('Status '. $status);
 			error_log('Locale '. $locale);
-			error_log('Checklist'. $checklist[0]);			
+			error_log('Checklist'. print_r($checklist, true));			
 		}
-		if($passo == 3){
-			$arquivos = $submissão->getGalleys();
-			$doi = $submissão->getStoredPubId('doi');
-			$status = $submissão->getStatusKey();
-			
-			foreach ($arquivos as $arquivo) {
-				$documento = $arquivo->getFile();
-				$caminhoDoPdf = $documento->getFilePath(); 
-				$locale = $arquivo->getLocale();
-			}
-			$checklist = $submissão->getLocalizedData('submissionChecklist');
-			error_log('Doi '. $doi);
-			error_log('Status '. $status);
-			error_log('Locale '. $locale);
-			error_log('Checklist'. $checklist);
-
-
-		}
-
 	}
 }
+
+/* Para pegar o passado pelo plugin de logo
+	Com isso precisa do context, os comandos abaixo foram encontrados em TemplateManager.inc.php
+	'publicFilesDir' => $request->getBaseUrl() . '/' . $publicFileManager->getContextFilesPath($context->getId()),
+ 	'displayPageHeaderLogo' => $context->getLocalizedPageHeaderLogo()
+	creio que dê pra pegar com o getLocalizedData(), mas ainda não existe outra logo
+ */

@@ -8,7 +8,9 @@ spl_autoload_register(
         if ($classes === null) {
             $classes = array(
                 'folhaderosto' => '/FolhaDeRosto.inc.php',
-                'pdf' => '/Pdf.inc.php'
+                'pdf' => '/Pdf.inc.php',
+                'prensadesubmissoes' => '/PrensaDeSubmissoes.inc.php',
+                'submissao' => '/Submissao.inc.php'
             );
         }
         $cn = strtolower($class);
