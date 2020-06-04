@@ -112,7 +112,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         unlink($imagemExtraida);
     }    
 
-    public function testeInserçãoEmPdfExistenteNãoModificaPdfOriginal(): void{
+    public function testeInserçãoEmPdfExistenteNãoModificaPdfOriginal(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdfNovo = new Pdf($this->caminhoDoPdfTeste);
         $folhaDeRosto->inserir($pdfNovo);

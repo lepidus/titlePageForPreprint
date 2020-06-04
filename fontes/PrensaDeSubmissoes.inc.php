@@ -15,8 +15,11 @@ class PrensaDeSubmissoes {
        foreach($this->submissões as $submissão){
            $folhaDeRosto = new FolhaDeRosto($submissão->status, $submissão->doi, $this->logoParaFolhaDeRosto, $this->checklist);
            $caminhoDaComposição = $submissão->caminhoDaComposição;
-           $pdf = new Pdf($caminhoDaComposição);
-           $folhaDeRosto->inserir($pdf);
+           
+           if (Pdf::éPdf($caminhoDaComposição)) {
+               $pdf = new Pdf($caminhoDaComposição);
+               $folhaDeRosto->inserir($pdf);
+           }
        }
        
     }
