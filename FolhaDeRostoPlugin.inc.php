@@ -1,16 +1,18 @@
 <?php
 
 import('lib.pkp.classes.plugins.GenericPlugin');
-
-const CAMINHO_LOGO = "/plugins/themes/scielo-theme/styles/img/preprint_pilot.png";
+import('plugins.generic.carimbo-do-pdf.fontes.Submissao');
+import('plugins.generic.carimbo-do-pdf.fontes.PrensaDeSubmissoes');
+import('plugins.generic.carimbo-do-pdf.fontes.Pdf');
+import('plugins.generic.carimbo-do-pdf.fontes.FolhaDeRosto');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
+	private $passoParaInserirFolhaDeRosto = 4;
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
 		if ($success && $this->getEnabled()) {
-			// Display the publication statement on the article details page
-			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRosto']);
+			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRostoQuandoNecessario']);
 		}
 		return $success;
 	}
@@ -23,39 +25,31 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		return 'FolhaDeRostoPlugin';
 	}
 
-	public function inserirFolhaDeRosto($nomeDoGancho, $args) {
-		error_log($nomeDoGancho);
-		
+	public function inserirFolhaDeRostoQuandoNecessario($nomeDoGancho, $args) {
 		$passo = $args[0];
-
-		error_log('inserida folha de rosto no passo ' . $passo);
-
-		$submissão = $args[1];
-		$formulário = $args[2];
-
-		if ($passo == 2) {
-			$arquivos = $submissão->getGalleys();
-			$doi = $submissão->getStoredPubId('doi');
-			$status = $submissão->getStatusKey();
-			$logo = CAMINHO_LOGO;
-			$checklist = $formulário->context->getLocalizedData('submissionChecklist');
-			
-			foreach ($arquivos as $arquivo) {
-				$documento = $arquivo->getFile();
-				$caminhoDoPdf = $documento->getFilePath(); 
-			}
-
-			error_log('Doi '. $doi);
-			error_log('Status '. $status);
-			error_log('Locale '. $locale);
-			error_log('Checklist'. print_r($checklist, true));			
+		
+		if ($passo == $this->passoParaInserirFolhaDeRosto) {
+			$prensa = $this->obterPrensaDeSubmissões($args[1],  $args[2]);
+			$prensa->inserirFolhasDeRosto();
 		}
 	}
-}
 
-/* Para pegar o passado pelo plugin de logo
-	Com isso precisa do context, os comandos abaixo foram encontrados em TemplateManager.inc.php
-	'publicFilesDir' => $request->getBaseUrl() . '/' . $publicFileManager->getContextFilesPath($context->getId()),
- 	'displayPageHeaderLogo' => $context->getLocalizedPageHeaderLogo()
-	creio que dê pra pegar com o getLocalizedData(), mas ainda não existe outra logo
- */
+	private function obterPrensaDeSubmissões($submissão, $formulário) {
+		$arquivosDeComposição = $submissão->getGalleys();
+		$doi = $submissão->getStoredPubId('doi');
+		$status = __($submissão->getStatusKey());
+		$checklistBruta = $formulário->context->getLocalizedData('submissionChecklist');
+		$composiçãoDaSubmissão = array();
+
+		foreach ($arquivosDeComposição as $arquivo) {
+			$composiçãoDaSubmissão[] = $arquivo->getFile()->getFilePath(); 
+		}
+
+		foreach ($checklistBruta as $itemDaChecklist) {
+			$checklist[] = $itemDaChecklist['content'];
+		}
+		
+		$logo = "/home/pablo/git/carimbo-do-pdf/recursos/preprint_pilot.png";
+		return new PrensaDeSubmissoes($logo, $checklist, new Submissao($status, $doi, $composiçãoDaSubmissão));
+	}
+}
