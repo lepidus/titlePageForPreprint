@@ -35,17 +35,21 @@ class FolhaDeRosto {
 
     private function gerarFolhaDeRosto(): string {
         $folhaDeRosto = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $folhaDeRosto->AddPage();
         $folhaDeRosto->setPrintHeader(false);
         $folhaDeRosto->setPrintFooter(false);
-        $folhaDeRosto->SetFont('times', '', 20);
-        $folhaDeRosto->Image($this->logo, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        $folhaDeRosto->AddPage();
+        $folhaDeRosto->SetFont('times', '', 18);
+        $folhaDeRosto->Image($this->logo, 20, 20, 25    , '', 'PNG', '', 'T', false, 350, '', false, false, 0, false, false, false);
+        $folhaDeRosto->Write(0, " ", '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, "Situação: " . $this->statusDaSubmissão, '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, "DOI: " . $this->doi, '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, "Autore(a)s reconhecem que aceitaram os requisitos abaixo no momento da submissão:", '', 0, 'C', true, 0, false, false, 0);
+        
         foreach ($this->checklist as $item) {
-            $folhaDeRosto->Write(0, $item, '', 0, 'C', true, 0, false, false, 0);
+            $texto = "<ul><li>". $item . "</li></ul>";
+            $folhaDeRosto->WriteHTML($texto, true, 0, true, 0);
         }
+
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
         return $arquivoDaFolhaDeRosto;
@@ -58,7 +62,7 @@ class FolhaDeRosto {
         $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $copiaArquivoOriginal . ' ' . $arquivoModificado;
         shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
-        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
+        // $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
     }
     
     private function removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal) {

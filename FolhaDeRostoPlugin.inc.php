@@ -7,7 +7,7 @@ import('plugins.generic.carimbo-do-pdf.fontes.Pdf');
 import('plugins.generic.carimbo-do-pdf.fontes.FolhaDeRosto');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
-	private $passoParaInserirFolhaDeRosto = 4;
+	private $passoParaInserirFolhaDeRosto = 2;
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
@@ -49,8 +49,8 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 			$checklist[] = $itemDaChecklist['content'];
 		}
 		
-		$logo = "/home/pablo/git/carimbo-do-pdf/recursos/preprint_pilot.png";
-		//caminho pelo plugin /plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png
+		$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
+		 
 		return new PrensaDeSubmissoes($logo, $checklist, new Submissao($status, $doi, $composiçãoDaSubmissão));
 	}
 }
