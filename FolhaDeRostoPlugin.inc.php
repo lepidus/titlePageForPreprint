@@ -38,17 +38,21 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$arquivosDeComposição = $submissão->getGalleys();
 		$doi = $submissão->getStoredPubId('doi');
 		$status = __($submissão->getStatusKey());
-		$checklistBruta = $formulário->context->getLocalizedData('submissionChecklist');
 		$composiçãoDaSubmissão = array();
-
+		
 		foreach ($arquivosDeComposição as $arquivo) {
 			$composiçãoDaSubmissão[] = $arquivo->getFile()->getFilePath(); 
+			$locale = $arquivo->getLocale();
+			error_log($locale);
 		}
+		
+		$checklistBruta = $formulário->context->getData('submissionChecklist', $locale);
 
 		foreach ($checklistBruta as $itemDaChecklist) {
 			$checklist[] = $itemDaChecklist['content'];
 		}
-		
+		error_log($checklist[0]);
+
 		$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
 		 
 		return new PrensaDeSubmissoes($logo, $checklist, new Submissao($status, $doi, $composiçãoDaSubmissão));
