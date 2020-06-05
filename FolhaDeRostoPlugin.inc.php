@@ -50,6 +50,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		}
 		
 		$logo = "/home/pablo/git/carimbo-do-pdf/recursos/preprint_pilot.png";
+		//caminho pelo plugin /plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png
 		return new PrensaDeSubmissoes($logo, $checklist, new Submissao($status, $doi, $composiçãoDaSubmissão));
 	}
 }

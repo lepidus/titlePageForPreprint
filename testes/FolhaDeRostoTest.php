@@ -70,8 +70,9 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
         
         $this->converterPdfEmTexto($pdf);
-        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($this->status, $this->pdfComoTexto);
-        $this->assertEquals($this->status, $resultadoDaProcura);
+        $textoEsperado = "Situação: " . $this->status;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 
     public function testeInserçãoEmPdfExistenteCarimbaDoi(): void {
@@ -81,8 +82,9 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
         
         $this->converterPdfEmTexto($pdf);
-        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($this->doi, $this->pdfComoTexto);
-        $this->assertEquals($this->doi, $resultadoDaProcura);
+        $textoEsperado = "DOI: " . $this->doi;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
        
     }
 
@@ -93,6 +95,14 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
         
         $this->converterPdfEmTexto($pdf);
+
+        $rótuloEsperadoLinha1 = "Autore(a)s reconhecem que aceitaram os requisitos abaixo no";
+        $rótuloEsperadoLinha2 = 'momento da submissão:';
+        $resultadoDaProcuraRótuloLinha1 = $this->procurarEmArquivoDeTexto($rótuloEsperadoLinha1, $this->pdfComoTexto);
+        $this->assertEquals($rótuloEsperadoLinha1, $resultadoDaProcuraRótuloLinha1);
+        $resultadoDaProcuraRótuloLinha2 = $this->procurarEmArquivoDeTexto($rótuloEsperadoLinha2, $this->pdfComoTexto);
+        $this->assertEquals($rótuloEsperadoLinha2, $resultadoDaProcuraRótuloLinha2);
+
         $primeiroItem = $this->checklist[0];
         $resultadoDaProcuraPrimeiroItemDaChecklist = $this->procurarEmArquivoDeTexto($primeiroItem, $this->pdfComoTexto);
         $this->assertEquals($primeiroItem, $resultadoDaProcuraPrimeiroItemDaChecklist);

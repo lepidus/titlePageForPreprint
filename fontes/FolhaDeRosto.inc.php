@@ -36,13 +36,16 @@ class FolhaDeRosto {
     private function gerarFolhaDeRosto(): string {
         $folhaDeRosto = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $folhaDeRosto->AddPage();
-        $folhaDeRosto->SetFont('times', 'BI', 20);
-        $folhaDeRosto->Write(0, $this->statusDaSubmissão, '', 0, 'C', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, $this->doi, '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->setPrintHeader(false);
+        $folhaDeRosto->setPrintFooter(false);
+        $folhaDeRosto->SetFont('times', '', 20);
+        $folhaDeRosto->Image($this->logo, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        $folhaDeRosto->Write(0, "Situação: " . $this->statusDaSubmissão, '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, "DOI: " . $this->doi, '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, "Autore(a)s reconhecem que aceitaram os requisitos abaixo no momento da submissão:", '', 0, 'C', true, 0, false, false, 0);
         foreach ($this->checklist as $item) {
             $folhaDeRosto->Write(0, $item, '', 0, 'C', true, 0, false, false, 0);
         }
-        $folhaDeRosto->Image($this->logo, 10, 10, 15, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
         return $arquivoDaFolhaDeRosto;
