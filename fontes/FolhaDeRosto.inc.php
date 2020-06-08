@@ -47,7 +47,7 @@ class FolhaDeRosto {
         $folhaDeRosto->Write(0, " ", '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->statusDaSubmissão, '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, "DOI: " . $this->doi, '', 0, 'C', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, "Autore(a)s reconhecem que aceitaram os requisitos abaixo no momento da submissão:", '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('submission.submit.submissionChecklist'. ": ", $this->locale), '', 0, 'C', true, 0, false, false, 0);
         
         foreach ($this->checklist as $item) {
             $texto = "<ul><li>". $item . "</li></ul>";

@@ -14,6 +14,13 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
+		AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'en_US');
+		AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'es_ES');
+		error_log("locale primario: " . AppLocale::getPrimaryLocale());
+		error_log("status em espanhol: " . __('common.status', array(), 'es_ES'));
+		error_log("status em inglês: " . __('common.status', array(), 'en_US'));
+		error_log("status em pt_br: " . __('common.status', array(), 'pt_BR'));
+
 		if ($success && $this->getEnabled()) {
 			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRostoQuandoNecessario']);
 		}
