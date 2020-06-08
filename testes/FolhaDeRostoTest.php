@@ -4,7 +4,7 @@ require_once ("ManipulacaoDePdfTest.php");
 class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     
     private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
-        return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist);
+        return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist, $this->locale, $this->tradutor);
     }
 
     private function converterPdfEmImagem(string $caminhoDoPdf, $caminhoDaImagem): imagick {
@@ -96,8 +96,8 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         
         $this->converterPdfEmTexto($pdf);
 
-        $rótuloEsperadoLinha1 = "Autore(a)s reconhecem que aceitaram os requisitos abaixo no";
-        $rótuloEsperadoLinha2 = 'momento da submissão:';
+        $rótuloEsperadoLinha1 = "Autore(a)s reconhecem que aceitaram os requisitos abaixo no momento";
+        $rótuloEsperadoLinha2 = 'da submissão:';
         $resultadoDaProcuraRótuloLinha1 = $this->procurarEmArquivoDeTexto($rótuloEsperadoLinha1, $this->pdfComoTexto);
         $this->assertEquals($rótuloEsperadoLinha1, $resultadoDaProcuraRótuloLinha1);
         $resultadoDaProcuraRótuloLinha2 = $this->procurarEmArquivoDeTexto($rótuloEsperadoLinha2, $this->pdfComoTexto);
@@ -135,6 +135,18 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->imagensSãoIguais($imagemDoPdfOriginal, $imagemDoPdfComFolhaDeRosto);
         unlink($arquivoDaImagemDoPdfOriginal);
         unlink($arquivoDaImagemDoPdfComFolhaDeRosto);
+    }
+
+    public function testeCarimbaFolhaDeRostoComStatusDeSubmissãoTraduzidoParaLocaleDaComposição(): void {
+        $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist, "en_US", $this->tradutor);
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = "Status: " . $this->status;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 }
 ?>

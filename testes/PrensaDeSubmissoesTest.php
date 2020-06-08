@@ -5,8 +5,9 @@ class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
 
     public function testeComSomenteUmPdfFolhaDeRostoDeveSerIncluida(): void {   
         $caminhoDaComposição = $this->caminhoDoPdfTeste;
-        $submissão = new Submissao($this->status, $this->doi, array($caminhoDaComposição));
-        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão);
+        $composição = new Composicao($caminhoDaComposição, "pt-BR");
+        $submissão = new Submissao($this->status, $this->doi, array($composição));
+        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão, $this->tradutor);
 
         $prensa->inserirFolhasDeRosto();
         
@@ -17,9 +18,11 @@ class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
     public function testeComMaisDeUmPdfFolhaDeRostoDeveSerIncluida(): void {
         $caminhoDaPrimeiraComposição = $this->caminhoDoPdfTeste;
         $caminhoDaSegundaComposição = $this->caminhoDoPdfTeste2;
-        $submissão = new Submissao($this->status, $this->doi, array($caminhoDaPrimeiraComposição, $caminhoDaSegundaComposição));
+        $primeiraComposição = new Composicao($caminhoDaPrimeiraComposição, "pt-BR");
+        $segundaComposição = new Composicao($caminhoDaSegundaComposição, "pt-BR");
+        $submissão = new Submissao($this->status, $this->doi, array($primeiraComposição, $segundaComposição));
         
-        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão);
+        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão, $this->tradutor);
         $prensa->inserirFolhasDeRosto();
 
         $pdfDaPrimeiraComposição = new Pdf($caminhoDaPrimeiraComposição);
@@ -32,10 +35,12 @@ class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
     public function testeDeveIgnorarArquivosNãoPdf(): void {
         $caminhoDaPrimeiraComposição = $this->caminhoDoPdfTeste;
         $caminhoDaSegundaComposição = "testes" . DIRECTORY_SEPARATOR . "arquivoNaoPdf.odt";
-        $submissão = new Submissao($this->status, $this->doi, array($caminhoDaPrimeiraComposição, $caminhoDaSegundaComposição));
-        
+        $primeiraComposição = new Composicao($caminhoDaPrimeiraComposição, "pt-BR");
+        $segundaComposição = new Composicao($caminhoDaSegundaComposição, "pt-BR");
+        $submissão = new Submissao($this->status, $this->doi, array($primeiraComposição, $segundaComposição));
+
         $hashDaComposiçãoNãoPdf = md5_file($caminhoDaSegundaComposição);
-        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão);
+        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão, $this->tradutor);
         $prensa->inserirFolhasDeRosto();
 
         $pdfDaPrimeiraComposição = new Pdf($caminhoDaPrimeiraComposição);

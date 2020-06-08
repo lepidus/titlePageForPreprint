@@ -8,13 +8,17 @@ class FolhaDeRosto {
     private $doi;
     private $logo;
     private $checklist;
+    private $locale;
+    private $tradutor;
     const DIRETORIO_DE_SAIDA = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
 
-    public function __construct(string $status, string $doi, string $logo, array $checklist) {
+    public function __construct(string $status, string $doi, string $logo, array $checklist, string $locale, tradutor $tradutor) {
         $this->statusDaSubmissão = $status;
         $this->doi = $doi;
         $this->logo = $logo;
         $this->checklist = $checklist;
+        $this->locale = $locale;
+        $this->tradutor = $tradutor;
     }
     
     public function obterStatusDeSubmissão(): string {
@@ -41,7 +45,7 @@ class FolhaDeRosto {
         $folhaDeRosto->SetFont('times', '', 18);
         $folhaDeRosto->Image($this->logo, 20, 20, 25    , '', 'PNG', '', 'T', false, 350, '', false, false, 0, false, false, false);
         $folhaDeRosto->Write(0, " ", '', 0, 'C', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, "Situação: " . $this->statusDaSubmissão, '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->statusDaSubmissão, '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, "DOI: " . $this->doi, '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, "Autore(a)s reconhecem que aceitaram os requisitos abaixo no momento da submissão:", '', 0, 'C', true, 0, false, false, 0);
         
@@ -62,7 +66,7 @@ class FolhaDeRosto {
         $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $copiaArquivoOriginal . ' ' . $arquivoModificado;
         shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
-        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
+        // $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
     }
     
     private function removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal) {

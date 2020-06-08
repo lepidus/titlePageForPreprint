@@ -7,10 +7,14 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
+                'composicao' => '/Composicao.inc.php',
                 'folhaderosto' => '/FolhaDeRosto.inc.php',
                 'pdf' => '/Pdf.inc.php',
                 'prensadesubmissoes' => '/PrensaDeSubmissoes.inc.php',
-                'submissao' => '/Submissao.inc.php'
+                'submissao' => '/Submissao.inc.php',
+                'tradutor' => '/Tradutor.inc.php',
+                'tradutorparatestes' => '/TradutorParaTestes.inc.php',
+                'tradutorpkp' => '/TradutorPKP.inc.php'
             );
         }
         $cn = strtolower($class);

@@ -7,8 +7,11 @@ class ManipulacaoDePdfTest extends TestCase {
     protected $doi = "10.1000/182";
     protected $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png"; 
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
-    
+    protected $locale = "pt_BR";
+    protected $tradutor;
+
     protected function setUp(): void {
+        $this->tradutor = new TradutorParaTestes();
         $this->caminhoDoPdfTeste = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf";
         $this->cópiaDoPdfTesteParaRestaurar = "testes" . DIRECTORY_SEPARATOR . "testeUmaPagina_copia.pdf";
         copy($this->caminhoDoPdfTeste, $this->cópiaDoPdfTesteParaRestaurar);

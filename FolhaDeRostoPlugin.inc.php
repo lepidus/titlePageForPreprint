@@ -2,9 +2,12 @@
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.carimbo-do-pdf.fontes.Submissao');
+import('plugins.generic.carimbo-do-pdf.fontes.Composicao');
 import('plugins.generic.carimbo-do-pdf.fontes.PrensaDeSubmissoes');
 import('plugins.generic.carimbo-do-pdf.fontes.Pdf');
 import('plugins.generic.carimbo-do-pdf.fontes.FolhaDeRosto');
+import('plugins.generic.carimbo-do-pdf.fontes.Tradutor');
+import('plugins.generic.carimbo-do-pdf.fontes.TradutorPKP');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
 	private $passoParaInserirFolhaDeRosto = 2;
@@ -38,23 +41,19 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$arquivosDeComposição = $submissão->getGalleys();
 		$doi = $submissão->getStoredPubId('doi');
 		$status = __($submissão->getStatusKey());
-		$composiçãoDaSubmissão = array();
+		$composiçõesDaSubmissão = array();
+		$checklistBruta = $formulário->context->getLocalizedData('submissionChecklist');
 		
 		foreach ($arquivosDeComposição as $arquivo) {
-			$composiçãoDaSubmissão[] = $arquivo->getFile()->getFilePath(); 
-			$locale = $arquivo->getLocale();
-			error_log($locale);
+			$composiçõesDaSubmissão[] = new Composicao($arquivo->getFile()->getFilePath(), $arquivo->getLocale());
 		}
-		
-		$checklistBruta = $formulário->context->getData('submissionChecklist', $locale);
 
 		foreach ($checklistBruta as $itemDaChecklist) {
 			$checklist[] = $itemDaChecklist['content'];
 		}
-		error_log($checklist[0]);
-
+		
 		$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
 		 
-		return new PrensaDeSubmissoes($logo, $checklist, new Submissao($status, $doi, $composiçãoDaSubmissão));
+		return new PrensaDeSubmissoes($logo, $checklist, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP());
 	}
 }
