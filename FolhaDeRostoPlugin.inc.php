@@ -14,12 +14,12 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
-		AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'en_US');
-		AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'es_ES');
-		error_log("locale primario: " . AppLocale::getPrimaryLocale());
-		error_log("status em espanhol: " . __('common.status', array(), 'es_ES'));
-		error_log("status em inglês: " . __('common.status', array(), 'en_US'));
-		error_log("status em pt_br: " . __('common.status', array(), 'pt_BR'));
+		// AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'en_US');
+		// AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'es_ES');
+		// error_log("locale primario: " . AppLocale::getPrimaryLocale());
+		// error_log("status em espanhol: " . __('common.status', array(), 'es_ES'));
+		// error_log("status em inglês: " . __('common.status', array(), 'en_US'));
+		// error_log("status em pt_br: " . __('common.status', array(), 'pt_BR'));
 
 		if ($success && $this->getEnabled()) {
 			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRostoQuandoNecessario']);
@@ -49,20 +49,21 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$doi = $submissão->getStoredPubId('doi');
 		$status = $submissão->getStatusKey();
 		$composiçõesDaSubmissão = array();
-		$checklistBruta = $formulário->context->getLocalizedData('submissionChecklist');
 		$contexto = $formulário->context;
 
 		foreach ($arquivosDeComposição as $arquivo) {
 			$composiçõesDaSubmissão[] = new Composicao($arquivo->getFile()->getFilePath(), $arquivo->getLocale());
-		}
-		
-		error_log("checklistBruta: " . print_r($checklistBruta,true));
-		foreach ($checklistBruta as $itemDaChecklist) {
-			$checklist[] = $itemDaChecklist['content'];
+			//retorna quantas revisoes(versoes) tem
+			// $newGalley = clone $arquivo;
+			// $newGalley->setData('id', null);
+			Services::get('galley')->edit($newGalley, [], $submissão);
+
+			$fileDao = DAORegistry::getDAO('SubmissionFileDAO');
+			error_log(print_r($fileDao->getAllRevisions($arquivo->getFile()->getFileId()), true));
 		}
 		
 		$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
 		 
-		return new PrensaDeSubmissoes($logo, $checklist, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP($f;rmulário->contexto));
+		return new PrensaDeSubmissoes($logo, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP($contexto));
 	}
 }

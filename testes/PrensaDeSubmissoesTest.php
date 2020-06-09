@@ -19,7 +19,7 @@ class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
         $caminhoDaPrimeiraComposição = $this->caminhoDoPdfTeste;
         $caminhoDaSegundaComposição = $this->caminhoDoPdfTeste2;
         $primeiraComposição = new Composicao($caminhoDaPrimeiraComposição, $this->locale);
-        $segundaComposição = new Composicao($caminhoDaSegundaComposição, $this->locale);
+        $segundaComposição = new Composicao($caminhoDaSegundaComposição, "en_US");
         $submissão = new Submissao($this->status, $this->doi, array($primeiraComposição, $segundaComposição));
         
         $prensa = new PrensaDeSubmissoes($this->logo, $submissão, $this->tradutor);
