@@ -7,7 +7,7 @@ class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
         $caminhoDaComposição = $this->caminhoDoPdfTeste;
         $composição = new Composicao($caminhoDaComposição, $this->locale);
         $submissão = new Submissao($this->status, $this->doi, array($composição));
-        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão, $this->tradutor);
+        $prensa = new PrensaDeSubmissoes($this->logo, $submissão, $this->tradutor);
 
         $prensa->inserirFolhasDeRosto();
         
@@ -22,7 +22,7 @@ class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
         $segundaComposição = new Composicao($caminhoDaSegundaComposição, $this->locale);
         $submissão = new Submissao($this->status, $this->doi, array($primeiraComposição, $segundaComposição));
         
-        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão, $this->tradutor);
+        $prensa = new PrensaDeSubmissoes($this->logo, $submissão, $this->tradutor);
         $prensa->inserirFolhasDeRosto();
 
         $pdfDaPrimeiraComposição = new Pdf($caminhoDaPrimeiraComposição);
@@ -40,7 +40,7 @@ class PrensaDeSubmissoesTest extends ManipulacaoDePdfTest {
         $submissão = new Submissao($this->status, $this->doi, array($primeiraComposição, $segundaComposição));
 
         $hashDaComposiçãoNãoPdf = md5_file($caminhoDaSegundaComposição);
-        $prensa = new PrensaDeSubmissoes($this->logo, $this->checklist, $submissão, $this->tradutor);
+        $prensa = new PrensaDeSubmissoes($this->logo, $submissão, $this->tradutor);
         $prensa->inserirFolhasDeRosto();
 
         $pdfDaPrimeiraComposição = new Pdf($caminhoDaPrimeiraComposição);

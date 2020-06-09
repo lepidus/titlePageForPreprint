@@ -7,16 +7,14 @@ class FolhaDeRosto {
     private $statusDaSubmissão;
     private $doi;
     private $logo;
-    private $checklist;
     private $locale;
     private $tradutor;
     const DIRETORIO_DE_SAIDA = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
 
-    public function __construct(string $status, string $doi, string $logo, array $checklist, string $locale, tradutor $tradutor) {
+    public function __construct(string $status, string $doi, string $logo, string $locale, tradutor $tradutor) {
         $this->statusDaSubmissão = $status;
         $this->doi = $doi;
         $this->logo = $logo;
-        $this->checklist = $checklist;
         $this->locale = $locale;
         $this->tradutor = $tradutor;
     }
@@ -31,10 +29,6 @@ class FolhaDeRosto {
 
     public function obterLogo(): string {
         return $this->logo;
-    }
-
-    public function obterChecklist(): array {
-        return $this->checklist;
     }
 
     private function gerarFolhaDeRosto(): string {
