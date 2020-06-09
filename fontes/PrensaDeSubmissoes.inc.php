@@ -21,7 +21,6 @@ class PrensaDeSubmissoes {
                $pdf = new Pdf($composição->arquivo);
                $folhaDeRosto->inserir($pdf);
            }
-       }
-       
+       }   
     }
 }

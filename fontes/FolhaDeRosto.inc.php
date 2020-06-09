@@ -46,10 +46,10 @@ class FolhaDeRosto {
         $folhaDeRosto->Image($this->logo, 20, 20, 25    , '', 'PNG', '', 'T', false, 350, '', false, false, 0, false, false, false);
         $folhaDeRosto->Write(0, " ", '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($this->statusDaSubmissão, $this->locale), '', 0, 'C', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.pubIds.doi.editor.doi', $this->locale) . ": " . $this->doi, '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('metadata.property.displayName.doi', $this->locale) . ": " . $this->doi, '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('submission.submit.submissionChecklist', $this->locale) . ": ", '', 0, 'C', true, 0, false, false, 0);
         
-        foreach ($this->checklist as $item) {
+        foreach ($this->tradutor->obterCheckListTraduzida($this->locale) as $item) {
             $texto = "<ul><li>". $item . "</li></ul>";
             $folhaDeRosto->WriteHTML($texto, true, 0, true, 0);
         }

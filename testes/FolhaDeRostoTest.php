@@ -134,7 +134,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         unlink($arquivoDaImagemDoPdfComFolhaDeRosto);
     }
 
-    public function testeCarimbaFolhaDeRostoComStatusDeSubmissãoTraduzidoParaLocaleDaComposição(): void {
+    public function testeCarimbaFolhaDeRostoComStatusDeSubmissãoTraduzidoParaIdiomaDaComposição(): void {
         $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
@@ -146,7 +146,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 
-    public function testeCarimbaFolhaDeRostoComRótuloDeChecklistTraduzidaParaLocaleDaComposição(): void {
+    public function testeCarimbaFolhaDeRostoComRótuloDeChecklistTraduzidaParaIdiomaDaComposição(): void {
         $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
@@ -156,6 +156,22 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $textoEsperado = "Submission Requirements:";
         $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
+    }
+
+    public function testeCarimbaFolhaDeRostoComChecklistTraduzidaParaIdiomaDaComposição(): void {
+        $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist, "en_US", $this->tradutor);
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+
+        $primeiroItem = "The submission has not been previously published.";
+        $resultadoDaProcuraPrimeiroItemDaChecklist = $this->procurarEmArquivoDeTexto($primeiroItem, $this->pdfComoTexto);
+        $this->assertEquals($primeiroItem, $resultadoDaProcuraPrimeiroItemDaChecklist);
+        $segundoItem = "Where available, URLs for the references have been provided.";
+        $resultadoDaProcuraSegundoItemDaChecklist = $this->procurarEmArquivoDeTexto($segundoItem, $this->pdfComoTexto);
+        $this->assertEquals($segundoItem, $resultadoDaProcuraSegundoItemDaChecklist);
     }
 }
 ?>
