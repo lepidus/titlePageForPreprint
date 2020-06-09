@@ -47,7 +47,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 	private function obterPrensaDeSubmissões($submissão, $formulário) {
 		$arquivosDeComposição = $submissão->getGalleys();
 		$doi = $submissão->getStoredPubId('doi');
-		$status = __($submissão->getStatusKey());
+		$status = $submissão->getStatusKey();
 		$composiçõesDaSubmissão = array();
 		$checklistBruta = $formulário->context->getLocalizedData('submissionChecklist');
 		

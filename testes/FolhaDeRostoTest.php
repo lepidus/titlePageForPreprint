@@ -70,7 +70,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
         
         $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "Situação: " . $this->status;
+        $textoEsperado = "Situação: Em fila";
         $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
@@ -96,12 +96,9 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         
         $this->converterPdfEmTexto($pdf);
 
-        $rótuloEsperadoLinha1 = "Autore(a)s reconhecem que aceitaram os requisitos abaixo no momento";
-        $rótuloEsperadoLinha2 = 'da submissão:';
-        $resultadoDaProcuraRótuloLinha1 = $this->procurarEmArquivoDeTexto($rótuloEsperadoLinha1, $this->pdfComoTexto);
-        $this->assertEquals($rótuloEsperadoLinha1, $resultadoDaProcuraRótuloLinha1);
-        $resultadoDaProcuraRótuloLinha2 = $this->procurarEmArquivoDeTexto($rótuloEsperadoLinha2, $this->pdfComoTexto);
-        $this->assertEquals($rótuloEsperadoLinha2, $resultadoDaProcuraRótuloLinha2);
+        $rótuloEsperado = "Lista de verificação da submissão:";
+        $resultadoDaProcuraRótulo = $this->procurarEmArquivoDeTexto($rótuloEsperado, $this->pdfComoTexto);
+        $this->assertEquals($rótuloEsperado, $resultadoDaProcuraRótulo);
 
         $primeiroItem = $this->checklist[0];
         $resultadoDaProcuraPrimeiroItemDaChecklist = $this->procurarEmArquivoDeTexto($primeiroItem, $this->pdfComoTexto);
@@ -144,7 +141,19 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
         
         $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "Status: " . $this->status;
+        $textoEsperado = "Status: Queued";
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
+    }
+
+    public function testeCarimbaFolhaDeRostoComRótuloDeChecklistTraduzidaParaLocaleDaComposição(): void {
+        $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->checklist, "en_US", $this->tradutor);
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = "Submission Requirements:";
         $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
