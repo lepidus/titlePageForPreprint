@@ -38,6 +38,14 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		}
 	}
 
+	public function criaNovaRevisao($arquivo, $submissão){
+		$submissionFile = $arquivo->getFile();
+		$submissionFileManager = new SubmissionFileManager($submissão->getContextId(), $submissão->getId());
+		$resultadoDaCópia = $submissionFileManager->copyFileToFileStage($arquivo->getFileId(), $submissionFile->getRevision(), $submissionFile->getFileStage(), $arquivo->getFileId(), true);
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+		return $submissionFileDao->getLatestRevision($submissionFile->getFileId());
+	}
+
 	private function obterPrensaDeSubmissões($submissão, $formulário) {
 		$arquivosDeComposição = $submissão->getGalleys(); //fatorar esses nomes
 		$doi = $submissão->getStoredPubId('doi');
@@ -46,16 +54,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$contexto = $formulário->context;
 
 		foreach ($arquivosDeComposição as $arquivo) {
-			$submissionFile = $arquivo->getFile();
-			error_log("mostrando revisão do arquivo submetido antes da cópia: ");
-			error_log(print_r($submissionFile->getFileIdAndRevision(), true));
-			$submissionFileManager = new SubmissionFileManager($submissão->getContextId(), $submissão->getId());
-			$resultadoDaCópia = $submissionFileManager->copyFileToFileStage($arquivo->getFileId(), $submissionFile->getRevision(), $submissionFile->getFileStage(), $arquivo->getFileId(), true);
-			$codigoDoNovoArquivo = $resultadoDaCópia[0];
-			$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-			$novaRevisão = $submissionFileDao->getLatestRevision($submissionFile->getFileId());
-			error_log("mostrando revisão do arquivo submetido depois da cópia: ");
-			error_log(print_r($novaRevisão->getFileIdAndRevision(), true));
+			$novaRevisão = $this->criaNovaRevisao($arquivo, $submissão);
 			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $arquivo->getLocale());
 		}
 			$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
