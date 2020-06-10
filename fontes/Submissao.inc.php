@@ -9,7 +9,12 @@ class Submissao {
 
     public function __construct(string $status, $doi, string $autores, string $dataDeSubmissão, array $composições = null) {
         $this->status = $status;
-        $this->doi = $doi;
+        if (empty($doi)) {
+            $this->doi = "Não informado";
+        }
+        else {
+            $this->doi = $doi;
+        }
         $this->autores = $autores;
         $this->composições = $composições;
         $this->dataDeSubmissão = $dataDeSubmissão;

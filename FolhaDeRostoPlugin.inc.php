@@ -11,7 +11,7 @@ import('plugins.generic.carimbo-do-pdf.fontes.TradutorPKP');
 import('lib.pkp.classes.file.SubmissionFileManager');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
-	private $passoParaInserirFolhaDeRosto = 2;
+	private $passoParaInserirFolhaDeRosto = 4;
 	const CAMINHO_DA_LOGO = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
 
 	public function register($category, $path, $mainContextId = NULL) {
@@ -52,12 +52,13 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$doi = $submissão->getStoredPubId('doi');
 		$status = $submissão->getStatusKey();
 		$autores = $submissão->getAuthorString();
+		$dataDeSubmissão = $submissão->getData('lastModified');
 		$contexto = $formulário->context;
 
 		foreach ($composições as $composição) {
 			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
 			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale());
 		}
-			return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
+			return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
 	}
 }

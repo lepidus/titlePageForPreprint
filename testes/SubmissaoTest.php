@@ -25,6 +25,11 @@ class SubmissaoTest extends TestCase {
         $this->assertEquals($this->doi, $submissão->obterDOI());
     }
 
+    public function testeDoiNãoInformado(): void {
+        $submissão = new Submissao($this->status, null, $this->autores, $this->dataDeSubmissão, $this->composições);
+        $this->assertEquals("Não informado", $submissão->obterDOI());
+    }
+
     public function testeTemAutores(): void {
         $submissão = $this->obterSubmissãoParaTeste();
         $this->assertEquals($this->autores, $submissão->obterAutores());
