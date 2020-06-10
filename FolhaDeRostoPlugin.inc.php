@@ -12,6 +12,7 @@ import('lib.pkp.classes.file.SubmissionFileManager');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
 	private $passoParaInserirFolhaDeRosto = 2;
+	const CAMINHO_DA_LOGO = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
@@ -38,26 +39,24 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		}
 	}
 
-	public function criaNovaRevisao($arquivo, $submissão){
-		$submissionFile = $arquivo->getFile();
-		$submissionFileManager = new SubmissionFileManager($submissão->getContextId(), $submissão->getId());
-		$resultadoDaCópia = $submissionFileManager->copyFileToFileStage($arquivo->getFileId(), $submissionFile->getRevision(), $submissionFile->getFileStage(), $arquivo->getFileId(), true);
+	public function criaNovaRevisão($composição, $submissão){
+		$arquivoDaSubmissão = $composição->getFile();
+		$gerenciadorDeArquivosDeSubmissão = new SubmissionFileManager($submissão->getContextId(), $submissão->getId());
+		$resultadoDaCópia = $gerenciadorDeArquivosDeSubmissão->copyFileToFileStage($composição->getFileId(), $arquivoDaSubmissão->getRevision(), $arquivoDaSubmissão->getFileStage(), $composição->getFileId(), true);
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		return $submissionFileDao->getLatestRevision($submissionFile->getFileId());
+		return $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
 	}
 
 	private function obterPrensaDeSubmissões($submissão, $formulário) {
-		$arquivosDeComposição = $submissão->getGalleys(); //fatorar esses nomes
+		$composições = $submissão->getGalleys();
 		$doi = $submissão->getStoredPubId('doi');
 		$status = $submissão->getStatusKey();
-		$composiçõesDaSubmissão = array(); //fatorar esses nomes
 		$contexto = $formulário->context;
 
-		foreach ($arquivosDeComposição as $arquivo) {
-			$novaRevisão = $this->criaNovaRevisao($arquivo, $submissão);
-			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $arquivo->getLocale());
+		foreach ($composições as $composição) {
+			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
+			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale());
 		}
-			$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
-			return new PrensaDeSubmissoes($logo, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP($contexto));
+			return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP($contexto));
 		}
 }
