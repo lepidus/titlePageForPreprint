@@ -51,12 +51,13 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$composições = $submissão->getGalleys();
 		$doi = $submissão->getStoredPubId('doi');
 		$status = $submissão->getStatusKey();
+		$autores = $submissão->getAuthorString();
 		$contexto = $formulário->context;
 
 		foreach ($composições as $composição) {
 			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
 			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale());
 		}
-			return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP($contexto));
-		}
+			return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
+	}
 }

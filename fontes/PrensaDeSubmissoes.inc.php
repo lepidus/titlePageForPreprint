@@ -12,8 +12,8 @@ class PrensaDeSubmissoes {
     }
 
     public function inserirFolhasDeRosto(): void {
-       foreach($this->submissão->composições as $composição){
-           $folhaDeRosto = new FolhaDeRosto($this->submissão->status, $this->submissão->doi, $this->logoParaFolhaDeRosto, $composição->locale, $this->tradutor);
+       foreach($this->submissão->obterComposições() as $composição){
+           $folhaDeRosto = new FolhaDeRosto($this->submissão, $this->logoParaFolhaDeRosto, $composição->locale, $this->tradutor);
 
            if (Pdf::éPdf($composição->arquivo)) {
                $pdf = new Pdf($composição->arquivo);

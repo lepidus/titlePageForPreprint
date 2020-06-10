@@ -8,6 +8,8 @@ class ManipulacaoDePdfTest extends TestCase {
     protected $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png";
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     protected $locale = "pt_BR";
+    protected $titulo = "Assim Falou Zaratustra";
+    protected $autores = "Cleide Silva; João Carlos";
     protected $tradutor;
 
     protected function setUp(): void {

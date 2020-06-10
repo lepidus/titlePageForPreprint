@@ -3,9 +3,12 @@
 class TradutorPKP implements Tradutor {
 
     private $contexto;
+    private $submissão;
 
-    public function __construct($contexto) {
+    public function __construct($contexto, $submissão) {
         $this->contexto = $contexto;
+        $this->submissão = $submissão;
+
     }
 
     public function traduzir($chave, $locale) {
@@ -20,5 +23,9 @@ class TradutorPKP implements Tradutor {
 			$checklist[] = $itemDaChecklist['content'];
         }
         return $checklist;
+    }
+
+    public function obterTítuloTraduzido($locale){
+        return $this->submissão->getTitle($locale);
     }
 }

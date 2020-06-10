@@ -4,7 +4,7 @@ require_once ("ManipulacaoDePdfTest.php");
 class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     
     private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
-        return new FolhaDeRosto($this->status, $this->doi, $this->logo, $this->locale, $this->tradutor);
+        return new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, $this->locale, $this->tradutor);
     }
 
     private function converterPdfEmImagem(string $caminhoDoPdf, $caminhoDaImagem): imagick {
@@ -35,21 +35,6 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         return trim($resultadoDaProcura);
     }
 
-    public function testeTemStatusDeSubmissão(): void {
-        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
-        $this->assertEquals($this->status, $folhaDeRosto->obterStatusDeSubmissão());
-    }
-    
-    public function testeTemDoi(): void {
-        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
-        $this->assertEquals($this->doi, $folhaDeRosto->obterDOI());
-    }
-
-    public function testeTemLogo(): void {
-        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
-        $this->assertEquals($this->logo, $folhaDeRosto->obterLogo());
-    }
-    
     public function testeInserçãoEmPdfExistenteCriaNovaPágina(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
 
@@ -80,7 +65,6 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $textoEsperado = "DOI: " . $this->doi;
         $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
-       
     }
 
     public function testeInserçãoEmPdfExistenteCarimbaChecklist(): void {
@@ -112,7 +96,31 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $imagemExtraida = $this->extrairImagemDePdf($pdf);
         $this->imagensSãoIguais(new imagick($this->logo), new imagick($imagemExtraida));
         unlink($imagemExtraida);
-    }    
+    }
+
+    public function testeInserçãoEmPdfExistenteCarimbaTitulo(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = $this->titulo;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
+    }
+
+    public function testeInserçãoEmPdfExistenteCarimbaAutores(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = $this->autores;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
+    }
 
     public function testeInserçãoEmPdfExistenteNãoModificaPdfOriginal(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
@@ -130,7 +138,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComStatusDeSubmissãoTraduzidoParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -142,7 +150,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComRótuloDeChecklistTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -154,7 +162,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComChecklistTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto($this->status, $this->doi, $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);

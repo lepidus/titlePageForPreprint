@@ -10,14 +10,16 @@ class TradutorParaTestes implements Tradutor {
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "submission.submit.submissionChecklist" => "Submission Requirements",
                                                     "item1CheckList" => "The submission has not been previously published.",
-                                                    "item2CheckList" => "Where available, URLs for the references have been provided.");
+                                                    "item2CheckList" => "Where available, URLs for the references have been provided.",
+                                                    "titulo" => "So spoke Zaratustra");
 
         $this->mapeamentoDeIdiomas["pt_BR"] = array("common.status" => "Situação",
                                                     "submissions.queued" => "Em fila",
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "submission.submit.submissionChecklist" => "Lista de verificação da submissão",
                                                     "item1CheckList" => "A submissão não foi publicado anteriormente.",
-                                                    "item2CheckList" => "As URLs das referências foram fornecidas.");
+                                                    "item2CheckList" => "As URLs das referências foram fornecidas.",
+                                                    "titulo" => "Assim Falou Zaratustra");
         
     }
 
@@ -28,5 +30,9 @@ class TradutorParaTestes implements Tradutor {
 
     public function obterCheckListTraduzida($locale) {
         return array($this->mapeamentoDeIdiomas[$locale]["item1CheckList"], $this->mapeamentoDeIdiomas[$locale]["item2CheckList"]);
+    }
+
+    public function obterTítuloTraduzido($locale) {
+        return $this->mapeamentoDeIdiomas[$locale]["titulo"];
     }
 }
