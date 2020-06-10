@@ -10,6 +10,7 @@ class ManipulacaoDePdfTest extends TestCase {
     protected $locale = "pt_BR";
     protected $titulo = "Assim Falou Zaratustra";
     protected $autores = "Cleide Silva; João Carlos";
+    protected $dataDeSubmissão = "10/06/2020";
     protected $tradutor;
 
     protected function setUp(): void {

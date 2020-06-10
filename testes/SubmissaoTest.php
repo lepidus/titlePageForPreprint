@@ -8,10 +8,11 @@ class SubmissaoTest extends TestCase {
     private $status = 'submissions.queued';
     private $doi = "10.1000/182";
     private $autores = "Clarice Linspector, Atila Iamarino";
+    private $dataDeSubmissão = "10/06/2020";
     private $composições = array();
     
     private function obterSubmissãoParaTeste() {
-        return new Submissao($this->status, $this->doi, $this->autores, $this->composições);
+        return new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->composições);
     }
 
     public function testeTemStatusDeSubmissão(): void {
@@ -32,6 +33,11 @@ class SubmissaoTest extends TestCase {
     public function testeTemComposições(): void {
         $submissão = $this->obterSubmissãoParaTeste();
         $this->assertEquals($this->composições, $submissão->obterComposições());
+    }
+
+    public function testeDataDeSubmissão(): void {
+        $submissão = $this->obterSubmissãoParaTeste();
+        $this->assertEquals($this->dataDeSubmissão, $submissão->obterDataDeSubmissão());
     }
 }
 ?>

@@ -5,12 +5,14 @@ class Submissao {
     private $doi;
     private $composições;
     private $autores;
+    private $dataDeSubmissão;
 
-    public function __construct(string $status, $doi, string $autores, array $composições = null) {
+    public function __construct(string $status, $doi, string $autores, string $dataDeSubmissão, array $composições = null) {
         $this->status = $status;
         $this->doi = $doi;
         $this->autores = $autores;
         $this->composições = $composições;
+        $this->dataDeSubmissão = $dataDeSubmissão;
     }
 
     public function obterStatus(): string {
@@ -27,6 +29,10 @@ class Submissao {
 
     public function obterComposições(): array {
         return $this->composições;
+    }
+
+    public function obterDataDeSubmissão(): string {
+        return $this->dataDeSubmissão;
     }
 
 }

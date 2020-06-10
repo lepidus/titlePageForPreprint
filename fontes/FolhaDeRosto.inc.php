@@ -40,6 +40,8 @@ class FolhaDeRosto {
             $folhaDeRosto->WriteHTML($texto, true, 0, true, 0);
         }
 
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.dateSubmitted', $this->locale) . ": " . $this->submissão->obterDataDeSubmissão(), '', 0, 'C', true, 0, false, false, 0);
+      
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
         return $arquivoDaFolhaDeRosto;

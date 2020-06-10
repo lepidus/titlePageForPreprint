@@ -4,7 +4,7 @@ require_once ("ManipulacaoDePdfTest.php");
 class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     
     private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
-        return new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, $this->locale, $this->tradutor);
+        return new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão), $this->logo, $this->locale, $this->tradutor);
     }
 
     private function converterPdfEmImagem(string $caminhoDoPdf, $caminhoDaImagem): imagick {
@@ -122,6 +122,18 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 
+    public function testeInserçãoEmPdfExistenteCarimbaDataDeSubmissão(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = "Data de submissão: ". $this->dataDeSubmissão;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
+    }
+
     public function testeInserçãoEmPdfExistenteNãoModificaPdfOriginal(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdfNovo = new Pdf($this->caminhoDoPdfTeste);
@@ -138,7 +150,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComStatusDeSubmissãoTraduzidoParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -150,7 +162,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComRótuloDeChecklistTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -162,7 +174,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComChecklistTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -175,6 +187,18 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $segundoItem = "Where available, URLs for the references have been provided.";
         $resultadoDaProcuraSegundoItemDaChecklist = $this->procurarEmArquivoDeTexto($segundoItem, $this->pdfComoTexto);
         $this->assertEquals($segundoItem, $resultadoDaProcuraSegundoItemDaChecklist);
+    }
+
+    public function testeCarimbaFolhaDeRostoComDataDeSubmissãoTraduzidaParaIdiomaDaComposição(): void {
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão), $this->logo, "en_US", $this->tradutor);
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = "Date submitted: ". $this->dataDeSubmissão;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 }
 ?>

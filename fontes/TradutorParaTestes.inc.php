@@ -9,6 +9,7 @@ class TradutorParaTestes implements Tradutor {
                                                     "submissions.queued" => "Queued",
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "submission.submit.submissionChecklist" => "Submission Requirements",
+                                                    "common.dateSubmitted" => "Date submitted",
                                                     "item1CheckList" => "The submission has not been previously published.",
                                                     "item2CheckList" => "Where available, URLs for the references have been provided.",
                                                     "titulo" => "So spoke Zaratustra");
@@ -17,6 +18,7 @@ class TradutorParaTestes implements Tradutor {
                                                     "submissions.queued" => "Em fila",
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "submission.submit.submissionChecklist" => "Lista de verificação da submissão",
+                                                    "common.dateSubmitted" => "Data de submissão",
                                                     "item1CheckList" => "A submissão não foi publicado anteriormente.",
                                                     "item2CheckList" => "As URLs das referências foram fornecidas.",
                                                     "titulo" => "Assim Falou Zaratustra");
