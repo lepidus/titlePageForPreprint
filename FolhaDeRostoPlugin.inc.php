@@ -8,19 +8,13 @@ import('plugins.generic.carimbo-do-pdf.fontes.Pdf');
 import('plugins.generic.carimbo-do-pdf.fontes.FolhaDeRosto');
 import('plugins.generic.carimbo-do-pdf.fontes.Tradutor');
 import('plugins.generic.carimbo-do-pdf.fontes.TradutorPKP');
+import('lib.pkp.classes.file.SubmissionFileManager');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
 	private $passoParaInserirFolhaDeRosto = 2;
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
-		// AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'en_US');
-		// AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, 'es_ES');
-		// error_log("locale primario: " . AppLocale::getPrimaryLocale());
-		// error_log("status em espanhol: " . __('common.status', array(), 'es_ES'));
-		// error_log("status em inglês: " . __('common.status', array(), 'en_US'));
-		// error_log("status em pt_br: " . __('common.status', array(), 'pt_BR'));
-
 		if ($success && $this->getEnabled()) {
 			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRostoQuandoNecessario']);
 		}
@@ -45,25 +39,26 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 	}
 
 	private function obterPrensaDeSubmissões($submissão, $formulário) {
-		$arquivosDeComposição = $submissão->getGalleys();
+		$arquivosDeComposição = $submissão->getGalleys(); //fatorar esses nomes
 		$doi = $submissão->getStoredPubId('doi');
 		$status = $submissão->getStatusKey();
-		$composiçõesDaSubmissão = array();
+		$composiçõesDaSubmissão = array(); //fatorar esses nomes
 		$contexto = $formulário->context;
 
 		foreach ($arquivosDeComposição as $arquivo) {
-			$composiçõesDaSubmissão[] = new Composicao($arquivo->getFile()->getFilePath(), $arquivo->getLocale());
-			//retorna quantas revisoes(versoes) tem
-			// $newGalley = clone $arquivo;
-			// $newGalley->setData('id', null);
-			Services::get('galley')->edit($newGalley, [], $submissão);
-
-			$fileDao = DAORegistry::getDAO('SubmissionFileDAO');
-			error_log(print_r($fileDao->getAllRevisions($arquivo->getFile()->getFileId()), true));
+			$submissionFile = $arquivo->getFile();
+			error_log("mostrando revisão do arquivo submetido antes da cópia: ");
+			error_log(print_r($submissionFile->getFileIdAndRevision(), true));
+			$submissionFileManager = new SubmissionFileManager($submissão->getContextId(), $submissão->getId());
+			$resultadoDaCópia = $submissionFileManager->copyFileToFileStage($arquivo->getFileId(), $submissionFile->getRevision(), $submissionFile->getFileStage(), $arquivo->getFileId(), true);
+			$codigoDoNovoArquivo = $resultadoDaCópia[0];
+			$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+			$novaRevisão = $submissionFileDao->getLatestRevision($submissionFile->getFileId());
+			error_log("mostrando revisão do arquivo submetido depois da cópia: ");
+			error_log(print_r($novaRevisão->getFileIdAndRevision(), true));
+			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $arquivo->getLocale());
 		}
-		
-		$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
-		 
-		return new PrensaDeSubmissoes($logo, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP($contexto));
-	}
+			$logo = "plugins/generic/carimbo-do-pdf/recursos/preprint_pilot.png";
+			return new PrensaDeSubmissoes($logo, new Submissao($status, $doi, $composiçõesDaSubmissão), new TradutorPKP($contexto));
+		}
 }
