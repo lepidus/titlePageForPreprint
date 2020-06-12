@@ -53,7 +53,10 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$status = $submissão->getStatusKey();
 		$autores = $submissão->getAuthorString();
 		$dataDeSubmissão = $submissão->getData('lastModified');
+		
 		$contexto = $formulário->context;
+		
+		error_log('Data curta '. $datestr2);
 
 		foreach ($composições as $composição) {
 			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);

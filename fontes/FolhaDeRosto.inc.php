@@ -26,21 +26,30 @@ class FolhaDeRosto {
         $folhaDeRosto->setPrintHeader(false);
         $folhaDeRosto->setPrintFooter(false);
         $folhaDeRosto->AddPage();
+        $folhaDeRosto->Image($this->logo, 'C', '', '35', '20', 'PNG', 'false', 'C', true, 400, 'C', false, false, 0, false, false, false);
+        $folhaDeRosto->Ln(25);
+        $folhaDeRosto->SetFont('times', '', 11);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($this->submissão->obterStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
         $folhaDeRosto->SetFont('times', '', 18);
-        $folhaDeRosto->Image($this->logo, 20, 20, 25    , '', 'PNG', '', 'T', false, 350, '', false, false, 0, false, false, false);
-        $folhaDeRosto->Write(0, " ", '', 0, 'C', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($this->submissão->obterStatus(), $this->locale), '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Write(0, $this->tradutor->obterTítuloTraduzido($this->locale), '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->SetFont('times', '', 12);
         $folhaDeRosto->Write(0, $this->submissão->obterAutores(), '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->SetFont('times', '', 11);
+        $folhaDeRosto->Ln(5);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('metadata.property.displayName.doi', $this->locale) . ": " . $this->submissão->obterDOI(), '', 0, 'C', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('submission.submit.submissionChecklist', $this->locale) . ": ", '', 0, 'C', true, 0, false, false, 0);
-        
-        foreach ($this->tradutor->obterCheckListTraduzida($this->locale) as $item) {
-            $texto = "<ul><li>". $item . "</li></ul>";
-            $folhaDeRosto->WriteHTML($texto, true, 0, true, 0);
-        }
+        $folhaDeRosto->Ln(10);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('submission.submit.submissionChecklist', $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $folhaDeRosto->SetFont('times', '', 10);
+        $folhaDeRosto->Ln(5);
 
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.dateSubmitted', $this->locale) . ": " . $this->submissão->obterDataDeSubmissão(), '', 0, 'C', true, 0, false, false, 0);
+        $texto = '';
+        foreach ($this->tradutor->obterCheckListTraduzida($this->locale) as $item) {
+            $texto = $texto. "<ul style=\"text-align:justify;\"><li>". $item . "</li></ul>";
+        }
+        $folhaDeRosto->writeHTMLCell(0, 0, '', '',$texto, 1, 1, false, true, 'JUSTIFY', false);
+        $folhaDeRosto->SetFont('times', '', 11);
+        $folhaDeRosto->Ln(5);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.dateSubmitted', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->locale, $this->submissão->obterDataDeSubmissão()), '', 0, 'JUSTIFY', true, 0, false, false, 0);
       
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
@@ -54,7 +63,7 @@ class FolhaDeRosto {
         $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $copiaArquivoOriginal . ' ' . $arquivoModificado;
         shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
-        // $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
+        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
     }
     
     private function removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal) {

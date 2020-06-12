@@ -37,4 +37,7 @@ class TradutorParaTestes implements Tradutor {
     public function obterTítuloTraduzido($locale) {
         return $this->mapeamentoDeIdiomas[$locale]["titulo"];
     }
+    public function obterDataTraduzida($locale, $data){
+        return $data;
+    }
 }
