@@ -6,7 +6,7 @@ Plugin do OPS para criação de folha de rosto nos arquivos submetidos no servid
 
 ## Como utilizar 
 1. Instale a dependência
-2. Adicione o plugin pelo painel de controle do Administrador do servidor (no arquivo php.ini verifique as variáveis: upload_max_filesize e post_max_size mude para igual ou maior que 16M) ou descompacte o arquivo no diretório `plugins/generic/`
+2. Adicione o plugin pelo painel de controle do Administrador do servidor (no arquivo php.ini verifique as variáveis: upload_max_filesize e post_max_size mude para igual ou maior que 37M) ou descompacte o arquivo no diretório `plugins/generic/`
 3. Ative o plugin no painel de controle
 
 ## Dependências para Desenvolvimento
