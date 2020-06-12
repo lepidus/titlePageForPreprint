@@ -2,12 +2,12 @@
 <!DOCTYPE version SYSTEM "../../../lib/pkp/dtd/pluginVersion.dtd">
 
 <!--
-  * plugins/generic/carimbo-do-pdf/version.xml
+  * plugins/generic/folhaDeRostoDoPDF/version.xml
   *
   * Plugin version information.
   -->
 <version>
-	<application>carimbo-do-pdf</application>
+	<application>folhaDeRostoDoPDF</application>
 	<type>plugins.generic</type>
 	<release>1.0.0.0</release>
 	<date>2020-05-27</date>
