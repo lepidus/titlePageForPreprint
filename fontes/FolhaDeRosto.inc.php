@@ -26,7 +26,7 @@ class FolhaDeRosto {
         $folhaDeRosto->setPrintHeader(false);
         $folhaDeRosto->setPrintFooter(false);
         $folhaDeRosto->AddPage();
-        $folhaDeRosto->Image($this->logo, 'C', '', '35', '20', 'PNG', 'false', 'C', true, 400, 'C', false, false, 0, false, false, false);
+        $folhaDeRosto->Image($this->logo, '', '', '35', '20', 'PNG', 'false', 'C', true, 400, 'C', false, false, 0, false, false, false);
         $folhaDeRosto->Ln(25);
         $folhaDeRosto->SetFont('times', '', 11);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($this->submissão->obterStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
@@ -42,11 +42,11 @@ class FolhaDeRosto {
         $folhaDeRosto->SetFont('times', '', 10);
         $folhaDeRosto->Ln(5);
 
-        $texto = '';
+        $textoChecklist = '';
         foreach ($this->tradutor->obterCheckListTraduzida($this->locale) as $item) {
-            $texto = $texto. "<ul style=\"text-align:justify;\"><li>". $item . "</li></ul>";
+            $textoChecklist = $textoChecklist. "<ul style=\"text-align:justify;\"><li>". $item . "</li></ul>";
         }
-        $folhaDeRosto->writeHTMLCell(0, 0, '', '',$texto, 1, 1, false, true, 'JUSTIFY', false);
+        $folhaDeRosto->writeHTMLCell(0, 0, '', '',$textoChecklist, 1, 1, false, true, 'JUSTIFY', false);
         $folhaDeRosto->SetFont('times', '', 11);
         $folhaDeRosto->Ln(5);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.dateSubmitted', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->locale, $this->submissão->obterDataDeSubmissão()), '', 0, 'JUSTIFY', true, 0, false, false, 0);
@@ -63,7 +63,7 @@ class FolhaDeRosto {
         $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $copiaArquivoOriginal . ' ' . $arquivoModificado;
         shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
-        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
+        // $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
     }
     
     private function removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal) {
