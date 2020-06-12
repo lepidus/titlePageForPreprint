@@ -7,7 +7,7 @@ Plugin do OPS para criação de folha de rosto nos arquivos submetidos no servid
 ## Dependências para Desenvolvimento
 * [poppler-utils](https://poppler.freedesktop.org/)
 * [php-imagick](https://www.php.net/manual/pt_BR/imagick.compareimages.php)
-* [phpunit](https://phpunit.de/)
+* [phpunit](https://phpunit.de/) - em função dos testes
 
 ## Instalação para Desenvolvimento
 1. Clone o [repositório](https://gitlab.lepidus.com.br/softwares-pkp/plugins_ojs/carimbo-do-pdf);
