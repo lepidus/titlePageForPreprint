@@ -63,7 +63,7 @@ class FolhaDeRosto {
         $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $copiaArquivoOriginal . ' ' . $arquivoModificado;
         shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
-        // $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
+        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
     }
     
     private function removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal) {
