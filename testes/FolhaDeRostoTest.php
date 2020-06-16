@@ -63,7 +63,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         
         $this->converterPdfEmTexto($pdf);
 
-        $rótuloEsperado = "Lista de verificação da submissão:";
+        $rótuloEsperado = "Este preprint foi submetido sob as seguintes condições:";
         $resultadoDaProcuraRótulo = $this->procurarEmArquivoDeTexto($rótuloEsperado, $this->pdfComoTexto);
         $this->assertEquals($rótuloEsperado, $resultadoDaProcuraRótulo);
 
@@ -144,7 +144,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
         
         $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "Submission Requirements:";
+        $textoEsperado = "This preprint was submitted under the following conditions:";
         $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }

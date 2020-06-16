@@ -16,6 +16,8 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$success = parent::register($category, $path);
+		$this->addLocaleData();
+
 		if ($success && $this->getEnabled()) {
 			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRostoQuandoNecessario']);
 		}
