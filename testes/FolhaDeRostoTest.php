@@ -43,18 +43,6 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->assertEquals(2, $pdf->obterNúmeroDePáginas());
     }
 
-    public function testeInserçãoEmPdfExistenteCarimbaFolhaDeRostoComStatusDeSubmissão(): void {
-        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
-        $pdf = new Pdf($this->caminhoDoPdfTeste);
-        
-        $folhaDeRosto->inserir($pdf);
-        
-        $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "Situação: Em fila";
-        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
-        $this->assertEquals($textoEsperado, $resultadoDaProcura);
-    }
-
     public function testeInserçãoEmPdfExistenteCarimbaDoi(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdf = new Pdf($this->caminhoDoPdfTeste);
@@ -147,18 +135,6 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->imagensSãoIguais($imagemDoPdfOriginal, $imagemDoPdfComFolhaDeRosto);
         unlink($arquivoDaImagemDoPdfOriginal);
         unlink($arquivoDaImagemDoPdfComFolhaDeRosto);
-    }
-
-    public function testeCarimbaFolhaDeRostoComStatusDeSubmissãoTraduzidoParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão), $this->logo, "en_US", $this->tradutor);
-        $pdf = new Pdf($this->caminhoDoPdfTeste);
-        
-        $folhaDeRosto->inserir($pdf);
-        
-        $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "Status: Queued";
-        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
-        $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 
     public function testeCarimbaFolhaDeRostoComRótuloDeChecklistTraduzidaParaIdiomaDaComposição(): void {

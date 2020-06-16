@@ -29,8 +29,6 @@ class FolhaDeRosto {
         $folhaDeRosto->Image($this->logo, '', '', '35', '20', 'PNG', 'false', 'C', true, 400, 'C', false, false, 0, false, false, false);
         $folhaDeRosto->Ln(25);
         $folhaDeRosto->SetFont('times', '', 11);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($this->submissão->obterStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        $folhaDeRosto->SetFont('times', '', 18);
         $folhaDeRosto->Write(0, $this->tradutor->obterTítuloTraduzido($this->locale), '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->SetFont('times', '', 12);
         $folhaDeRosto->Write(0, $this->submissão->obterAutores(), '', 0, 'C', true, 0, false, false, 0);
