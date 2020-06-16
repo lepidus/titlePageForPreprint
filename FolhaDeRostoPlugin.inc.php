@@ -11,32 +11,34 @@ import('plugins.generic.folhaDeRostoDoPDF.fontes.TradutorPKP');
 import('lib.pkp.classes.file.SubmissionFileManager');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
-	private $passoParaInserirFolhaDeRosto = 4;
+	const PASSO_PARA_INSERIR_FOLHA_DE_ROSTO = 4;
 	const CAMINHO_DA_LOGO = "plugins/generic/folhaDeRostoDoPDF/recursos/preprint_pilot.png";
 
 	public function register($category, $path, $mainContextId = NULL) {
-		$success = parent::register($category, $path);
-		$this->addLocaleData();
-
-		if ($success && $this->getEnabled()) {
+		$pluginRegistrado = parent::register($category, $path);
+		
+		if ($pluginRegistrado && $this->getEnabled()) {
 			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRostoQuandoNecessario']);
 		}
-		return $success;
+		return $pluginRegistrado;
 	}
 
 	public function getDisplayName() {
-		return 'FolhaDeRostoPlugin';
+		return 'FolhaDeRostoDoPDF';
 	}
 
 	public function getDescription() {
-		return 'FolhaDeRostoPlugin';
+		return 'FolhaDeRostoDoPDF';
 	}
 
-	public function inserirFolhaDeRostoQuandoNecessario($nomeDoGancho, $args) {
-		$passo = $args[0];
+	public function inserirFolhaDeRostoQuandoNecessario($nomeDoGancho, $argumentos) {
+		$passoDaSubmissão = $argumentos[0];
 		
-		if ($passo == $this->passoParaInserirFolhaDeRosto) {
-			$prensa = $this->obterPrensaDeSubmissões($args[1],  $args[2]);
+		if ($passoDaSubmissão == self::PASSO_PARA_INSERIR_FOLHA_DE_ROSTO) {
+			$this->addLocaleData("pt_BR");
+			$this->addLocaleData("en_US");
+			$this->addLocaleData("es_ES");
+			$prensa = $this->obterPrensaDeSubmissões($argumentos[1],  $argumentos[2]);
 			$prensa->inserirFolhasDeRosto();
 		}
 	}
