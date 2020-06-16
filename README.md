@@ -1,12 +1,12 @@
 # FolhaDeRostoPlugin
-Plugin do OPS para criação de folha de rosto nos arquivos submetidos no servidor Scielo.
+Plugin do OPS para criação de folha de rosto nos arquivos PDF submetidos no servidor Scielo.
 
 ## Dependências de Instalação 
 * [poppler-utils](https://poppler.freedesktop.org/)
 
 ## Como utilizar 
 1. Instale a dependência poppler-utils
-2. Adicione o plugin pelo painel de controle do Administrador do servidor (no arquivo php.ini verifique as variáveis: upload_max_filesize e post_max_size mude para igual ou maior que 37M) ou descompacte o arquivo no diretório `plugins/generic/`
+2. Adicione o plugin pelo painel de controle do Administrador do servidor. Caso o OPS informe erro com o tamanho do arquivo, confira a configuração do php.ini com relação as variáveis: upload_max_filesize e post_max_size, cujo valor deve ser de pelo menos 17M). Ou descompacte o plugin no diretório `plugins/generic/`, neste caso não é necessário ajuste em arquivos de configuração do PHP.
 3. Ative o plugin no painel de controle
 
 ## Dependências para Desenvolvimento
