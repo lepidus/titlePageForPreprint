@@ -24,16 +24,12 @@ class TradutorPKP implements Tradutor {
         }
         return $checklist;
     }
-
     public function obterTítuloTraduzido($locale){
         return $this->submissão->getTitle($locale);
     }
-    public function obterDataTraduzida($locale, $data){
-        if($locale == 'en_US'){
-            return date("m-d-Y", strtotime($data));
-        }
-        else{
-            return date("d-m-Y", strtotime($data));
-        }
+
+    public function obterDataTraduzida($data){
+        $dateFormatShort = Config::getVar('general', 'date_format_short');
+        return strftime($dateFormatShort, $data);
     }
 }

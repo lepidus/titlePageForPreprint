@@ -11,7 +11,7 @@ import('plugins.generic.folhaDeRostoDoPDF.fontes.TradutorPKP');
 import('lib.pkp.classes.file.SubmissionFileManager');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
-	const PASSO_PARA_INSERIR_FOLHA_DE_ROSTO = 2;
+	const PASSO_PARA_INSERIR_FOLHA_DE_ROSTO = 4;
 	const CAMINHO_DA_LOGO = "plugins/generic/folhaDeRostoDoPDF/recursos/preprint_pilot.png";
 
 	public function register($category, $path, $mainContextId = NULL) {
@@ -26,6 +26,8 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 	public function getDisplayName() {
 		return 'FolhaDeRostoDoPDF';
 	}
+	
+
 
 	public function getDescription() {
 		return 'FolhaDeRostoDoPDF';
@@ -56,7 +58,8 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$doi = $submissão->getStoredPubId('doi');
 		$status = $submissão->getStatusKey();
 		$autores = $submissão->getAuthorString();
-		$dataDeSubmissão = $submissão->getData('lastModified');
+		$dataDeSubmissão = strtotime($submissão->getData('lastModified'));
+
 		
 		$contexto = $formulário->context;
 
