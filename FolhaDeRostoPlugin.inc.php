@@ -11,7 +11,7 @@ import('plugins.generic.folhaDeRostoDoPDF.fontes.TradutorPKP');
 import('lib.pkp.classes.file.SubmissionFileManager');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
-	const PASSO_PARA_INSERIR_FOLHA_DE_ROSTO = 4;
+	const PASSO_PARA_INSERIR_FOLHA_DE_ROSTO = 2;
 	const CAMINHO_DA_LOGO = "plugins/generic/folhaDeRostoDoPDF/recursos/preprint_pilot.png";
 
 	public function register($category, $path, $mainContextId = NULL) {
