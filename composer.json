@@ -1,5 +1,5 @@
 {
     "require" : {
-    "tecnick.com/tcpdf" : "6.3.5"
+    "tecnickcom/tcpdf": "6.3.5"
     }
 }

@@ -43,18 +43,6 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->assertEquals(2, $pdf->obterNúmeroDePáginas());
     }
 
-    public function testeInserçãoEmPdfExistenteCarimbaDoi(): void {
-        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
-        $pdf = new Pdf($this->caminhoDoPdfTeste);
-        
-        $folhaDeRosto->inserir($pdf);
-        
-        $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "DOI: " . $this->doi;
-        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
-        $this->assertEquals($textoEsperado, $resultadoDaProcura);
-    }
-
     public function testeInserçãoEmPdfExistenteCarimbaChecklist(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdf = new Pdf($this->caminhoDoPdfTeste);
