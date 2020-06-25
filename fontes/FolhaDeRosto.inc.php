@@ -28,7 +28,7 @@ class FolhaDeRosto {
         $folhaDeRosto->AddPage();
         $folhaDeRosto->Image($this->logo, '', '', '35', '20', 'PNG', 'false', 'C', true, 400, 'C', false, false, 0, false, false, false);
         $folhaDeRosto->Ln(25);
-        $fontname = TCPDF_FONTS::addTTFfont('recursos/opensans.ttf', 'TrueTypeUnicode', '', 32);
+        $fontname = TCPDF_FONTS::addTTFfont(__DIR__.'/../recursos/opensans.ttf', 'TrueTypeUnicode', '', 32);
         $folhaDeRosto->SetFont($fontname, '', 18, '', false);
         $folhaDeRosto->Write(0, $this->tradutor->obterTítuloTraduzido($this->locale), '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->SetFont($fontname, '', 12, '', false);
