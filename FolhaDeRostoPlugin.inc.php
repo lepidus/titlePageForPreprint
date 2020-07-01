@@ -19,6 +19,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		
 		if ($pluginRegistrado && $this->getEnabled()) {
 			HookRegistry::register('SubmissionHandler::saveSubmit', [$this, 'inserirFolhaDeRostoQuandoNecessario']);
+			HookRegistry::register('Publication::publish::before', [$this, 'inserirFolhaDeRostoQuandoPublicar']);
 		}
 		return $pluginRegistrado;
 	}
@@ -43,6 +44,13 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 			$prensa = $this->obterPrensaDeSubmissões($argumentos[1],  $argumentos[2]);
 			$prensa->inserirFolhasDeRosto();
 		}
+	}
+
+	public function inserirFolhaDeRostoQuandoPublicar($nomeDoGancho, $argumentos){
+		$publicação = $argumentos[0];
+		$submissão = Services::get('submission')->get($publicação->getData('submissionId'));
+		$contextDao = Application::getContextDAO();
+		$contexto = $contextDao->getById($submissão->getContextId());
 	}
 
 	public function criaNovaRevisão($composição, $submissão){
