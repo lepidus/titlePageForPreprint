@@ -27,8 +27,6 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 	public function getDisplayName() {
 		return 'FolhaDeRostoDoPDF';
 	}
-	
-
 
 	public function getDescription() {
 		return 'FolhaDeRostoDoPDF';
@@ -39,19 +37,6 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$submissão = Services::get('submission')->get($publicação->getData('submissionId'));
 		$contextDao = Application::getContextDAO();
 		$contexto = $contextDao->getById($submissão->getContextId());
-
-		$galleySettingsDAO = new PublicGalleySettingsDAO();
-		DAORegistry::registerDAO('PublicGalleySettingsDAO', $galleySettingsDAO);
-
-		$composições = $submissão->getGalleys();
-		
-		foreach ($composições as $composição) {
-			$id = $composição->getId();
-			error_log('id: '. $id);
-			$galleySettingsDAO->updateSetting($id, 'folhaDeRosto', 'sim', 'string', false);
-			error_log("funfou");
-		}
-
 		$this->addLocaleData("pt_BR");
 		$this->addLocaleData("en_US");
 		$this->addLocaleData("es_ES");
@@ -74,11 +59,16 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$autores = $submissão->getAuthorString();
 		$dataDeSubmissão = strtotime($submissão->getData('lastModified'));
 
+		$galleySettingsDAO = new PublicGalleySettingsDAO();
+		DAORegistry::registerDAO('PublicGalleySettingsDAO', $galleySettingsDAO);
 
 		foreach ($composições as $composição) {
 			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
-			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale());
-		}
-			return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
+			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId());
+			error_log($novaRevisão->getId());
+			error_log($galleySettingsDAO->verificaExistencia($novaRevisão->getId()));
+
+		} 
+		return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
 	}
 }

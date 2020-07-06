@@ -23,15 +23,21 @@ class PublicGalleySettingsDAO extends DAO{
 	protected function _getCacheName() {
 		return 'publicationGalleySettings';
 	}
-	
+
+    function verificaExistencia($id) {
+		$result = $this->retrieve(
+			'SELECT * FROM publication_galley_settings WHERE galley_id = ?',
+			array((int) $id)
+		);
+
+		if($result) return true;
+		else return false;
+	}
+
     function updateSetting($id, $name, $value, $type = null, $isLocalized = false) {
 		$keyFields = array('setting_name', 'locale', $this->_getPrimaryKeyColumn());
 		if (!$isLocalized) {
 			$value = $this->convertToDB($value, $type);
-			error_log("valor da conversão: ". $value);
-			error_log("nome da tabela: ". $this->_getTableName());
-			error_log("nome da chave primária: ". $this->_getPrimaryKeyColumn());
-
 			
 			$this->replace($this->_getTableName(),
 				array(
@@ -42,18 +48,17 @@ class PublicGalleySettingsDAO extends DAO{
 				),
 				$keyFields
 			);
-			error_log("passou o replace");
+
 
 		} else {
 			if (is_array($value)) foreach ($value as $locale => $localeValue) {
 				$this->update('DELETE FROM ' . $this->_getTableName() . ' WHERE ' . $this->_getPrimaryKeyColumn() . ' = ? AND setting_name = ? AND locale = ?', array($id, $name, $locale));
 				if (empty($localeValue)) continue;
-				$type = null;
 				$this->update('INSERT INTO ' . $this->_getTableName() . '
-					(' . $this->_getPrimaryKeyColumn() . ', setting_name, setting_value, setting_type, locale)
-					VALUES (?, ?, ?, ?, ?)',
+					(' . $this->_getPrimaryKeyColumn() . ', setting_name, setting_value, locale)
+					VALUES (?, ?, ?, ?)',
 					array(
-						$id, $name, $this->convertToDB($localeValue, $type), $type, $locale
+						$id, $name, $this->convertToDB($localeValue, $type), $locale
 					)
 				);
 			}

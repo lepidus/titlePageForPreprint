@@ -18,6 +18,11 @@ class PrensaDeSubmissoes {
            if (Pdf::éPdf($composição->arquivo)) {
                $pdf = new Pdf($composição->arquivo);
                $folhaDeRosto->inserir($pdf);
+               $galleySettingsDAO = new PublicGalleySettingsDAO();
+                
+               DAORegistry::registerDAO('PublicGalleySettingsDAO', $galleySettingsDAO);
+               $id = $composição->identificador;
+               $galleySettingsDAO->updateSetting($id, 'folhaDeRosto', 'sim', 'string', false);
            }
        }   
     }
