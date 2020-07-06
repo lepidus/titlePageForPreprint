@@ -9,6 +9,7 @@ import('plugins.generic.folhaDeRostoDoPDF.fontes.FolhaDeRosto');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Tradutor');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.TradutorPKP');
 import('lib.pkp.classes.file.SubmissionFileManager');
+import('plugins.generic.folhaDeRostoDoPDF.classes.PublicGalleySettingsDAO');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
 	const PASSO_PARA_INSERIR_FOLHA_DE_ROSTO = 4;
@@ -38,6 +39,18 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$submissão = Services::get('submission')->get($publicação->getData('submissionId'));
 		$contextDao = Application::getContextDAO();
 		$contexto = $contextDao->getById($submissão->getContextId());
+
+		$galleySettingsDAO = new PublicGalleySettingsDAO();
+		DAORegistry::registerDAO('PublicGalleySettingsDAO', $galleySettingsDAO);
+
+		$composições = $submissão->getGalleys();
+		
+		foreach ($composições as $composição) {
+			$id = $composição->getId();
+			error_log('id: '. $id);
+			$galleySettingsDAO->updateSetting($id, 'folhaDeRosto', 'sim', 'string', false);
+			error_log("funfou");
+		}
 
 		$this->addLocaleData("pt_BR");
 		$this->addLocaleData("en_US");
