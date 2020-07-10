@@ -15,14 +15,9 @@ class PrensaDeSubmissoes {
        foreach($this->submissão->obterComposições() as $composição){
            $folhaDeRosto = new FolhaDeRosto($this->submissão, $this->logoParaFolhaDeRosto, $composição->locale, $this->tradutor);
 
-           if (Pdf::éPdf($composição->arquivo)) {
+           if (Pdf::éPdf($composição->arquivo)) {               
                $pdf = new Pdf($composição->arquivo);
                $folhaDeRosto->inserir($pdf);
-               $galleySettingsDAO = new PublicGalleySettingsDAO();
-                
-               DAORegistry::registerDAO('PublicGalleySettingsDAO', $galleySettingsDAO);
-               $id = $composição->identificador;
-               $galleySettingsDAO->updateSetting($id, 'folhaDeRosto', 'sim', 'string', false);
            }
        }   
     }

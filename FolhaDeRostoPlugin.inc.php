@@ -3,13 +3,13 @@
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Submissao');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Composicao');
-import('plugins.generic.folhaDeRostoDoPDF.fontes.PrensaDeSubmissoes');
+import('plugins.generic.folhaDeRostoDoPDF.fontes.PrensaDeSubmissoesPKP');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Pdf');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.FolhaDeRosto');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Tradutor');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.TradutorPKP');
+import('plugins.generic.folhaDeRostoDoPDF.fontes.SubmissionFileSettingsDAO');
 import('lib.pkp.classes.file.SubmissionFileManager');
-import('plugins.generic.folhaDeRostoDoPDF.classes.PublicGalleySettingsDAO');
 
 class FolhaDeRostoPlugin extends GenericPlugin {
 	const PASSO_PARA_INSERIR_FOLHA_DE_ROSTO = 4;
@@ -46,6 +46,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 
 	public function criaNovaRevisão($composição, $submissão){
 		$arquivoDaSubmissão = $composição->getFile();
+
 		$gerenciadorDeArquivosDeSubmissão = new SubmissionFileManager($submissão->getContextId(), $submissão->getId());
 		$resultadoDaCópia = $gerenciadorDeArquivosDeSubmissão->copyFileToFileStage($composição->getFileId(), $arquivoDaSubmissão->getRevision(), $arquivoDaSubmissão->getFileStage(), $composição->getFileId(), true);
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
@@ -58,17 +59,20 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$status = $submissão->getStatusKey();
 		$autores = $submissão->getAuthorString();
 		$dataDeSubmissão = strtotime($submissão->getData('lastModified'));
-
-		$galleySettingsDAO = new PublicGalleySettingsDAO();
-		DAORegistry::registerDAO('PublicGalleySettingsDAO', $galleySettingsDAO);
-
+		
 		foreach ($composições as $composição) {
-			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
-			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId());
-			error_log($novaRevisão->getId());
-			error_log($galleySettingsDAO->verificaExistencia($novaRevisão->getId()));
+			$arquivoDaSubmissão = $composição->getFile();
+			$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+			$revisao = $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
+			error_log("Revisão antes de criar " . $revisao->getRevision());
 
+			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
+			$revisao = $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
+			
+			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId(), $revisao->getRevision());
+			
+			error_log("Revisão depois de criar " . $revisao->getRevision());
 		} 
-		return new PrensaDeSubmissoes(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
+		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
 	}
 }

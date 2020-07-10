@@ -62,17 +62,40 @@ class FolhaDeRosto {
         $comandoParaJuntar = 'pdfunite '.  $arquivoDaFolhaDeRosto . ' '. $copiaArquivoOriginal . ' ' . $arquivoModificado;
         shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
-        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal);
+        $this->removerArquivosTemporários($arquivoDaFolhaDeRosto);
+        $this->removerArquivosTemporários($copiaArquivoOriginal);
     }
     
-    private function removerArquivosTemporários($arquivoDaFolhaDeRosto, $copiaArquivoOriginal) {
-        unlink($arquivoDaFolhaDeRosto);
-        unlink($copiaArquivoOriginal);
+    private function removerArquivosTemporários($arquivo) {
+        unlink($arquivo);
     }
 
     public function inserir(pdf $pdf): void {
         $arquivoDaFolhaDeRosto = $this->gerarFolhaDeRosto();
         $this->concatenarFolhaDeRosto($arquivoDaFolhaDeRosto, $pdf);
     }
+
+    public function remover(pdf $pdf): void {
+        $comandoParaSeparar = 'pdfseparate -f 2 '. $pdf->obterCaminho() . ' %d.pdf';
+        $comandoParaJuntar = 'pdfunite ';
+        $arquivoModificado = self::DIRETORIO_DE_SAIDA . "semFolhaDeRosto.pdf";
+        $paginas = $pdf->obterNúmeroDePáginas();
+        
+        for ($i = 2; $i <= $paginas; $i++){
+            $comandoParaJuntar = $comandoParaJuntar . $i .'.pdf ';
+        }
+        
+        $comandoParaJuntar = $comandoParaJuntar . $arquivoModificado;
+        
+        shell_exec($comandoParaSeparar);
+        shell_exec($comandoParaJuntar);
+
+        rename($arquivoModificado, $pdf->obterCaminho());
+
+        for ($i = 2; $i <= $paginas; $i++){
+            $this->removerArquivosTemporários( $i .'.pdf');
+        }
+    }
+
 }
 ?>

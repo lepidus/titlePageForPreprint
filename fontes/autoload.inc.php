@@ -11,10 +11,12 @@ spl_autoload_register(
                 'folhaderosto' => '/FolhaDeRosto.inc.php',
                 'pdf' => '/Pdf.inc.php',
                 'prensadesubmissoes' => '/PrensaDeSubmissoes.inc.php',
+                'prensadesubmissoespkp' => '/PrensaDeSubmissoesPKP.inc.php',
                 'submissao' => '/Submissao.inc.php',
                 'tradutor' => '/Tradutor.inc.php',
                 'tradutorparatestes' => '/TradutorParaTestes.inc.php',
-                'tradutorpkp' => '/TradutorPKP.inc.php'
+                'tradutorpkp' => '/TradutorPKP.inc.php',
+                'submissionfilesettingsdao' => '/SubmissionFileSettingsDAO.inc.php'
             );
         }
         $cn = strtolower($class);

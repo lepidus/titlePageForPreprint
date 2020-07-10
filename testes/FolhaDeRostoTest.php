@@ -43,6 +43,14 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->assertEquals(2, $pdf->obterNúmeroDePáginas());
     }
 
+    public function testeEmPdfExistenteRemoçãoDePágina(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        $folhaDeRosto->inserir($pdf);
+        $folhaDeRosto->remover($pdf);
+        $this->assertEquals(1, $pdf->obterNúmeroDePáginas());
+    }
+
     public function testeInserçãoEmPdfExistenteCarimbaChecklist(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdf = new Pdf($this->caminhoDoPdfTeste);
