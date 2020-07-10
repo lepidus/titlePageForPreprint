@@ -11,6 +11,14 @@ class PrensaDeSubmissoesPKP {
         $this->tradutor = $tradutor;
     }
 
+    public function inserirNoBanco($id, $json){
+        $fileSettingsDAO = new SubmissionFileSettingsDAO(); 
+        DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
+        
+        $fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'sim', 'string', false);
+        $fileSettingsDAO->updateSetting($id, 'revisoes', $json, 'JSON', false);
+    }
+
     public function inserirFolhasDeRosto(): void {
        foreach($this->submissão->obterComposições() as $composição){
            $folhaDeRosto = new FolhaDeRosto($this->submissão, $this->logoParaFolhaDeRosto, $composição->locale, $this->tradutor);
@@ -22,21 +30,22 @@ class PrensaDeSubmissoesPKP {
                $pdf = new Pdf($composição->arquivo);
                $id = $composição->identificador;
                $revisão = $composição->revisão;
-
-               $revisoes = $fileSettingsDAO->getSetting($id, 'revisoes');
-               $revisoes = json_decode($revisoes);
-               array_push($revisoes, $revisão);
-               $objJSON = json_encode($revisoes);
-               
-               $fileSettingsDAO->updateSetting($id, 'revisoes', $objJSON, 'JSON', false);
                
                $setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
+               $revisões = '[]';
                
-               if($setting == 'sim'){
-                   error_log("Já tem folha de rosto");
-                //    $folhaDeRosto->remover($pdf);
-                //    $folhaDeRosto->inserir($pdf);
-               }
+                if($setting == 'sim'){     
+                    $revisões = $fileSettingsDAO->getSetting($id, 'revisoes');
+                    $folhaDeRosto->remover($pdf);
+                }
+                
+                $revisões = json_decode($revisões);
+                array_push($revisões, $revisão);
+                $revisõesJSON = json_encode($revisões);
+
+                $folhaDeRosto->inserir($pdf);
+
+                $this-> inserirNoBanco($id, $revisõesJSON);
            }
        }   
     }
