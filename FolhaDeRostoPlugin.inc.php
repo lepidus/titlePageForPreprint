@@ -63,9 +63,26 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		foreach ($composições as $composição) {
 			$arquivoDaSubmissão = $composição->getFile();
 			$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-			$revisao = $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
+
+			$id = $arquivoDaSubmissão->getFileId();
+			$revisao = $submissionFileDao->getLatestRevision($id);
 			error_log("Revisão antes de criar " . $revisao->getRevision());
 			
+			$fileSettingsDAO = new SubmissionFileSettingsDAO(); 
+			DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
+			
+			$setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
+
+			if($setting){
+				error_log("id no banco: ". $id);
+				$revisões = $fileSettingsDAO->getSetting($id, 'revisoes');
+				$revisões = json_decode($revisões);
+			}
+			else{
+				error_log("id n tá no banco: ". $id);
+			}
+
+
 			//////////////////////////////////////////////////////////////
 
 			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
