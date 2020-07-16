@@ -66,32 +66,27 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 
 			$id = $arquivoDaSubmissão->getFileId();
 			$revisao = $submissionFileDao->getLatestRevision($id);
-			error_log("Revisão antes de criar " . $revisao->getRevision());
-			
+
 			$fileSettingsDAO = new SubmissionFileSettingsDAO(); 
 			DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
 			
 			$setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
-
+			
 			if($setting){
-				error_log("id no banco: ". $id);
 				$revisões = $fileSettingsDAO->getSetting($id, 'revisoes');
 				$revisões = json_decode($revisões);
-			}
-			else{
-				error_log("id n tá no banco: ". $id);
-			}
 
-
-			//////////////////////////////////////////////////////////////
+				if($revisao->getRevision() != end($revisões)){
+					$fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'nao');
+				}
+			}
 
 			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
 			$revisao = $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
-			
+
 			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId(), $revisao->getRevision());
 			
-			error_log("Revisão depois de criar " . $revisao->getRevision());
-		} 
+		}
 		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
 	}
 }
