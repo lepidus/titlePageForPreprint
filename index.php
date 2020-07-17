@@ -13,5 +13,5 @@
  * @brief Wrapper for the Plugin Template plugin.
  *
  */
-require_once('CarimboDoPdfPlugin.inc.php');
-return new CarimboDoPdfPlugin();
+require_once('FolhaDeRostoPlugin.inc.php');
+return new FolhaDeRostoPlugin();
