@@ -75,26 +75,33 @@ class FolhaDeRosto {
         $this->concatenarFolhaDeRosto($arquivoDaFolhaDeRosto, $pdf);
     }
 
-    public function remover(pdf $pdf): void {
+    private function removerPrimeiraPagina(pdf $pdf) {
         $comandoParaSeparar = 'pdfseparate -f 2 '. $pdf->obterCaminho() . ' %d.pdf';
+        shell_exec($comandoParaSeparar);
+    }
+
+    private function juntarDemaisPaginas(pdf $pdf) {
         $comandoParaJuntar = 'pdfunite ';
         $arquivoModificado = self::DIRETORIO_DE_SAIDA . "semFolhaDeRosto.pdf";
+        $pagInicial = 2;
         $paginas = $pdf->obterNúmeroDePáginas();
-        
-        for ($i = 2; $i <= $paginas; $i++){
-            $comandoParaJuntar = $comandoParaJuntar . $i .'.pdf ';
-        }
-        
-        $comandoParaJuntar = $comandoParaJuntar . $arquivoModificado;
-        
-        shell_exec($comandoParaSeparar);
-        shell_exec($comandoParaJuntar);
 
+        for ($i = $pagInicial; $i <= $paginas; $i++){
+            $comandoParaJuntar .= ($i .'.pdf ');
+        }
+
+        $comandoParaJuntar .= $arquivoModificado;
+        shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
 
-        for ($i = 2; $i <= $paginas; $i++){
+        for ($i = $pagInicial; $i <= $paginas; $i++){
             $this->removerArquivosTemporários( $i .'.pdf');
         }
+    }
+
+    public function remover(pdf $pdf): void {
+        $this->removerPrimeiraPagina($pdf);
+        $this->juntarDemaisPaginas($pdf);
     }
 
 }

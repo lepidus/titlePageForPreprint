@@ -32,7 +32,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		return 'FolhaDeRostoDoPDF';
 	}
 
-	public function inserirFolhaDeRostoQuandoPublicar($nomeDoGancho, $argumentos){
+	public function inserirFolhaDeRostoQuandoPublicar($nomeDoGancho, $argumentos) {
 		$publicação = $argumentos[0];
 		$submissão = Services::get('submission')->get($publicação->getData('submissionId'));
 		$contextDao = Application::getContextDAO();
@@ -44,7 +44,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$prensa->inserirFolhasDeRosto();
 	}
 
-	public function criaNovaRevisão($composição, $submissão){
+	public function criaNovaRevisão($composição, $submissão) {
 		$arquivoDaSubmissão = $composição->getFile();
 
 		$gerenciadorDeArquivosDeSubmissão = new SubmissionFileManager($submissão->getContextId(), $submissão->getId());
@@ -72,11 +72,11 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 			
 			$setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
 			
-			if($setting){
+			if($setting) {
 				$revisões = $fileSettingsDAO->getSetting($id, 'revisoes');
 				$revisões = json_decode($revisões);
 
-				if($revisao->getRevision() != end($revisões)){
+				if($revisao->getRevision() != end($revisões)) {
 					$fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'nao');
 				}
 			}
