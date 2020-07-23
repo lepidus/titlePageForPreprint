@@ -3,6 +3,7 @@
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Submissao');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Composicao');
+import('plugins.generic.folhaDeRostoDoPDF.fontes.PrensaDeSubmissoes');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.PrensaDeSubmissoesPKP');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.Pdf');
 import('plugins.generic.folhaDeRostoDoPDF.fontes.FolhaDeRosto');
