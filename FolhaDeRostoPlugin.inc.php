@@ -57,9 +57,12 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 	private function obterPrensaDeSubmissões($submissão, $contexto) {
 		$composições = $submissão->getGalleys();
 		$doi = $submissão->getStoredPubId('doi');
-		$status = $submissão->getStatusKey();
 		$autores = $submissão->getAuthorString();
 		$dataDeSubmissão = strtotime($submissão->getData('lastModified'));
+		
+		$publicacao = $submissão->getCurrentPublication();
+		$status = $publicacao->getData('relationStatus');
+		$dataDePublicacao = strtotime($publicacao->getData('datePublished'));
 		
 		foreach ($composições as $composição) {
 			$arquivoDaSubmissão = $composição->getFile();
@@ -88,6 +91,6 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId(), $revisao->getRevision());
 			
 		}
-		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
+		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $dataDePublicacao, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
 	}
 }

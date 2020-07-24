@@ -29,6 +29,20 @@ class FolhaDeRosto {
         $folhaDeRosto->Image($this->logo, '', '', '35', '20', 'PNG', 'false', 'C', true, 400, 'C', false, false, 0, false, false, false);
         $folhaDeRosto->Ln(25);
         $fontname = TCPDF_FONTS::addTTFfont(__DIR__.'/../recursos/opensans.ttf', 'TrueTypeUnicode', '', 32);
+        
+        if($this->submissão->obterStatus()) {
+            $relacoes = Services::get('publication')->getRelationOptions();
+            $status = $this->submissão->obterStatus();
+            foreach($relacoes as $relacao) {
+                if($status == $relacao['value']) {
+                    $folhaDeRosto->SetFont($fontname, '', 10, '', false);
+                    $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $relacao['label'], '', 0, 'JUSTIFY', true, 0, false, false, 0);
+                    $folhaDeRosto->Ln(5);
+                    break;
+                }
+            }
+        }
+        
         $folhaDeRosto->SetFont($fontname, '', 18, '', false);
         $folhaDeRosto->Write(0, $this->tradutor->obterTítuloTraduzido($this->locale), '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->SetFont($fontname, '', 12, '', false);
@@ -49,6 +63,7 @@ class FolhaDeRosto {
         $folhaDeRosto->SetFont($fontname, '', 11, '', false);
         $folhaDeRosto->Ln(5);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.dateSubmitted', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDeSubmissão()), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('search.date', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDePublicação()), '', 0, 'JUSTIFY', true, 0, false, false, 0);
       
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
