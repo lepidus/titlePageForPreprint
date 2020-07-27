@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 class SubmissaoTest extends TestCase {
 
     
-    private $status = 1;
+    private $status = "publication.relation.none";
     private $doi = "10.1000/182";
     private $autores = "Clarice Linspector, Atila Iamarino";
     private $dataDeSubmissão = "10/06/2020";

@@ -30,18 +30,9 @@ class FolhaDeRosto {
         $folhaDeRosto->Ln(25);
         $fontname = TCPDF_FONTS::addTTFfont(__DIR__.'/../recursos/opensans.ttf', 'TrueTypeUnicode', '', 32);
         
-        if($this->submissão->obterStatus()) {
-            $relacoes = array(1 => 'publication.relation.none', 2 => 'publication.relation.submitted', 3 => 'publication.relation.published');
-            $status = $this->submissão->obterStatus();
-            foreach($relacoes as $chave => $texto) {
-                if($status == $chave) {
-                    $folhaDeRosto->SetFont($fontname, '', 10, '', false);
-                    $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($texto, $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-                    $folhaDeRosto->Ln(5);
-                    break;
-                }
-            }
-        }
+        $folhaDeRosto->SetFont($fontname, '', 10, '', false);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($this->submissão->obterStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $folhaDeRosto->Ln(5);
         
         $folhaDeRosto->SetFont($fontname, '', 18, '', false);
         $folhaDeRosto->Write(0, $this->tradutor->obterTítuloTraduzido($this->locale), '', 0, 'C', true, 0, false, false, 0);

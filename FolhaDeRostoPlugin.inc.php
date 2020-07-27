@@ -61,8 +61,11 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$dataDeSubmissão = strtotime($submissão->getData('lastModified'));
 		
 		$publicacao = $submissão->getCurrentPublication();
-		$status = $publicacao->getData('relationStatus');
 		$dataDePublicacao = strtotime($publicacao->getData('datePublished'));
+		
+		$status = $publicacao->getData('relationStatus');
+		$relacoes = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
+		$status = ($status) ? ($relacoes[$status]) : ("");
 		
 		foreach ($composições as $composição) {
 			$arquivoDaSubmissão = $composição->getFile();
