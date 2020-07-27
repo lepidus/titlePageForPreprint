@@ -5,14 +5,15 @@ use PHPUnit\Framework\TestCase;
 class SubmissaoTest extends TestCase {
 
     
-    private $status = 'submissions.queued';
+    private $status = 1;
     private $doi = "10.1000/182";
     private $autores = "Clarice Linspector, Atila Iamarino";
     private $dataDeSubmissão = "10/06/2020";
+    private $dataDePublicação = "12/06/2020";
     private $composições = array();
     
     private function obterSubmissãoParaTeste() {
-        return new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->composições);
+        return new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação, $this->composições);
     }
 
     public function testeTemStatusDeSubmissão(): void {
@@ -26,7 +27,7 @@ class SubmissaoTest extends TestCase {
     }
 
     public function testeDoiNãoInformado(): void {
-        $submissão = new Submissao($this->status, null, $this->autores, $this->dataDeSubmissão, $this->composições);
+        $submissão = new Submissao($this->status, null, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação, $this->composições);
         $this->assertEquals("Não informado", $submissão->obterDOI());
     }
 
@@ -43,6 +44,11 @@ class SubmissaoTest extends TestCase {
     public function testeDataDeSubmissão(): void {
         $submissão = $this->obterSubmissãoParaTeste();
         $this->assertEquals($this->dataDeSubmissão, $submissão->obterDataDeSubmissão());
+    }
+
+    public function testeDataDePublicação(): void {
+        $submissão = $this->obterSubmissãoParaTeste();
+        $this->assertEquals($this->dataDePublicação, $submissão->obterDataDePublicação());
     }
 }
 ?>

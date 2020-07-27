@@ -31,12 +31,12 @@ class FolhaDeRosto {
         $fontname = TCPDF_FONTS::addTTFfont(__DIR__.'/../recursos/opensans.ttf', 'TrueTypeUnicode', '', 32);
         
         if($this->submissão->obterStatus()) {
-            $relacoes = Services::get('publication')->getRelationOptions();
+            $relacoes = array(1 => 'publication.relation.none', 2 => 'publication.relation.submitted', 3 => 'publication.relation.published');
             $status = $this->submissão->obterStatus();
-            foreach($relacoes as $relacao) {
-                if($status == $relacao['value']) {
+            foreach($relacoes as $chave => $texto) {
+                if($status == $chave) {
                     $folhaDeRosto->SetFont($fontname, '', 10, '', false);
-                    $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $relacao['label'], '', 0, 'JUSTIFY', true, 0, false, false, 0);
+                    $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($texto, $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
                     $folhaDeRosto->Ln(5);
                     break;
                 }
