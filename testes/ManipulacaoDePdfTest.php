@@ -3,7 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 class ManipulacaoDePdfTest extends TestCase {
 
-    protected $status = 'submissions.queued';
+    protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";
     protected $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png";
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
@@ -11,6 +11,7 @@ class ManipulacaoDePdfTest extends TestCase {
     protected $titulo = "Assim Falou Zaratustra";
     protected $autores = "Cleide Silva; João Carlos";
     protected $dataDeSubmissão = "31/06/2020";
+    protected $dataDePublicação = "02/07/2020";
     protected $tradutor;
 
     protected function setUp(): void {

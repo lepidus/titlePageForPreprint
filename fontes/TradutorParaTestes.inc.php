@@ -6,19 +6,25 @@ class TradutorParaTestes implements Tradutor {
 
     public function __construct() {
         $this->mapeamentoDeIdiomas["en_US"] = array("common.status" => "Status",
-                                                    "submissions.queued" => "Queued",
+                                                    "publication.relation.none" => "Preprint has not been submitted for publication",
+                                                    "publication.relation.submitted" => "Preprint has been submitted for publication in journal",
+                                                    "publication.relation.published" => "Preprint has been published in a journal as an article",
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist" => "This preprint was submitted under the following conditions",
                                                     "common.dateSubmitted" => "Date submitted",
+                                                    "search.date" => "Publication Date",
                                                     "item1CheckList" => "The submission has not been previously published.",
                                                     "item2CheckList" => "Where available, URLs for the references have been provided.",
                                                     "titulo" => "So spoke Zaratustra");
 
         $this->mapeamentoDeIdiomas["pt_BR"] = array("common.status" => "Situação",
-                                                    "submissions.queued" => "Em fila",
+                                                    "publication.relation.none" => "O preprint não foi submetido para publicação",
+                                                    "publication.relation.submitted" => "O preprint foi submetido para publicação em um periódico",
+                                                    "publication.relation.published" => "O preprint foi publicado em um periódico como um artigo",
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist" => "Este preprint foi submetido sob as seguintes condições",
                                                     "common.dateSubmitted" => "Data de submissão",
+                                                    "search.date" => "Data de publicação",
                                                     "item1CheckList" => "A submissão não foi publicado anteriormente.",
                                                     "item2CheckList" => "As URLs das referências foram fornecidas.",
                                                     "titulo" => "Assim Falou Zaratustra");

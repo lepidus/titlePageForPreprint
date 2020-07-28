@@ -9,7 +9,7 @@
 <version>
 	<application>folhaDeRostoDoPDF</application>
 	<type>plugins.generic</type>
-	<release>1.0.0.0</release>
+	<release>1.1.0.0</release>
 	<date>2020-05-27</date>
 	<lazy-load>1</lazy-load>
 	<class>FolhaDeRostoPlugin</class>

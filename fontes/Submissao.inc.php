@@ -6,8 +6,9 @@ class Submissao {
     private $composições;
     private $autores;
     private $dataDeSubmissão;
+    private $dataDePublicação;
 
-    public function __construct(string $status, $doi, string $autores, string $dataDeSubmissão, array $composições = null) {
+    public function __construct(string $status, $doi, string $autores, string $dataDeSubmissão, string $dataDePublicação, array $composições = null) {
         $this->status = $status;
         if (empty($doi)) {
             $this->doi = "Não informado";
@@ -18,6 +19,7 @@ class Submissao {
         $this->autores = $autores;
         $this->composições = $composições;
         $this->dataDeSubmissão = $dataDeSubmissão;
+        $this->dataDePublicação = $dataDePublicação;
     }
 
     public function obterStatus(): string {
@@ -38,6 +40,10 @@ class Submissao {
 
     public function obterDataDeSubmissão(): string {
         return $this->dataDeSubmissão;
+    }
+
+    public function obterDataDePublicação(): string {
+        return $this->dataDePublicação;
     }
 
 }
