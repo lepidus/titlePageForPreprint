@@ -18,7 +18,7 @@ class TradutorPKP implements Tradutor {
     }
 
     public function obterCheckListTraduzida($locale) {
-        $checklistBruta = $this->contexto->getLocalizedData('submissionChecklist', $locale);
+        $checklistBruta = $this->contexto->getData('submissionChecklist')[$locale];
         foreach ($checklistBruta as $itemDaChecklist) {
 			$checklist[] = $itemDaChecklist['content'];
         }
