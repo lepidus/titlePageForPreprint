@@ -12,7 +12,7 @@ class TradutorParaTestes implements Tradutor {
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist" => "This preprint was submitted under the following conditions",
                                                     "common.dateSubmitted" => "Date submitted",
-                                                    "search.date" => "Publication Date",
+                                                    "plugins.geric.folhaDeRostoDoPDF.dataPublicacao" => "Date published",
                                                     "item1CheckList" => "The submission has not been previously published.",
                                                     "item2CheckList" => "Where available, URLs for the references have been provided.",
                                                     "titulo" => "So spoke Zaratustra");
@@ -24,7 +24,7 @@ class TradutorParaTestes implements Tradutor {
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist" => "Este preprint foi submetido sob as seguintes condições",
                                                     "common.dateSubmitted" => "Data de submissão",
-                                                    "search.date" => "Data de publicação",
+                                                    "plugins.geric.folhaDeRostoDoPDF.dataPublicacao" => "Data de postagem",
                                                     "item1CheckList" => "A submissão não foi publicado anteriormente.",
                                                     "item2CheckList" => "As URLs das referências foram fornecidas.",
                                                     "titulo" => "Assim Falou Zaratustra");

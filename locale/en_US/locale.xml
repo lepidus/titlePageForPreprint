@@ -2,4 +2,5 @@
 <!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
 <locale name="en_US" full_name="U.S. English">
 	<message key="plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist">This preprint was submitted under the following conditions</message>
+	<message key="plugins.geric.folhaDeRostoDoPDF.dataPublicacao">Date published</message>
 </locale>

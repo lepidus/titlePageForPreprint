@@ -137,7 +137,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
 
         $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "Data de publicação: ". $this->dataDePublicação;
+        $textoEsperado = "Data de postagem: ". $this->dataDePublicação;
         $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
@@ -216,7 +216,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $folhaDeRosto->inserir($pdf);
         
         $this->converterPdfEmTexto($pdf);
-        $textoEsperado = "Publication Date: ". $this->dataDePublicação;
+        $textoEsperado = "Date published: ". $this->dataDePublicação;
         $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
