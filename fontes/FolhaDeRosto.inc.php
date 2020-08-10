@@ -53,8 +53,8 @@ class FolhaDeRosto {
         $folhaDeRosto->writeHTMLCell(0, 0, '', '',$textoChecklist, 1, 1, false, true, 'JUSTIFY', false);
         $folhaDeRosto->SetFont($fontname, '', 11, '', false);
         $folhaDeRosto->Ln(5);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.dateSubmitted', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDeSubmissão()), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.dataPublicacao', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDePublicação()), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.dateSubmitted', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDeSubmissão(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.dataPublicacao', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDePublicação(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
       
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
