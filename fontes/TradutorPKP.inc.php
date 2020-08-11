@@ -31,7 +31,6 @@ class TradutorPKP implements Tradutor {
     }
 
     public function obterDataTraduzida($data, $locale){
-        $dateFormat = ['en_US' => '%Y/%m/%d', 'es_ES' => '%d/%m/%Y', 'pt_BR' => '%d/%m/%Y'];
-        return strftime($dateFormat[$locale], $data);
+        return strftime('%Y-%m-%d', $data);
     }
 }

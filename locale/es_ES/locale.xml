@@ -2,5 +2,6 @@
 <!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
 <locale name="es_ES" full_name="Espanol">
 	<message key="plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist">Este preprint fue presentado bajo las siguientes condiciones</message>
-	<message key="plugins.geric.folhaDeRostoDoPDF.dataPublicacao">Fecha de publicación</message>
+	<message key="plugins.geric.folhaDeRostoDoPDF.dataPublicacao">Postado en (AAAA-MM-DD)</message>
+	<message key="plugins.geric.folhaDeRostoDoPDF.dataSubmissao">Envíado en (AAAA-MM-DD)</message>
 </locale>
