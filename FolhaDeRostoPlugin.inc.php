@@ -58,10 +58,10 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$composições = $submissão->getGalleys();
 		$doi = $submissão->getStoredPubId('doi');
 		$autores = $submissão->getAuthorString();
-		$dataDeSubmissão = strtotime($submissão->getData('lastModified'));
+		$dataDeSubmissão = strtotime($submissão->getData('dateSubmitted'));
 		
 		$publicacao = $submissão->getCurrentPublication();
-		$dataDePublicacao = strtotime($publicacao->getData('datePublished'));
+		$dataDePublicacao = time();
 		
 		$status = $publicacao->getData('relationStatus');
 		$relacoes = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
