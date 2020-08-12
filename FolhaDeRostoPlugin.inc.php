@@ -41,7 +41,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$this->addLocaleData("pt_BR");
 		$this->addLocaleData("en_US");
 		$this->addLocaleData("es_ES");
-		$prensa = $this->obterPrensaDeSubmissões($submissão,  $contexto);
+		$prensa = $this->obterPrensaDeSubmissões($submissão, $publicação, $contexto);
 		$prensa->inserirFolhasDeRosto();
 	}
 
@@ -54,16 +54,27 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		return $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
 	}
 
-	private function obterPrensaDeSubmissões($submissão, $contexto) {
-		$composições = $submissão->getGalleys();
-		$doi = $submissão->getStoredPubId('doi');
-		$autores = $submissão->getAuthorString();
+	private function obterAutores($publicação) {
+		$userGroupIds = array_map(function($author) {
+			return $author->getData('userGroupId');
+		}, $publicação->getData('authors'));
+		$userGroups = array_map(function($userGroupId) {
+			$userGroupDao = DAORegistry::getDAO('UserGroupDAO'); /* @var $userGroupDao UserGroupDAO */
+			return $userGroupDao->getbyId($userGroupId);
+		}, array_unique($userGroupIds));
+
+		return $publicação->getAuthorString($userGroups);
+	}
+
+	private function obterPrensaDeSubmissões($submissão, $publicação, $contexto) {
+		$composições = $publicação->getData('galleys');
+		$doi = $publicação->getStoredPubId('doi');
+		$autores = $this->obterAutores($publicação);
 		$dataDeSubmissão = strtotime($submissão->getData('dateSubmitted'));
 		
-		$publicacao = $submissão->getCurrentPublication();
 		$dataDePublicacao = time();
 		
-		$status = $publicacao->getData('relationStatus');
+		$status = $publicação->getData('relationStatus');
 		$relacoes = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
 		$status = ($status) ? ($relacoes[$status]) : ("");
 		
@@ -94,6 +105,6 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId(), $revisao->getRevision());
 			
 		}
-		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $dataDePublicacao, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão));
+		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $dataDePublicacao, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão, $publicação));
 	}
 }
