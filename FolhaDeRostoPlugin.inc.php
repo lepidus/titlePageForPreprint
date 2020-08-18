@@ -36,13 +36,28 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 	public function inserirFolhaDeRostoQuandoPublicar($nomeDoGancho, $argumentos) {
 		$publicação = $argumentos[0];
 		$submissão = Services::get('submission')->get($publicação->getData('submissionId'));
-		$contextDao = Application::getContextDAO();
-		$contexto = $contextDao->getById($submissão->getContextId());
+		$contexto = Application::getContextDAO()->getById($submissão->getContextId());
 		$this->addLocaleData("pt_BR");
 		$this->addLocaleData("en_US");
 		$this->addLocaleData("es_ES");
-		$prensa = $this->obterPrensaDeSubmissões($submissão, $publicação, $contexto);
+		$dadosPrensa = $this->obterDadosParaPrensa($submissão, $publicação);
+		$dadosPrensa['dataDePublicacao'] = time();	//Dado que este método é chamado no momento da publicação
+		$prensa = $this->obterPrensaDeSubmissões($submissão, $publicação, $contexto, $dadosPrensa);
 		$prensa->inserirFolhasDeRosto();
+	}
+
+	private function obterDadosParaPrensa($submissão, $publicação) {
+		$dados = array();
+
+		$dados['doi'] = $publicação->getStoredPubId('doi');
+		$dados['autores'] = $this->obterAutores($publicação);
+		$dados['dataDeSubmissão'] = strtotime($submissão->getData('dateSubmitted'));
+
+		$status = $publicação->getData('relationStatus');
+		$relacoes = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
+		$dados['status'] = ($status) ? ($relacoes[$status]) : ("");
+
+		return $dados;
 	}
 
 	public function criaNovaRevisão($composição, $submissão) {
@@ -66,45 +81,40 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		return $publicação->getAuthorString($userGroups);
 	}
 
-	private function obterPrensaDeSubmissões($submissão, $publicação, $contexto) {
+	private function criaNovaComposicao($submissão, $composição) {
+		$arquivoDaSubmissão = $composição->getFile();
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+
+		$id = $arquivoDaSubmissão->getFileId();
+		$revisao = $submissionFileDao->getLatestRevision($id);
+
+		$fileSettingsDAO = new SubmissionFileSettingsDAO(); 
+		DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
+		
+		$setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
+		
+		if($setting) {
+			$revisões = $fileSettingsDAO->getSetting($id, 'revisoes');
+			$revisões = json_decode($revisões);
+
+			if($revisao->getRevision() != end($revisões)) {
+				$fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'nao');
+			}
+		}
+
+		$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
+		$revisao = $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
+
+		return new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId(), $revisao->getRevision());
+	}
+
+	private function obterPrensaDeSubmissões($submissão, $publicação, $contexto, $dados) {
 		$composições = $publicação->getData('galleys');
-		$doi = $publicação->getStoredPubId('doi');
-		$autores = $this->obterAutores($publicação);
-		$dataDeSubmissão = strtotime($submissão->getData('dateSubmitted'));
-		
-		$dataDePublicacao = time();
-		
-		$status = $publicação->getData('relationStatus');
-		$relacoes = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
-		$status = ($status) ? ($relacoes[$status]) : ("");
 		
 		foreach ($composições as $composição) {
-			$arquivoDaSubmissão = $composição->getFile();
-			$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-
-			$id = $arquivoDaSubmissão->getFileId();
-			$revisao = $submissionFileDao->getLatestRevision($id);
-
-			$fileSettingsDAO = new SubmissionFileSettingsDAO(); 
-			DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
-			
-			$setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
-			
-			if($setting) {
-				$revisões = $fileSettingsDAO->getSetting($id, 'revisoes');
-				$revisões = json_decode($revisões);
-
-				if($revisao->getRevision() != end($revisões)) {
-					$fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'nao');
-				}
-			}
-
-			$novaRevisão = $this->criaNovaRevisão($composição, $submissão);
-			$revisao = $submissionFileDao->getLatestRevision($arquivoDaSubmissão->getFileId());
-
-			$composiçõesDaSubmissão[] = new Composicao($novaRevisão->getFilePath(), $composição->getLocale(), $novaRevisão->getId(), $revisao->getRevision());
-			
+			$composiçõesDaSubmissão[] = $this->criaNovaComposicao($submissão, $composição);	
 		}
-		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($status, $doi, $autores, $dataDeSubmissão, $dataDePublicacao, $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão, $publicação));
+
+		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($dados['status'], $dados['doi'], $dados['autores'], $dados['dataDeSubmissão'], $dados['dataDePublicacao'], $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão, $publicação));
 	}
 }
