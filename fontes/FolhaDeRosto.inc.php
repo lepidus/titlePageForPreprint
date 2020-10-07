@@ -32,6 +32,10 @@ class FolhaDeRosto {
         
         $folhaDeRosto->SetFont($fontname, '', 10, '', false);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('common.status', $this->locale) . ": " . $this->tradutor->traduzir($this->submissão->obterStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        if($this->submissão->obterStatus() == 'publication.relation.published'){
+            $folhaDeRosto->Write(0, $this->tradutor->traduzir('publication.relation.vorDoi', $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
+            $folhaDeRosto->write(0, $this->submissão->obterDOIJournal(), $this->submissão->obterDOIJournal(), 0, 'JUSTIFY', true, 0, false, false, 0);
+        }
         $folhaDeRosto->Ln(5);
         
         $folhaDeRosto->SetFont($fontname, '', 18, '', false);

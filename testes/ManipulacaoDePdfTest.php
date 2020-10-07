@@ -5,6 +5,7 @@ class ManipulacaoDePdfTest extends TestCase {
 
     protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";
+    protected $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
     protected $logo = 'testes' . DIRECTORY_SEPARATOR . "logo_semCanalAlfa.png";
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     protected $locale = "pt_BR";

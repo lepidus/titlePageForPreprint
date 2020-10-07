@@ -4,7 +4,7 @@ require_once ("ManipulacaoDePdfTest.php");
 class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     
     private function obterFolhaDeRostoParaTeste(): FolhaDeRosto {
-        return new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, $this->locale, $this->tradutor);
+        return new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->doiJournal, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, $this->locale, $this->tradutor);
     }
 
     private function converterPdfEmImagem(string $caminhoDoPdf, $caminhoDaImagem): imagick {
@@ -158,7 +158,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComRelaçãoTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->doiJournal, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -170,7 +170,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComRótuloDeChecklistTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->doiJournal, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -182,7 +182,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComChecklistTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->doiJournal, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -198,7 +198,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComDataDeSubmissãoTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->doiJournal, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);
@@ -210,7 +210,7 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
     }
 
     public function testeCarimbaFolhaDeRostoComDataDePublicaçãoTraduzidaParaIdiomaDaComposição(): void {
-        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
+        $folhaDeRosto = new FolhaDeRosto(new Submissao($this->status, $this->doi, $this->doiJournal, $this->autores, $this->dataDeSubmissão, $this->dataDePublicação), $this->logo, "en_US", $this->tradutor);
         $pdf = new Pdf($this->caminhoDoPdfTeste);
         
         $folhaDeRosto->inserir($pdf);

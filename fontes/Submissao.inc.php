@@ -3,19 +3,16 @@ class Submissao {
 
     private $status;
     private $doi;
+    private $doiJournal;
     private $composições;
     private $autores;
     private $dataDeSubmissão;
     private $dataDePublicação;
 
-    public function __construct(string $status, $doi, string $autores, string $dataDeSubmissão, string $dataDePublicação, array $composições = null) {
+    public function __construct(string $status, $doi, $doiJournal, string $autores, string $dataDeSubmissão, string $dataDePublicação, array $composições = null) {
         $this->status = $status;
-        if (empty($doi)) {
-            $this->doi = "Não informado";
-        }
-        else {
-            $this->doi = $doi;
-        }
+        $this->doi = ((empty($doi)) ? ("Não informado") : ($doi));
+        $this->doiJournal = ((empty($doiJournal)) ? ("Não informado") : ($doiJournal));
         $this->autores = $autores;
         $this->composições = $composições;
         $this->dataDeSubmissão = $dataDeSubmissão;
@@ -28,6 +25,10 @@ class Submissao {
 
     public function obterDOI(): string {
         return $this->doi;
+    }
+
+    public function obterDOIJournal(): string {
+        return $this->doiJournal;
     }
 
     public function obterAutores(): string {

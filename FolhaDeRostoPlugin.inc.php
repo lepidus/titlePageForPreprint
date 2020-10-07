@@ -50,6 +50,7 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 		$dados = array();
 
 		$dados['doi'] = $publicação->getStoredPubId('doi');
+		$dados['doiJournal'] = $publicação->getData('vorDoi');
 		$dados['autores'] = $this->obterAutores($publicação);
 		$dados['dataDeSubmissão'] = strtotime($submissão->getData('dateSubmitted'));
 
@@ -115,6 +116,6 @@ class FolhaDeRostoPlugin extends GenericPlugin {
 			$composiçõesDaSubmissão[] = $this->criaNovaComposicao($submissão, $composição);	
 		}
 
-		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($dados['status'], $dados['doi'], $dados['autores'], $dados['dataDeSubmissão'], $dados['dataDePublicacao'], $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão, $publicação));
+		return new PrensaDeSubmissoesPKP(self::CAMINHO_DA_LOGO, new Submissao($dados['status'], $dados['doi'], $dados['doiJournal'], $dados['autores'], $dados['dataDeSubmissão'], $dados['dataDePublicacao'], $composiçõesDaSubmissão), new TradutorPKP($contexto, $submissão, $publicação));
 	}
 }
