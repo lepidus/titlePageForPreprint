@@ -19,6 +19,4 @@ Plugin do OPS para criação de folha de rosto nos arquivos PDF submetidos no se
 2. Clone o [repositório](https://gitlab.lepidus.com.br/softwares-pkp/plugins_ojs/folhaDeRostoDoPDF)
 3. Troque de branch (se necessário).
 4. Execute `composer install` dentro do repositório.
-5. Modifique o arquivo: /etc/ImageMagick-6/policy.xml , para permitir a escrita/leitura de arquivos PDF, mudando a linha que especifica permissões relacionadas a arquivos PDF:
-De: <policy domain=“coder” rights="none" pattern=“PDF” />
-Para:<policy domain=“coder” rights=“read|write” pattern=“PDF” /> 
+5. Modifique o arquivo: /etc/ImageMagick-6/policy.xml , para permitir a escrita/leitura de arquivos PDF, mudando a linha que especifica permissões relacionadas a arquivos PDF de `<policy domain=“coder” rights="none" pattern=“PDF” />` para `<policy domain=“coder” rights=“read|write” pattern=“PDF” />`
