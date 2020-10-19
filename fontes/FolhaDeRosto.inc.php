@@ -86,18 +86,17 @@ class FolhaDeRosto {
         $this->concatenarFolhaDeRosto($arquivoDaFolhaDeRosto, $pdf);
     }
 
-    private function removerPrimeiraPagina(pdf $pdf) {
-        $comandoParaSeparar = 'pdfseparate -f 2 '. $pdf->obterCaminho() . ' %d.pdf';
+    private function separarPaginas(pdf $pdf, $paginaInicial) {
+        $comandoParaSeparar = "pdfseparate -f {$paginaInicial} {$pdf->obterCaminho()} %d.pdf";
         shell_exec($comandoParaSeparar);
     }
 
-    private function juntarDemaisPaginas(pdf $pdf) {
+    private function juntarPaginas(pdf $pdf, $paginaInicial) {
         $comandoParaJuntar = 'pdfunite ';
         $arquivoModificado = self::DIRETORIO_DE_SAIDA . "semFolhaDeRosto.pdf";
-        $pagInicial = 2;
         $paginas = $pdf->obterNúmeroDePáginas();
 
-        for ($i = $pagInicial; $i <= $paginas; $i++){
+        for ($i = $paginaInicial; $i <= $paginas; $i++){
             $comandoParaJuntar .= ($i .'.pdf ');
         }
 
@@ -105,14 +104,41 @@ class FolhaDeRosto {
         shell_exec($comandoParaJuntar);
         rename($arquivoModificado, $pdf->obterCaminho());
 
-        for ($i = $pagInicial; $i <= $paginas; $i++){
+        for ($i = $paginaInicial; $i <= $paginas; $i++){
             $this->removerArquivosTemporários( $i .'.pdf');
         }
     }
 
     public function remover(pdf $pdf): void {
-        $this->removerPrimeiraPagina($pdf);
-        $this->juntarDemaisPaginas($pdf);
+        $this->separarPaginas($pdf, 2);
+        $this->juntarPaginas($pdf, 2);
+    }
+
+    private function adicionaHeaderPagina($caminhoPagina) {
+        $pdf = new FPDI();
+        
+        $pdf->AddPage();
+        $pdf->setSourceFile($caminhoPagina);
+        $tplIdx = $pdf->importPage(1);
+        $pdf->useTemplate($tplIdx);
+
+        $pdf->SetFont('Helvetica', '', 10);
+        $pdf->Write(0, mb_convert_encoding("Não vale a pena sonhar e esquecer de viver", 'ISO-8859-15'), '', 0, 'C', true, 0, false, false, 0);
+
+        $caminhoSaida = "header_{$caminhoPagina}";
+        $pdf->Output($caminhoSaida, "F");
+        rename($caminhoSaida, $caminhoPagina);
+    }
+
+    public function adicionaHeadersDocumento(pdf $pdf): void {
+        $this->separarPaginas($pdf, 1);
+
+        $paginas = $pdf->obterNúmeroDePáginas();
+        for($i = 1; $i <= $paginas; $i++) {
+            $this->adicionaHeaderPagina("{$i}.pdf");
+        }
+
+        $this->juntarPaginas($pdf, 1);
     }
 
 }

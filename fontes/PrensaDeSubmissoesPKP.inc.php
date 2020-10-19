@@ -34,6 +34,9 @@ class PrensaDeSubmissoesPKP implements PrensaDeSubmissoes {
             $revisões = $fileSettingsDAO->getSetting($id, 'revisoes');
             $folhaDeRosto->remover($pdf);
         }
+        else {
+            $folhaDeRosto->adicionaHeadersDocumento($pdf);
+        }
 
         $revisões = json_decode($revisões);
         array_push($revisões, $revisão);
