@@ -1,7 +1,6 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
-use \setasign\Fpdi\Fpdi;
 
 class FolhaDeRosto { 
 
@@ -115,7 +114,7 @@ class FolhaDeRosto {
     }
 
     private function adicionaHeaderPagina($caminhoPagina) {
-        $pdf = new FPDI();
+        $pdf = new TCPDI(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         
         $pdf->AddPage();
         $pdf->setSourceFile($caminhoPagina);
@@ -123,7 +122,7 @@ class FolhaDeRosto {
         $pdf->useTemplate($tplIdx);
 
         $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, mb_convert_encoding("Não vale a pena sonhar e esquecer de viver", 'ISO-8859-15'), '', 0, 'C', true, 0, false, false, 0);
+        $pdf->Write(0, "Não vale a pena sonhar e esquecer de viver", '', 0, 'C', true, 0, false, false, 0);
 
         $caminhoSaida = "header_{$caminhoPagina}";
         $pdf->Output($caminhoSaida, "F");
