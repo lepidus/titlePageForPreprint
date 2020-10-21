@@ -113,18 +113,39 @@ class FolhaDeRosto {
         $this->juntarPaginas($pdf, 2);
     }
 
+    private function obterTextoHeader() {
+        $textoHeader = "";
+
+        if($this->submissão->obterStatus() == 'publication.relation.published') {
+            $textoHeader = __('plugins.geric.folhaDeRostoDoPDF.published', array(
+                'doiPreprint' => $this->submissão->obterDOI(),
+                'doiJournal' => $this->submissão->obterDOIJournal()
+            ), $this->locale);
+        }
+        else {
+            $textoHeader = __('plugins.geric.folhaDeRostoDoPDF.unpublished', array(
+                'doiPreprint' => $this->submissão->obterDOI()
+            ), $this->locale);
+        }
+
+        return $textoHeader;
+    }
+
     private function adicionaHeaderPagina($caminhoPagina) {
         $pdf = new TCPDI(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        
+        $fontName = TCPDF_FONTS::addTTFfont(__DIR__.'/../recursos/opensans.ttf', 'TrueTypeUnicode', '', 32);
+
+        $pdf->SetPrintHeader(false);
         $pdf->AddPage();
         $pdf->setSourceFile($caminhoPagina);
         $tplIdx = $pdf->importPage(1);
         $pdf->useTemplate($tplIdx);
 
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, "Não vale a pena sonhar e esquecer de viver", '', 0, 'C', true, 0, false, false, 0);
+        $pdf->SetY(1);
+        $pdf->SetFont($fontName, '', 8);
+        $pdf->Write(0, $this->obterTextoHeader(), '', 0, 'C', true, 0, false, false, 0);
 
-        $caminhoSaida = "header_{$caminhoPagina}";
+        $caminhoSaida = self::DIRETORIO_DE_SAIDA . "paginaHeader";
         $pdf->Output($caminhoSaida, "F");
         rename($caminhoSaida, $caminhoPagina);
     }
