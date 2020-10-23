@@ -31,7 +31,7 @@ class TradutorParaTestes implements Tradutor {
         
     }
 
-    public function traduzir($chave, $locale) {
+    public function traduzir($chave, $locale, $params = null) {
         $idioma = $this->mapeamentoDeIdiomas[$locale];
         return $idioma[$chave];
     }

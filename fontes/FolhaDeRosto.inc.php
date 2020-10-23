@@ -117,15 +117,15 @@ class FolhaDeRosto {
         $textoHeader = "";
 
         if($this->submissão->obterStatus() == 'publication.relation.published') {
-            $textoHeader = __('plugins.geric.folhaDeRostoDoPDF.published', array(
+            $textoHeader = $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.published', $this->locale, array(
                 'doiPreprint' => $this->submissão->obterDOI(),
                 'doiJournal' => $this->submissão->obterDOIJournal()
-            ), $this->locale);
+            ));
         }
         else {
-            $textoHeader = __('plugins.geric.folhaDeRostoDoPDF.unpublished', array(
+            $textoHeader = $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.unpublished', $this->locale, array(
                 'doiPreprint' => $this->submissão->obterDOI()
-            ), $this->locale);
+            ));
         }
 
         return $textoHeader;

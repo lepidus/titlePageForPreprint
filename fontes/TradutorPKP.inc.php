@@ -12,12 +12,12 @@ class TradutorPKP implements Tradutor {
         $this->publicação = $publicação;
     }
 
-    public function traduzir($chave, $locale) {
+    public function traduzir($chave, $locale, $params = null) {
         AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, $locale);
         AppLocale::requireComponents(LOCALE_COMPONENT_PKP_SUBMISSION, $locale);
         AppLocale::requireComponents(LOCALE_COMPONENT_APP_SUBMISSION, $locale);
 
-        return __($chave, null, $locale);
+        return __($chave, $params, $locale);
     }
 
     public function obterCheckListTraduzida($locale) {
