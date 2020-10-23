@@ -13,6 +13,7 @@ class TradutorParaTestes implements Tradutor {
                                                     "plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist" => "This preprint was submitted under the following conditions",
                                                     "plugins.geric.folhaDeRostoDoPDF.dataSubmissao" => "Date submitted",
                                                     "plugins.geric.folhaDeRostoDoPDF.dataPublicacao" => "Date published",
+                                                    "plugins.geric.folhaDeRostoDoPDF.unpublished" => "SciELO Preprints - this preprint has not been peer reviewed",
                                                     "item1CheckList" => "The submission has not been previously published.",
                                                     "item2CheckList" => "Where available, URLs for the references have been provided.",
                                                     "titulo" => "So spoke Zaratustra");
@@ -25,6 +26,7 @@ class TradutorParaTestes implements Tradutor {
                                                     "plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist" => "Este preprint foi submetido sob as seguintes condições",
                                                     "plugins.geric.folhaDeRostoDoPDF.dataSubmissao" => "Data de submissão",
                                                     "plugins.geric.folhaDeRostoDoPDF.dataPublicacao" => "Data de postagem",
+                                                    "plugins.geric.folhaDeRostoDoPDF.unpublished" => "SciELO Preprints - este preprint não foi revisado por pares",
                                                     "item1CheckList" => "A submissão não foi publicado anteriormente.",
                                                     "item2CheckList" => "As URLs das referências foram fornecidas.",
                                                     "titulo" => "Assim Falou Zaratustra");

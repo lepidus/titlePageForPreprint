@@ -142,6 +142,18 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 
+    public function testeInserçãoEmPdfExistenteCarimbaHeader(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+
+        $folhaDeRosto->adicionaHeadersDocumento($pdf);
+
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = "SciELO Preprints - este preprint não foi revisado por pares";
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
+    }
+
     public function testeInserçãoEmPdfExistenteNãoModificaPdfOriginal(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdfNovo = new Pdf($this->caminhoDoPdfTeste);
