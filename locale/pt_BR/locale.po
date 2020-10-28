@@ -14,14 +14,11 @@ msgstr ""
 msgid "plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist"
 msgstr "Este preprint foi submetido sob as seguintes condições"
 
-msgid "plugins.geric.folhaDeRostoDoPDF.dataPublicacao"
+msgid "plugins.generic.folhaDeRostoDoPDF.dataPublicacao"
 msgstr "Postado em (AAAA-MM-DD)"
 
-msgid "plugins.geric.folhaDeRostoDoPDF.dataSubmissao"
+msgid "plugins.generic.folhaDeRostoDoPDF.dataSubmissao"
 msgstr "Submetido em (AAAA-MM-DD)"
 
-msgid "plugins.geric.folhaDeRostoDoPDF.unpublished"
-msgstr "SciELO Preprints - este preprint {$doiPreprint} não foi revisado por pares"
-
-msgid "plugins.geric.folhaDeRostoDoPDF.published"
-msgstr "SciELO Preprints - este preprint {$doiPreprint} não foi revisado por pares. Possui uma versão publicada em um periódico: {$doiJournal}"
+msgid "plugins.generic.folhaDeRostoDoPDF.textoCabecalho"
+msgstr "SciELO Preprints - Este documento é um preprint e sua situação atual está disponível em: {$doiPreprint}"

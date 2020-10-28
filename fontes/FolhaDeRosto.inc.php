@@ -58,8 +58,8 @@ class FolhaDeRosto {
         $folhaDeRosto->writeHTMLCell(0, 0, '', '',$textoChecklist, 1, 1, false, true, 'JUSTIFY', false);
         $folhaDeRosto->SetFont($this->fontName, '', 11, '', false);
         $folhaDeRosto->Ln(5);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.dataSubmissao', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDeSubmissão(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.dataPublicacao', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDePublicação(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.generic.folhaDeRostoDoPDF.dataSubmissao', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDeSubmissão(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.generic.folhaDeRostoDoPDF.dataPublicacao', $this->locale) . ": " . $this->tradutor->obterDataTraduzida($this->submissão->obterDataDePublicação(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
       
         $arquivoDaFolhaDeRosto = self::DIRETORIO_DE_SAIDA . 'folhaDeRosto.pdf';
         $folhaDeRosto->Output($arquivoDaFolhaDeRosto, 'F');
@@ -114,24 +114,6 @@ class FolhaDeRosto {
         $this->juntarPaginas($pdf, 2);
     }
 
-    private function obterTextoHeader() {
-        $textoHeader = "";
-
-        if($this->submissão->obterStatus() == 'publication.relation.published') {
-            $textoHeader = $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.published', $this->locale, array(
-                'doiPreprint' => $this->submissão->obterDOI(),
-                'doiJournal' => $this->submissão->obterDOIJournal()
-            ));
-        }
-        else {
-            $textoHeader = $this->tradutor->traduzir('plugins.geric.folhaDeRostoDoPDF.unpublished', $this->locale, array(
-                'doiPreprint' => $this->submissão->obterDOI()
-            ));
-        }
-
-        return $textoHeader;
-    }
-
     private function adicionaHeaderPagina($caminhoPagina) {
         $pdf = new TCPDI(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -141,9 +123,10 @@ class FolhaDeRosto {
         $tplIdx = $pdf->importPage(1);
         $pdf->useTemplate($tplIdx);
 
+        $linkDOI = "https://doi.org/".$this->submissão->obterDOI();
         $pdf->SetY(1);
         $pdf->SetFont($this->fontName, '', 8);
-        $pdf->Write(0, $this->obterTextoHeader(), '', 0, 'C', true, 0, false, false, 0);
+        $pdf->Write(0, $this->tradutor->traduzir('plugins.generic.folhaDeRostoDoPDF.textoCabecalho', $this->locale, ['doiPreprint' => $linkDOI]), $linkDOI, 0, 'C', true, 0, false, false, 0);
 
         $caminhoSaida = self::DIRETORIO_DE_SAIDA . "paginaHeader";
         $pdf->Output($caminhoSaida, "F");
