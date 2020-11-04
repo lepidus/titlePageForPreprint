@@ -45,7 +45,7 @@ class FolhaDeRosto {
         $folhaDeRosto->Write(0, $this->submissão->obterAutores(), '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->SetFont($this->fontName, '', 11, '', false);
         $folhaDeRosto->Ln(5);
-        $folhaDeRosto->Write(0, $this->tradutor->traduzir('metadata.property.displayName.doi', $this->locale) . ": " . $this->submissão->obterDOI(), '', 0, 'C', true, 0, false, false, 0);
+        $folhaDeRosto->Write(0, $this->tradutor->traduzir('metadata.property.displayName.doi', $this->locale) . ": https://doi.org/" . $this->submissão->obterDOI(), '', 0, 'C', true, 0, false, false, 0);
         $folhaDeRosto->Ln(10);
         $folhaDeRosto->Write(0, $this->tradutor->traduzir('plugins.generic.folhaDeRostoDoPDF.rotuloDaChecklist', $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
         $folhaDeRosto->SetFont($this->fontName, '', 10, '', false);
