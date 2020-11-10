@@ -118,6 +118,18 @@ class FolhaDeRostoTest extends ManipulacaoDePdfTest {
         $this->assertEquals($textoEsperado, $resultadoDaProcura);
     }
 
+    public function testeInserçãoEmPdfExistenteCarimbaDOI(): void {
+        $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
+        $pdf = new Pdf($this->caminhoDoPdfTeste);
+        
+        $folhaDeRosto->inserir($pdf);
+        
+        $this->converterPdfEmTexto($pdf);
+        $textoEsperado = "https://doi.org/" . $this->doi;
+        $resultadoDaProcura = $this->procurarEmArquivoDeTexto($textoEsperado, $this->pdfComoTexto);
+        $this->assertEquals($textoEsperado, $resultadoDaProcura);
+    }
+
     public function testeInserçãoEmPdfExistenteCarimbaDataDeSubmissão(): void {
         $folhaDeRosto = $this->obterFolhaDeRostoParaTeste();
         $pdf = new Pdf($this->caminhoDoPdfTeste);
