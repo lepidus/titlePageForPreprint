@@ -15,6 +15,15 @@ class Pdf {
         return (int)$paginasComoTexto[1];
     }
 
+    public function obterOrientacaoPagina(): string {
+        $linhaDoTamanhoPagina = shell_exec("pdfinfo -box -f 1 -l 1 {$this->caminho} | grep '1 size: '");
+        preg_match('~(\d+\.\d+) x (\d+\.\d+)~', $linhaDoTamanhoPagina, $ocorrencias);
+        $largura = (float) $ocorrencias[1];
+        $altura = (float) $ocorrencias[2];
+
+        return ($largura > $altura) ? ("L") : ("P");
+    }
+
     public function obterCaminho(): string {
         return $this->caminho;
     }

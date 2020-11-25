@@ -31,5 +31,10 @@ final class PdfTest extends TestCase {
     public function testeNãoÉPDF() : void {
         $this->assertFalse(Pdf::éPdf("testes" . DIRECTORY_SEPARATOR . "arquivoNaoPdf.odt"));
     }
+
+    public function testeObterOrientacaoPagina() : void {
+        $pdf = new Pdf("testes" . DIRECTORY_SEPARATOR . "testeUmaPagina.pdf");
+        $this->assertEquals("P", $pdf->obterOrientacaoPagina());
+    }
 }
 ?> 
