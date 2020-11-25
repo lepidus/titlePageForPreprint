@@ -115,8 +115,10 @@ class FolhaDeRosto {
     }
 
     private function adicionaHeaderPagina($caminhoPagina) {
-        $pdf = new TCPDI(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
+        $pdf = new Pdf($caminhoPagina);
+        $orientacaoPagina = $pdf->obterOrientacaoPagina();
+        
+        $pdf = new TCPDI($orientacaoPagina, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetPrintHeader(false);
         $pdf->AddPage();
         $pdf->setSourceFile($caminhoPagina);
