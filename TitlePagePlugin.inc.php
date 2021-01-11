@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * @file plugins/generic/TitlePageForPreprint/TitlePagePlugin.inc.php
+ * 
+ * Copyright (c) 2017-2019 Simon Fraser University
+ * Copyright (c) 2017-2019 John Willinsky
+ * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ *
+ * @class TitlePagePlugin
+ * @ingroup plugins_generic_TitlePageForPreprint
+ *
+ * @brief Plugin class for the TitlePageForPreprint plugin.
+ */
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.TitlePageForPreprint.sources.Submission');
 import('plugins.generic.TitlePageForPreprint.sources.Composition');
