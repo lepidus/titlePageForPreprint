@@ -29,7 +29,7 @@ class SubmissionTest extends TestCase {
 
     public function testDoiNotInformed(): void {
         $submission = new Submission($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
-        $this->assertEquals("Não informado", $submission->getDOI());
+        $this->assertEquals("Not informed", $submission->getDOI());
     }
 
     public function testHasDoiJournal(): void {
