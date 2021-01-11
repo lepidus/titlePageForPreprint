@@ -11,7 +11,7 @@ class SubmissionPressForTests implements PrensaDeSubmissoes {
         $this->translator = $translator;
     }
 
-    public function insertTitlePages(): void {
+    public function insertTitlePage(): void {
        foreach($this->submission->getComposition() as $composition){
            $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $composition->locale, $this->translator);
 
