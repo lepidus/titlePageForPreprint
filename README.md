@@ -1,22 +1,24 @@
-# FolhaDeRostoPlugin
-Plugin do OPS para criação de folha de rosto nos arquivos PDF submetidos no servidor Scielo.
+# Title Page Plugin
+Generic plugin for OPS, creates a title page on PDF files submitted to Scielo servers.
 
-## Dependências de Instalação 
+## Installation dependencies 
 * [poppler-utils](https://poppler.freedesktop.org/)
 
-## Como utilizar 
-1. Instale a dependência poppler-utils.
-2. Adicione o plugin pelo painel de controle do Administrador do servidor. Caso o OPS informe erro com o tamanho do arquivo, confira a configuração do php.ini com relação as variáveis: upload_max_filesize e post_max_size, cujo valor deve ser de pelo menos 17M). Ou descompacte o plugin no diretório `plugins/generic/`, neste caso não é necessário ajuste em arquivos de configuração do PHP.
-3. Ative o plugin no painel de controle.
+## How to use
+1. Install the 'poppler-utils' dependency.
+2. Add the plugin to OPS, by the administrator Control Panel. In case OPS raise the file size error, check out the variables on ´php.ini´: `upload_max_filesize` and `post_max_size` wich the values must be at least 17M.  
+In order to avoid editing PHP configuration files, you can also install the plugin by unziping it to the directory `plugins/generic/`.
+3. Activate the plugin on the Control Panel.
 
-## Dependências para Desenvolvimento
+## Development dependencies
 * [poppler-utils](https://poppler.freedesktop.org/)
-* [php-imagick](https://www.php.net/manual/pt_BR/imagick.compareimages.php) - para executar os testes de unidade
-* [phpunit](https://phpunit.de/) - versão 8, para executar os testes de unidade
+* [php-imagick](https://www.php.net/manual/pt_BR/imagick.compareimages.php) - needed for unit tests.
+* [phpunit](https://phpunit.de/) - version 8, to run unit tests.
 
-## Instalação para Desenvolvimento
-1. Realize a instalação das dependências para desenvolvimento.
-2. Clone o [repositório](https://gitlab.lepidus.com.br/softwares-pkp/plugins_ojs/folhaDeRostoDoPDF)
-3. Troque de branch (se necessário).
-4. Execute `composer install` dentro do repositório.
-5. Modifique o arquivo: /etc/ImageMagick-6/policy.xml , para permitir a escrita/leitura de arquivos PDF, mudando a linha que especifica permissões relacionadas a arquivos PDF de `<policy domain=“coder” rights="none" pattern=“PDF” />` para `<policy domain=“coder” rights=“read|write” pattern=“PDF” />`
+## Installation for development
+1. Install the development dependencies.
+2. Clone the [repository](https://gitlab.lepidus.com.br/softwares-pkp/plugins_ojs/folhaDeRostoDoPDF)
+3. Switch branch, if needed.
+4. Run `composer install` inside the repository.
+5. Modify the file: `/etc/ImageMagick-6/policy.xml` , to allow read/write permissions to PDF, changing this specific line: `<policy domain=“coder” rights="none" pattern=“PDF” />` 
+to this:            `<policy domain=“coder” rights=“read|write” pattern=“PDF” />`
