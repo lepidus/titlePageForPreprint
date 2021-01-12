@@ -15,8 +15,8 @@ class SubmissionPressPKP implements SubmissionPress {
         $fileSettingsDAO = new SubmissionFileSettingsDAO(); 
         DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
         
-        $fileSettingsDAO->updateSetting($id, 'titlePage', 'yes', 'string', false);
-        $fileSettingsDAO->updateSetting($id, 'revisions', $json, 'JSON', false);
+        $fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'sim', 'string', false);
+        $fileSettingsDAO->updateSetting($id, 'revisoes', $json, 'JSON', false);
     }
 
     private function verifyInDB($titlePage, $composition) {
@@ -27,11 +27,11 @@ class SubmissionPressPKP implements SubmissionPress {
         $id = $composition->identifier;
         $revision = $composition->revision;
 
-        $setting = $fileSettingsDAO->getSetting($id, 'titlePage');
+        $setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
         $revisions = '[]';
 
-        if($setting == 'yes') {     
-            $revisions = $fileSettingsDAO->getSetting($id, 'revisions');
+        if($setting == 'sim') {     
+            $revisions = $fileSettingsDAO->getSetting($id, 'revisoes');
             $titlePage->remove($pdf);
         }
         else {

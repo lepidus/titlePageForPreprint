@@ -35,7 +35,7 @@ class TitlePage {
         $titlePage->Write(0, $this->translator->translate('common.status', $this->locale) . ": " . $this->translator->translate($this->submission->getStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
         if($this->submission->getStatus() == 'publication.relation.published'){
             $titlePage->Write(0, $this->translator->translate('publication.relation.vorDoi', $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
-            $titlePage->write(0, $this->submission->getDOIJournal(), $this->submission->getDOIJournal(), 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->write(0, $this->submission->getJournalDOI(), $this->submission->getJournalDOI(), 0, 'JUSTIFY', true, 0, false, false, 0);
         }
         $titlePage->Ln(5);
         

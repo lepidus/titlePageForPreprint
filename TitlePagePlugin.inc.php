@@ -103,14 +103,14 @@ class TitlePagePlugin extends GenericPlugin {
 		$fileSettingsDAO = new SubmissionFileSettingsDAO(); 
 		DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
 		
-		$setting = $fileSettingsDAO->getSetting($id, 'TitlePage');
+		$setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
 		
 		if($setting) {
-			$revisions = $fileSettingsDAO->getSetting($id, 'revisions');
+			$revisions = $fileSettingsDAO->getSetting($id, 'revisoes');
 			$revisions = json_decode($revisions);
 
 			if($revision->getRevision() != end($revisions)) {
-				$fileSettingsDAO->updateSetting($id, 'TitlePage', 'no');
+				$fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'nao');
 			}
 		}
 
