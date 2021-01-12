@@ -1,5 +1,5 @@
 <?php
-class SubmissionPressForTests implements PrensaDeSubmissoes {
+class SubmissionPressForTests implements SubmissionPress {
 
     private $logoForTitlePage;
     private $submission;
@@ -12,7 +12,7 @@ class SubmissionPressForTests implements PrensaDeSubmissoes {
     }
 
     public function insertTitlePage(): void {
-       foreach($this->submission->getComposition() as $composition){
+       foreach($this->submission->getCompositions() as $composition){
            $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $composition->locale, $this->translator);
 
            if (Pdf::isPdf($composition->file)) {               

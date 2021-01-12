@@ -20,7 +20,7 @@ class PdfHandlingTest extends TestCase {
         $this->pathOfTestPdf = "tests" . DIRECTORY_SEPARATOR . "testOnePage.pdf";
         $this->copyOfTestPdfToRestore = "tests" . DIRECTORY_SEPARATOR . "testOnePage_copy.pdf";
         copy($this->pathOfTestPdf, $this->copyOfTestPdfToRestore);
-        $this->pdfComoTexto = "tests" . DIRECTORY_SEPARATOR . "testOnePage.txt";
+        $this->pdfAsText = "tests" . DIRECTORY_SEPARATOR . "testOnePage.txt";
 
         $this->pathOfTestPdf2 = "tests" . DIRECTORY_SEPARATOR . "testTwoPages.pdf";
         $this->copyOfTestPdfToRestore2 = "tests" . DIRECTORY_SEPARATOR . "testTwoPages_copy.pdf";
