@@ -2,7 +2,7 @@
 
 set -e
 
-comandoParaTestes="phpunit --bootstrap fontes/autoload.inc.php testes/"
+testsCommand="phpunit --bootstrap fonts/autoload.inc.php tests/"
 
-echo "Executando testes de unidade..."
-eval "$comandoParaTestes"
+echo "Running unit tests..."
+eval "$testsCommand"
