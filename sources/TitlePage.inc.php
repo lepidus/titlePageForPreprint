@@ -42,7 +42,7 @@ class TitlePage {
         $titlePage->SetFont($this->fontName, '', 18, '', false);
         $titlePage->Write(0, $this->translator->getTranslatedTitle($this->locale), '', 0, 'C', true, 0, false, false, 0);
         $titlePage->SetFont($this->fontName, '', 12, '', false);
-        $titlePage->Write(0, $this->submission->getAuthor(), '', 0, 'C', true, 0, false, false, 0);
+        $titlePage->Write(0, $this->submission->getAuthors(), '', 0, 'C', true, 0, false, false, 0);
         $titlePage->SetFont($this->fontName, '', 11, '', false);
         $titlePage->Ln(5);
         $titlePage->Write(0, "https://doi.org/" . $this->submission->getDOI(), "https://doi.org/" . $this->submission->getDOI(), 0, 'C', true, 0, false, false, 0);

@@ -121,7 +121,7 @@ class TitlePagePlugin extends GenericPlugin {
 	}
 
 	private function getSubmissionPress($submission, $publication, $context, $data) {
-		$composition = $publication->getData('galleys');
+		$compositions = $publication->getData('galleys');
 		
 		foreach ($compositions as $composition) {
 			$submissionCompositions[] = $this->createNewComposition($submission, $composition);	
