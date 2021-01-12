@@ -12,7 +12,7 @@
  * @brief Plugin class for the TitlePageForPreprint plugin.
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
-import('plugins.generic.TitlePageForPreprint.sources.Submission');
+import('plugins.generic.TitlePageForPreprint.sources.SubmissionModel');
 import('plugins.generic.TitlePageForPreprint.sources.Composition');
 import('plugins.generic.TitlePageForPreprint.sources.SubmissionPress');
 import('plugins.generic.TitlePageForPreprint.sources.SubmissionPressPKP');
@@ -127,6 +127,6 @@ class TitlePagePlugin extends GenericPlugin {
 			$submissionCompositions[] = $this->createNewComposition($submission, $composition);	
 		}
 
-		return new SubmissionPressPKP(self::LOGO_PATH, new Submission($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionCompositions), new TranslatorPKP($context, $submission, $publication));
+		return new SubmissionPressPKP(self::LOGO_PATH, new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionCompositions), new TranslatorPKP($context, $submission, $publication));
 	}
 }

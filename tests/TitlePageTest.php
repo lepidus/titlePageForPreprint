@@ -4,7 +4,7 @@ require_once ("PdfHandlingTest.php");
 class TitlePageTest extends PdfHandlingTest {
     
     private function getTitlePageForTests(): TitlePage {
-        return new TitlePage(new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, $this->locale, $this->translator);
+        return new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, $this->locale, $this->translator);
     }
 
     private function convertPdfToImage(string $pdfPath, $imagePath): imagick {
@@ -182,7 +182,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithRelationTranslatedToCompositionLanguage(): void {
-        $titlePage = new TitlePage(new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -194,7 +194,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithChecklistLabelTranslatedToCompositionLanguage(): void {
-        $titlePage = new TitlePage(new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -206,7 +206,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithChecklistTranslatedToCompositionLanguage(): void {
-        $titlePage = new TitlePage(new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -222,7 +222,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithSubmissionDateTranslatedToCompositionLanguage(): void {
-        $titlePage = new TitlePage(new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -234,7 +234,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithPublicationDateTranslatedToCompositionLanguage(): void {
-        $titlePage = new TitlePage(new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);

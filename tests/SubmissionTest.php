@@ -14,7 +14,7 @@ class SubmissionTest extends TestCase {
     private $compositions = array();
     
     private function getSubmissionForTests() {
-        return new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
+        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
     }
 
     public function testHasSubmissionStatus(): void {
@@ -28,7 +28,7 @@ class SubmissionTest extends TestCase {
     }
 
     public function testDoiNotInformed(): void {
-        $submission = new Submission($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
+        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -38,7 +38,7 @@ class SubmissionTest extends TestCase {
     }
 
     public function testDoiJournalNotInformed(): void {
-        $submission = new Submission($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
+        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 

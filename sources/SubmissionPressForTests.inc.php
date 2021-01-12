@@ -5,7 +5,7 @@ class SubmissionPressForTests implements PrensaDeSubmissoes {
     private $submission;
     private $translator;
 
-    public function __construct(string $logoForTitlePage, Submission $submission, Translator $translator) {
+    public function __construct(string $logoForTitlePage, SubmissionModel $submission, Translator $translator) {
         $this->logoForTitlePage = $logoForTitlePage;
         $this->submission = $submission;
         $this->translator = $translator;

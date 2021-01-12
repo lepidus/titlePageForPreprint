@@ -11,7 +11,7 @@ class TitlePage {
     private $fontName;
     const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
 
-    public function __construct(Submission $submission, string $logo, string $locale, translator $translator) {
+    public function __construct(SubmissionModel $submission, string $logo, string $locale, translator $translator) {
         $this->submission = $submission;
         $this->logo = $logo;
         $this->locale = $locale;

@@ -6,7 +6,7 @@ class SubmissionPressTest extends PdfHandlingTest {
     public function testWithOnlyOnePdfTitlePageMustBeIncluded(): void {   
         $compositionPath = $this->pathOfTestPdf;
         $composition = new Composition($compositionPath, $this->locale, 1, 2);
-        $submission = new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($composition));
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($composition));
         $press = new SubmissionPressForTests($this->logo, $submission, $this->translator);
 
         $press->insertTitlePage();
@@ -20,7 +20,7 @@ class SubmissionPressTest extends PdfHandlingTest {
         $secondCompositionPath = $this->pathOfTestPdf2;
         $firstComposition = new Composition($fistCompositionPath, $this->locale, 2, 2);
         $secondComposition = new Composition($secondCompositionPath, "en_US", 3, 2);
-        $submission = new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($firstComposition, $secondComposition));
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($firstComposition, $secondComposition));
         
         $press = new SubmissionPressForTests($this->logo, $submission, $this->translator);
         $press->insertTitlePage();
@@ -37,7 +37,7 @@ class SubmissionPressTest extends PdfHandlingTest {
         $secondCompositionPath = "tests" . DIRECTORY_SEPARATOR . "fileNotPdf.odt";
         $firstComposition = new Composition($fistCompositionPath, $this->locale, 4, 2);
         $secondComposition = new Composition($secondCompositionPath, $this->locale, 5, 2);
-        $submission = new Submission($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($firstComposition, $secondComposition));
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($firstComposition, $secondComposition));
 
         $hashOfNotPdfComposition = md5_file($secondCompositionPath);
         $press = new SubmissionPressForTests($this->logo, $submission, $this->translator);

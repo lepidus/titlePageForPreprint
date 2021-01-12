@@ -13,7 +13,7 @@ spl_autoload_register(
                 'submissionpress' => '/submissionPress.inc.php',
                 'submissionpressfortests' => '/SubmissionPressForTests.inc.php',
                 'submissionpresspkp' => '/SubmissionPressPKP.inc.php',
-                'submission' => '/Submission.inc.php',
+                'submission' => '/SubmissionModel.inc.php',
                 'translator' => '/Translator.inc.php',
                 'translatorfortests' => '/TranslatorForTests.inc.php',
                 'translatorPKP' => '/TranslatorPKP.inc.php',

@@ -1,5 +1,5 @@
 <?php
-class Submission {
+class SubmissionModel {
 
     private $status;
     private $doi;
