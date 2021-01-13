@@ -19,8 +19,9 @@ class TitlePage {
         $this->fontName = TCPDF_FONTS::addTTFfont(__DIR__.'/../resources/opensans.ttf', 'TrueTypeUnicode', '', 32);
     }
 
-    public function getLogo(): string {
-        return $this->logo;
+    public function getLogoType(): string {
+        $fileType = pathinfo($this->logo, PATHINFO_EXTENSION);
+        return strtoupper($fileType);
     }
     
     private function generateTitlePage(): string {
@@ -28,7 +29,7 @@ class TitlePage {
         $titlePage->setPrintHeader(false);
         $titlePage->setPrintFooter(false);
         $titlePage->AddPage();
-        $titlePage->Image($this->logo, '', '', '35', '20', 'PNG', 'false', 'C', true, 400, 'C', false, false, 0, false, false, false);
+        $titlePage->Image($this->logo, '', '', '', '20', $this->getLogoType(), 'false', 'C', false, 400, 'C', false, false, 0, false, false, false);
         $titlePage->Ln(25);
         
         $titlePage->SetFont($this->fontName, '', 10, '', false);

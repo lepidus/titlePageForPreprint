@@ -25,7 +25,6 @@ import('lib.pkp.classes.file.SubmissionFileManager');
 
 class TitlePagePlugin extends GenericPlugin {
 	const STEPS_TO_INSERT_TITLE_PAGE = 4;
-	const LOGO_PATH = "plugins/generic/TitlePageForPreprint/resources/preprint_pilot.png";
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$registeredPlugin = parent::register($category, $path);
@@ -42,6 +41,14 @@ class TitlePagePlugin extends GenericPlugin {
 
 	public function getDescription() {
 		return 'Add a Title Page with essential information on preprints.';
+	}
+
+	public function getLogoPath($context) {
+		$publicFileManager = new PublicFileManager();
+		$filesPath = $publicFileManager->getContextFilesPath($context->getId());
+		$logoFilePath = $context->getLocalizedPageHeaderLogo()['uploadName'];
+
+		return $filesPath . DIRECTORY_SEPARATOR . $logoFilePath;
 	}
 
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
@@ -121,12 +128,13 @@ class TitlePagePlugin extends GenericPlugin {
 	}
 
 	private function getSubmissionPress($submission, $publication, $context, $data) {
+		$logoPath = $this->getLogoPath($context);
 		$compositions = $publication->getData('galleys');
 		
 		foreach ($compositions as $composition) {
 			$submissionCompositions[] = $this->createNewComposition($submission, $composition);	
 		}
 
-		return new SubmissionPressPKP(self::LOGO_PATH, new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionCompositions), new TranslatorPKP($context, $submission, $publication));
+		return new SubmissionPressPKP($logoPath, new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionCompositions), new TranslatorPKP($context, $submission, $publication));
 	}
 }
