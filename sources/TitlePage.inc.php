@@ -48,7 +48,7 @@ class TitlePage {
         $titlePage->Ln(5);
         $titlePage->Write(0, "https://doi.org/" . $this->submission->getDOI(), "https://doi.org/" . $this->submission->getDOI(), 0, 'C', true, 0, false, false, 0);
         $titlePage->Ln(10);
-        $titlePage->Write(0, $this->translator->translate('plugins.generic.TitlePageForPreprint.checklistLabel', $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.checklistLabel', $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
         $titlePage->SetFont($this->fontName, '', 10, '', false);
         $titlePage->Ln(5);
 
@@ -59,8 +59,8 @@ class TitlePage {
         $titlePage->writeHTMLCell(0, 0, '', '',$checklistText, 1, 1, false, true, 'JUSTIFY', false);
         $titlePage->SetFont($this->fontName, '', 11, '', false);
         $titlePage->Ln(5);
-        $titlePage->Write(0, $this->translator->translate('plugins.generic.TitlePageForPreprint.submissionDate', $this->locale) . ": " . $this->translator->getTranslatedDate($this->submission->getSubmissionDate(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        $titlePage->Write(0, $this->translator->translate('plugins.generic.TitlePageForPreprint.publicationDate', $this->locale) . ": " . $this->translator->getTranslatedDate($this->submission->getPublicationDate(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale) . ": " . $this->translator->getTranslatedDate($this->submission->getSubmissionDate(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale) . ": " . $this->translator->getTranslatedDate($this->submission->getPublicationDate(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
       
         $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
         $titlePage->Output($TitlePageFile, 'F');
@@ -129,7 +129,7 @@ class TitlePage {
         $linkDOI = "https://doi.org/".$this->submission->getDOI();
         $pdf->SetY(1);
         $pdf->SetFont($this->fontName, '', 8);
-        $pdf->Write(0, $this->translator->translate('plugins.generic.TitlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]), $linkDOI, 0, 'C', true, 0, false, false, 0);
+        $pdf->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]), $linkDOI, 0, 'C', true, 0, false, false, 0);
 
         $outputPath = self::OUTPUT_DIRECTORY . "pageHeader";
         $pdf->Output($outputPath, "F");

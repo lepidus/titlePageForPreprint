@@ -11,14 +11,14 @@ msgstr ""
 "PO-Revision-Date: 2020-07-29T11:05:18+00:00\n"
 "Language: U.S. English\n"
 
-msgid "plugins.generic.TitlePageForPreprint.rotuloDaChecklist"
+msgid "plugins.generic.titlePageForPreprint.checklistLabel"
 msgstr "This preprint was submitted under the following conditions"
 
-msgid "plugins.generic.TitlePageForPreprint.dataPublicacao"
+msgid "plugins.generic.titlePageForPreprint.publicationDate"
 msgstr "Posted on (YYYY-MM-DD)"
 
-msgid "plugins.generic.TitlePageForPreprint.dataSubmissao"
+msgid "plugins.generic.titlePageForPreprint.submissionDate"
 msgstr "Submitted on (YYYY-MM-DD)"
 
-msgid "plugins.generic.TitlePageForPreprint.textoCabecalho"
+msgid "plugins.generic.titlePageForPreprint.headerText"
 msgstr "SciELO Preprints - This document is a preprint and its current status is available at: {$doiPreprint}"
