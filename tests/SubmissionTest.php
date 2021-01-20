@@ -49,7 +49,7 @@ class SubmissionTest extends TestCase {
 
     public function testHasCompositions(): void {
         $submission = $this->getSubmissionForTests();
-        $this->assertEquals($this->compositions, $submission->getCompositions());
+        $this->assertEquals($this->compositions, $submission->getGalleys());
     }
 
     public function testSubmissionDate(): void {

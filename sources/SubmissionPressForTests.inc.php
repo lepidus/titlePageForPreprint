@@ -12,7 +12,7 @@ class SubmissionPressForTests implements SubmissionPress {
     }
 
     public function insertTitlePage(): void {
-       foreach($this->submission->getCompositions() as $composition){
+       foreach($this->submission->getGalleys() as $composition){
            $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $composition->locale, $this->translator);
 
            if (Pdf::isPdf($composition->file)) {               

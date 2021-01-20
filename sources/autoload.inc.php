@@ -7,7 +7,7 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'composition' => '/Composition.inc.php',
+                'galleyadapter' => '/GalleyAdapter.inc.php',
                 'titlepage' => '/TitlePage.inc.php',
                 'pdf' => '/Pdf.inc.php',
                 'submissionpress' => '/SubmissionPress.inc.php',

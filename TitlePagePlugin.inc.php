@@ -13,7 +13,7 @@
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.TitlePageForPreprint.sources.SubmissionModel');
-import('plugins.generic.TitlePageForPreprint.sources.Composition');
+import('plugins.generic.TitlePageForPreprint.sources.GalleyAdapter');
 import('plugins.generic.TitlePageForPreprint.sources.SubmissionPress');
 import('plugins.generic.TitlePageForPreprint.sources.SubmissionPressPKP');
 import('plugins.generic.TitlePageForPreprint.sources.Pdf');
@@ -124,7 +124,7 @@ class TitlePagePlugin extends GenericPlugin {
 		$newRevision = $this->createNewRevision($composition, $submission);
 		$revision = $submissionFileDao->getLatestRevision($submissionFile->getFileId());
 
-		return new Composition($newRevision->getFilePath(), $composition->getLocale(), $newRevision->getId(), $revision->getRevision());
+		return new GalleyAdapter($newRevision->getFilePath(), $composition->getLocale(), $newRevision->getId(), $revision->getRevision());
 	}
 
 	private function getSubmissionPress($submission, $publication, $context, $data) {

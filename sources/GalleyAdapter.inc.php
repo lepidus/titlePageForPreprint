@@ -1,5 +1,5 @@
 <?php
-class Composition {
+class GalleyAdapter {
 
     public $file;
     public $locale;
