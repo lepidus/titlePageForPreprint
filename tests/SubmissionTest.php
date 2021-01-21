@@ -11,10 +11,10 @@ class SubmissionTest extends TestCase {
     private $authors = "Clarice Linspector, Atila Iamarino";
     private $submissionDate = "10/06/2020";
     private $publicationDate = "12/06/2020";
-    private $compositions = array();
+    private $galleys = array();
     
     private function getSubmissionForTests() {
-        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
+        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->galleys);
     }
 
     public function testHasSubmissionStatus(): void {
@@ -28,7 +28,7 @@ class SubmissionTest extends TestCase {
     }
 
     public function testDoiNotInformed(): void {
-        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
+        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->galleys);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -38,7 +38,7 @@ class SubmissionTest extends TestCase {
     }
 
     public function testDoiJournalNotInformed(): void {
-        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->compositions);
+        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->galleys);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 
@@ -47,9 +47,9 @@ class SubmissionTest extends TestCase {
         $this->assertEquals($this->authors, $submission->getAuthors());
     }
 
-    public function testHasCompositions(): void {
+    public function testHasGalleys(): void {
         $submission = $this->getSubmissionForTests();
-        $this->assertEquals($this->compositions, $submission->getGalleys());
+        $this->assertEquals($this->galleys, $submission->getGalleys());
     }
 
     public function testSubmissionDate(): void {

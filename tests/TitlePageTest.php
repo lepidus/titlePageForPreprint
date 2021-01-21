@@ -181,7 +181,7 @@ class TitlePageTest extends PdfHandlingTest {
         unlink($fileImageOfPdfWithTitlePage);
     }
 
-    public function testStampsTitlePageWithRelationTranslatedToCompositionLanguage(): void {
+    public function testStampsTitlePageWithRelationTranslatedToGalleyLanguage(): void {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
@@ -193,7 +193,7 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals($expectedText, $searchResult);
     }
 
-    public function testStampsTitlePageWithChecklistLabelTranslatedToCompositionLanguage(): void {
+    public function testStampsTitlePageWithChecklistLabelTranslatedToGalleyLanguage(): void {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
@@ -205,7 +205,7 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals($expectedText, $searchResult);
     }
 
-    public function testStampsTitlePageWithChecklistTranslatedToCompositionLanguage(): void {
+    public function testStampsTitlePageWithChecklistTranslatedToGalleyLanguage(): void {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
@@ -221,7 +221,7 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals($secondItem, $resultOfSearchForSecondItemOfChecklist);
     }
 
-    public function testStampsTitlePageWithSubmissionDateTranslatedToCompositionLanguage(): void {
+    public function testStampsTitlePageWithSubmissionDateTranslatedToGalleyLanguage(): void {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
@@ -233,7 +233,7 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals($expectedText, $searchResult);
     }
 
-    public function testStampsTitlePageWithPublicationDateTranslatedToCompositionLanguage(): void {
+    public function testStampsTitlePageWithPublicationDateTranslatedToGalleyLanguage(): void {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         

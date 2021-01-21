@@ -79,11 +79,11 @@ class TitlePagePlugin extends GenericPlugin {
 		return $data;
 	}
 
-	public function createNewRevision($composition, $submission) {
-		$submissionFile = $composition->getFile();
+	public function createNewRevision($galley, $submission) {
+		$submissionFile = $galley->getFile();
 
 		$submissionFileManager = new SubmissionFileManager($submission->getContextId(), $submission->getId());
-		$copyResult = $submissionFileManager->copyFileToFileStage($composition->getFileId(), $submissionFile->getRevision(), $submissionFile->getFileStage(), $composition->getFileId(), true);
+		$copyResult = $submissionFileManager->copyFileToFileStage($galley->getFileId(), $submissionFile->getRevision(), $submissionFile->getFileStage(), $galley->getFileId(), true);
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		return $submissionFileDao->getLatestRevision($submissionFile->getFileId());
 	}
@@ -100,8 +100,8 @@ class TitlePagePlugin extends GenericPlugin {
 		return $publication->getAuthorString($userGroups);
 	}
 
-	private function createNewComposition($submission, $composition) {
-		$submissionFile = $composition->getFile();
+	private function createNewGalley($submission, $galley) {
+		$submissionFile = $galley->getFile();
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 
 		$id = $submissionFile->getFileId();
@@ -121,20 +121,20 @@ class TitlePagePlugin extends GenericPlugin {
 			}
 		}
 
-		$newRevision = $this->createNewRevision($composition, $submission);
+		$newRevision = $this->createNewRevision($galley, $submission);
 		$revision = $submissionFileDao->getLatestRevision($submissionFile->getFileId());
 
-		return new GalleyAdapter($newRevision->getFilePath(), $composition->getLocale(), $newRevision->getId(), $revision->getRevision());
+		return new GalleyAdapter($newRevision->getFilePath(), $galley->getLocale(), $newRevision->getId(), $revision->getRevision());
 	}
 
 	private function getSubmissionPress($submission, $publication, $context, $data) {
 		$logoPath = $this->getLogoPath($context);
-		$compositions = $publication->getData('galleys');
+		$galleys = $publication->getData('galleys');
 		
-		foreach ($compositions as $composition) {
-			$submissionCompositions[] = $this->createNewComposition($submission, $composition);	
+		foreach ($galleys as $galley) {
+			$submissionGalleys[] = $this->createNewGalley($submission, $galley);	
 		}
 
-		return new SubmissionPressPKP($logoPath, new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionCompositions), new TranslatorPKP($context, $submission, $publication));
+		return new SubmissionPressPKP($logoPath, new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionGalleys), new TranslatorPKP($context, $submission, $publication));
 	}
 }

@@ -19,13 +19,13 @@ class SubmissionPressPKP implements SubmissionPress {
         $fileSettingsDAO->updateSetting($id, 'revisoes', $json, 'JSON', false);
     }
 
-    private function verifyInDB($titlePage, $composition) {
+    private function verifyInDB($titlePage, $galley) {
         $fileSettingsDAO = new SubmissionFileSettingsDAO(); 
         DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
 
-        $pdf = new Pdf($composition->file);
-        $id = $composition->identifier;
-        $revision = $composition->revision;
+        $pdf = new Pdf($galley->file);
+        $id = $galley->identifier;
+        $revision = $galley->revision;
 
         $setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
         $revisions = '[]';
@@ -46,13 +46,13 @@ class SubmissionPressPKP implements SubmissionPress {
     }
 
     public function insertTitlePage(): void {
-        foreach($this->submission->getGalleys() as $composition) {
-            $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $composition->locale, $this->translator);
+        foreach($this->submission->getGalleys() as $galley) {
+            $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $galley->locale, $this->translator);
 
-            if (Pdf::isPdf($composition->file)) {
-                $pdf = new Pdf($composition->file);
-                $id = $composition->identifier;
-                $revisionsJSON = $this->verifyInDB($titlePage, $composition);
+            if (Pdf::isPdf($galley->file)) {
+                $pdf = new Pdf($galley->file);
+                $id = $galley->identifier;
+                $revisionsJSON = $this->verifyInDB($titlePage, $galley);
                 $titlePage->insert($pdf);
                 $this->insertInDB($id, $revisionsJSON);
             }
