@@ -17,7 +17,6 @@ spl_autoload_register(
                 'translator' => '/Translator.inc.php',
                 'translatorfortests' => '/TranslatorForTests.inc.php',
                 'translatorPKP' => '/TranslatorPKP.inc.php',
-                'submissionfilesettingsdao' => '/SubmissionFileSettingsDAO.inc.php'
             );
         }
         $cn = strtolower($class);

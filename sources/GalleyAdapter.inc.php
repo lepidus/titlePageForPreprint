@@ -3,13 +3,13 @@ class GalleyAdapter {
 
     public $file;
     public $locale;
-    public $identifier;
-    public $revision;
+    public $submissionFileId;
+    public $revisionId;
 
-    public function __construct(string $filePath, string $locale, int $identifier, int $revision) {
+    public function __construct(string $filePath, string $locale, int $submissionFileId, int $revisionId) {
         $this->file = $filePath;
         $this->locale = $locale;
-        $this->identifier = $identifier;
-        $this->revision = $revision;
+        $this->submissionFileId = $submissionFileId;
+        $this->revisionId = $revisionId;
     }
 }

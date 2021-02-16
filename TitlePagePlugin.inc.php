@@ -20,8 +20,6 @@ import('plugins.generic.TitlePageForPreprint.sources.Pdf');
 import('plugins.generic.TitlePageForPreprint.sources.TitlePage');
 import('plugins.generic.TitlePageForPreprint.sources.Translator');
 import('plugins.generic.TitlePageForPreprint.sources.TranslatorPKP');
-import('plugins.generic.TitlePageForPreprint.sources.SubmissionFileSettingsDAO');
-import('lib.pkp.classes.file.SubmissionFileManager');
 
 class TitlePagePlugin extends GenericPlugin {
 	const STEPS_TO_INSERT_TITLE_PAGE = 4;
@@ -31,6 +29,7 @@ class TitlePagePlugin extends GenericPlugin {
 		
 		if ($registeredPlugin && $this->getEnabled()) {
 			HookRegistry::register('Publication::publish::before', [$this, 'insertTitlePageWhenPublishing']);
+			HookRegistry::register('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
 		}
 		return $registeredPlugin;
 	}
@@ -41,6 +40,23 @@ class TitlePagePlugin extends GenericPlugin {
 
 	public function getDescription() {
 		return 'Add a Title Page with essential information on preprints.';
+	}
+
+	public function modifySubmissionFileSchema($hookName, $params) {
+		$schema =& $params[0];
+
+        $schema->properties->{'folhaDeRosto'} = (object) [
+            'type' => 'string',
+            'apiSummary' => true,
+            'validation' => ['nullable'],
+        ];
+		$schema->properties->{'revisoes'} = (object) [
+            'type' => 'string',
+            'apiSummary' => true,
+            'validation' => ['nullable'],
+        ];
+
+        return false;
 	}
 
 	public function getLogoPath($context) {
@@ -79,15 +95,6 @@ class TitlePagePlugin extends GenericPlugin {
 		return $data;
 	}
 
-	public function createNewRevision($galley, $submission) {
-		$submissionFile = $galley->getFile();
-
-		$submissionFileManager = new SubmissionFileManager($submission->getContextId(), $submission->getId());
-		$copyResult = $submissionFileManager->copyFileToFileStage($galley->getFileId(), $submissionFile->getRevision(), $submissionFile->getFileStage(), $galley->getFileId(), true);
-		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		return $submissionFileDao->getLatestRevision($submissionFile->getFileId());
-	}
-
 	private function getAuthors($publication) {
 		$userGroupIds = array_map(function($author) {
 			return $author->getData('userGroupId');
@@ -100,31 +107,36 @@ class TitlePagePlugin extends GenericPlugin {
 		return $publication->getAuthorString($userGroups);
 	}
 
-	private function createNewGalley($submission, $galley) {
-		$submissionFile = $galley->getFile();
+	private function getLatestRevision($submissionFileId) {
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+		$revisions = $submissionFileDao->getRevisions($submissionFileId)->toArray();
+		$lastRevision = get_object_vars($revisions[0]);
 
-		$id = $submissionFile->getFileId();
-		$revision = $submissionFileDao->getLatestRevision($id);
-
-		$fileSettingsDAO = new SubmissionFileSettingsDAO(); 
-		DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
+		foreach($revisions as $revision){
+			$revision = get_object_vars($revision);
+			if($revision['fileId'] > $lastRevision['fileId'])
+				$lastRevision = $revision;
+		}
 		
-		$setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
-		
-		if($setting) {
-			$revisions = $fileSettingsDAO->getSetting($id, 'revisoes');
-			$revisions = json_decode($revisions);
+		return [$lastRevision['fileId'], $lastRevision['path']];
+	}
 
-			if($revision->getRevision() != end($revisions)) {
-				$fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'nao');
+	private function createGalleyAdapter($submission, $galley) {
+		$submissionFile = $galley->getFile();
+		list($revisionId, $revisionPath) = $this->getLatestRevision($submissionFile->getId());
+		
+		if($submissionFile->getData('folhaDeRosto')) {
+			$revisionIds = $submissionFile->getData('revisoes');
+			$revisionIds = json_decode($revisionIds);
+
+			if($revisionId != end($revisionIds)) {
+				Services::get('submissionFile')->edit($submissionFile, [
+					'folhaDeRosto' => 'nao',
+				], Application::get()->getRequest());
 			}
 		}
 
-		$newRevision = $this->createNewRevision($galley, $submission);
-		$revision = $submissionFileDao->getLatestRevision($submissionFile->getFileId());
-
-		return new GalleyAdapter($newRevision->getFilePath(), $galley->getLocale(), $newRevision->getId(), $revision->getRevision());
+		return new GalleyAdapter($revisionPath, $galley->getLocale(), $submissionFile->getId(), $revisionId);
 	}
 
 	private function getSubmissionPress($submission, $publication, $context, $data) {
@@ -132,7 +144,7 @@ class TitlePagePlugin extends GenericPlugin {
 		$galleys = $publication->getData('galleys');
 		
 		foreach ($galleys as $galley) {
-			$submissionGalleys[] = $this->createNewGalley($submission, $galley);	
+			$submissionGalleys[] = $this->createGalleyAdapter($submission, $galley);	
 		}
 
 		return new SubmissionPressPKP($logoPath, new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionGalleys), new TranslatorPKP($context, $submission, $publication));

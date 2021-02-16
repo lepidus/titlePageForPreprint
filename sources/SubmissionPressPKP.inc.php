@@ -12,49 +12,46 @@ class SubmissionPressPKP implements SubmissionPress {
     }
 
     public function insertInDB($id, $json){
-        $fileSettingsDAO = new SubmissionFileSettingsDAO(); 
-        DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
-        
-        $fileSettingsDAO->updateSetting($id, 'folhaDeRosto', 'sim', 'string', false);
-        $fileSettingsDAO->updateSetting($id, 'revisoes', $json, 'JSON', false);
+        $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+        $submissionFile = $submissionFileDao->getById($id);
+
+        Services::get('submissionFile')->edit($submissionFile, [
+            'folhaDeRosto' => 'sim',
+            'revisoes' => $json
+        ], Application::get()->getRequest());
     }
 
-    private function verifyInDB($titlePage, $galley) {
-        $fileSettingsDAO = new SubmissionFileSettingsDAO(); 
-        DAORegistry::registerDAO('SubmissionFileSettingsDAO', $fileSettingsDAO);
+    private function verifyInDB($titlePage, $galley, $pdf) {
+        $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 
-        $pdf = new Pdf($galley->file);
-        $id = $galley->identifier;
-        $revision = $galley->revision;
+        $submissionFile = $submissionFileDao->getById($galley->submissionFileId);
+        $revisionId = $galley->revisionId;
 
-        $setting = $fileSettingsDAO->getSetting($id, 'folhaDeRosto');
-        $revisions = '[]';
+        $hasTitlePage = $submissionFile->getData('folhaDeRosto');
+        $revisions = ($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : array();
 
-        if($setting == 'sim') {     
-            $revisions = $fileSettingsDAO->getSetting($id, 'revisoes');
+        if($hasTitlePage == 'sim') {
             $titlePage->remove($pdf);
         }
         else {
             $titlePage->addDocumentHeader($pdf);
+            array_push($revisions, $revisionId);
         }
 
-        $revisions = json_decode($revisions);
-        array_push($revisions, $revision);
-        $revisionsJSON = json_encode($revisions);
-
-        return $revisionsJSON;
+        return json_encode($revisions);
     }
 
     public function insertTitlePage(): void {
         foreach($this->submission->getGalleys() as $galley) {
             $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $galley->locale, $this->translator);
+            $pdfPath = \Config::getVar('files', 'files_dir') . DIRECTORY_SEPARATOR . $galley->file;
 
-            if (Pdf::isPdf($galley->file)) {
-                $pdf = new Pdf($galley->file);
-                $id = $galley->identifier;
-                $revisionsJSON = $this->verifyInDB($titlePage, $galley);
+            if (Pdf::isPdf($pdfPath)) {
+                $pdf = new Pdf($pdfPath);
+                $submissionFileId = $galley->submissionFileId;
+                $revisionsJSON = $this->verifyInDB($titlePage, $galley, $pdf);
                 $titlePage->insert($pdf);
-                $this->insertInDB($id, $revisionsJSON);
+                $this->insertInDB($submissionFileId, $revisionsJSON);
             }
         }   
     }
