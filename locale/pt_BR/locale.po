@@ -11,6 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2020-07-29T11:05:18+00:00\n"
 "Language: Português Brasileiro\n"
 
+msgid "plugins.generic.titlePageForPreprint.displayName"
+msgstr "Folha de Rosto para Preprint"
+
+msgid "plugins.generic.titlePageForPreprint.description"
+msgstr "Adiciona uma folha de rosto com informações essenciais sobre o preprint"
+
 msgid "plugins.generic.titlePageForPreprint.checklistLabel"
 msgstr "Este preprint foi submetido sob as seguintes condições"
 

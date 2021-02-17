@@ -12,14 +12,14 @@
  * @brief Plugin class for the TitlePageForPreprint plugin.
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
-import('plugins.generic.TitlePageForPreprint.sources.SubmissionModel');
-import('plugins.generic.TitlePageForPreprint.sources.GalleyAdapter');
-import('plugins.generic.TitlePageForPreprint.sources.SubmissionPress');
-import('plugins.generic.TitlePageForPreprint.sources.SubmissionPressPKP');
-import('plugins.generic.TitlePageForPreprint.sources.Pdf');
-import('plugins.generic.TitlePageForPreprint.sources.TitlePage');
-import('plugins.generic.TitlePageForPreprint.sources.Translator');
-import('plugins.generic.TitlePageForPreprint.sources.TranslatorPKP');
+import('plugins.generic.titlePageForPreprint.sources.SubmissionModel');
+import('plugins.generic.titlePageForPreprint.sources.GalleyAdapter');
+import('plugins.generic.titlePageForPreprint.sources.SubmissionPress');
+import('plugins.generic.titlePageForPreprint.sources.SubmissionPressPKP');
+import('plugins.generic.titlePageForPreprint.sources.Pdf');
+import('plugins.generic.titlePageForPreprint.sources.TitlePage');
+import('plugins.generic.titlePageForPreprint.sources.Translator');
+import('plugins.generic.titlePageForPreprint.sources.TranslatorPKP');
 
 class TitlePagePlugin extends GenericPlugin {
 	const STEPS_TO_INSERT_TITLE_PAGE = 4;
@@ -35,11 +35,11 @@ class TitlePagePlugin extends GenericPlugin {
 	}
 
 	public function getDisplayName() {
-		return 'Title Page For Preprint';
+		return __('plugins.generic.titlePageForPreprint.displayName');
 	}
 
 	public function getDescription() {
-		return 'Add a Title Page with essential information on preprints.';
+		return __('plugins.generic.titlePageForPreprint.description');
 	}
 
 	public function modifySubmissionFileSchema($hookName, $params) {
