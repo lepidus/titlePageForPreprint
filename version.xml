@@ -9,8 +9,8 @@
 <version>
 	<application>titlePageForPreprint</application>
 	<type>plugins.generic</type>
-	<release>1.3.2.0</release>
-	<date>2020-11-25</date>
+	<release>1.4.0.0</release>
+	<date>2021-02-19</date>
 	<lazy-load>1</lazy-load>
 	<class>TitlePagePlugin</class>
 </version>
