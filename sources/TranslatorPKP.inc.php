@@ -31,7 +31,4 @@ class TranslatorPKP implements Translator {
         return $this->publication->getLocalizedTitle($locale);
     }
 
-    public function getTranslatedDate($date, $locale){
-        return strftime('%Y-%m-%d', $date);
-    }
 }

@@ -59,8 +59,8 @@ class TitlePage {
         $titlePage->writeHTMLCell(0, 0, '', '',$checklistText, 1, 1, false, true, 'JUSTIFY', false);
         $titlePage->SetFont($this->fontName, '', 11, '', false);
         $titlePage->Ln(5);
-        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale) . ": " . $this->translator->getTranslatedDate($this->submission->getSubmissionDate(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale) . ": " . $this->translator->getTranslatedDate($this->submission->getPublicationDate(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale) . ": " . $this->submission->getSubmissionDate(), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale) . ": " . $this->submission->getPublicationDate(), '', 0, 'JUSTIFY', true, 0, false, false, 0);
       
         $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
         $titlePage->Output($TitlePageFile, 'F');

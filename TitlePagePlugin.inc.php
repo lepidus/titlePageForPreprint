@@ -28,7 +28,9 @@ class TitlePagePlugin extends GenericPlugin {
 		$registeredPlugin = parent::register($category, $path);
 		
 		if ($registeredPlugin && $this->getEnabled()) {
+			
 			HookRegistry::register('Publication::publish::before', [$this, 'insertTitlePageWhenPublishing']);
+			HookRegistry::register('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
 			HookRegistry::register('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
 		}
 		return $registeredPlugin;
@@ -75,10 +77,27 @@ class TitlePagePlugin extends GenericPlugin {
 		$this->addLocaleData("en_US");
 		$this->addLocaleData("es_ES");
 		$pressData = $this->getDataForPress($submission, $publication);
-		$pressData['publicationDate'] = time();	// This method is called only when publishing.
+		$pressData['publicationDate'] = strftime('%Y-%m-%d', time());	// This method is called only when publishing.
 		$press = $this->getSubmissionPress($submission, $publication, $context, $pressData);
 		$press->insertTitlePage();
 	}
+
+	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
+		$params = $arguments[2];
+		$publication = $arguments[0];
+		if (array_key_exists('relationStatus',$params) && $publication->getData('datePublished')){
+			$submission = Services::get('submission')->get($publication->getData('submissionId'));
+			$context = Application::getContextDAO()->getById($submission->getContextId());
+			$this->addLocaleData("pt_BR");
+			$this->addLocaleData("en_US");
+			$this->addLocaleData("es_ES");
+			$pressData = $this->getDataForPress($submission, $publication);
+			$pressData['publicationDate'] = $publication->getData('datePublished');
+			$press = $this->getSubmissionPress($submission, $publication, $context, $pressData);
+			$press->insertTitlePage();
+		}
+	}
+
 
 	private function getDataForPress($submission, $publication) {
 		$data = array();
@@ -86,7 +105,9 @@ class TitlePagePlugin extends GenericPlugin {
 		$data['doi'] = $publication->getStoredPubId('doi');
 		$data['doiJournal'] = $publication->getData('vorDoi');
 		$data['authors'] = $this->getAuthors($publication);
-		$data['submissionDate'] = strtotime($submission->getData('dateSubmitted'));
+
+		$dateSubmitted = strtotime($submission->getData('dateSubmitted'));
+		$data['submissionDate'] = date('Y-m-d', $dateSubmitted);
 
 		$status = $publication->getData('relationStatus');
 		$relation = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');

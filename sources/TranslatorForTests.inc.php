@@ -46,7 +46,4 @@ class TranslatorForTests implements Translator {
         return $this->languageMap[$locale]["title"];
     }
     
-    public function getTranslatedDate($date){
-        return $date;
-    }
 }
