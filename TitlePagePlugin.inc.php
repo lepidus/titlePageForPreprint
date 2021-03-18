@@ -71,31 +71,27 @@ class TitlePagePlugin extends GenericPlugin {
 
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
 		$publication = $arguments[0];
-		$submission = Services::get('submission')->get($publication->getData('submissionId'));
-		$context = Application::getContextDAO()->getById($submission->getContextId());
-		$this->addLocaleData("pt_BR");
-		$this->addLocaleData("en_US");
-		$this->addLocaleData("es_ES");
-		$pressData = $this->getDataForPress($submission, $publication);
-		$pressData['publicationDate'] = strftime('%Y-%m-%d', time());	// This method is called only when publishing.
-		$press = $this->getSubmissionPress($submission, $publication, $context, $pressData);
-		$press->insertTitlePage();
+		$this->insertTitlePage($publication, strftime('%Y-%m-%d', time()));
 	}
 
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
 		$params = $arguments[2];
 		$publication = $arguments[0];
 		if (array_key_exists('relationStatus',$params) && $publication->getData('datePublished')){
-			$submission = Services::get('submission')->get($publication->getData('submissionId'));
-			$context = Application::getContextDAO()->getById($submission->getContextId());
-			$this->addLocaleData("pt_BR");
-			$this->addLocaleData("en_US");
-			$this->addLocaleData("es_ES");
-			$pressData = $this->getDataForPress($submission, $publication);
-			$pressData['publicationDate'] = $publication->getData('datePublished');
-			$press = $this->getSubmissionPress($submission, $publication, $context, $pressData);
-			$press->insertTitlePage();
+			$this->insertTitlePage($publication, $publication->getData('datePublished'));
 		}
+	}
+
+	public function insertTitlePage($publication, $publicationDate){
+		$submission = Services::get('submission')->get($publication->getData('submissionId'));
+		$context = Application::getContextDAO()->getById($submission->getContextId());
+		$this->addLocaleData("pt_BR");
+		$this->addLocaleData("en_US");
+		$this->addLocaleData("es_ES");
+		$pressData = $this->getDataForPress($submission, $publication);
+		$pressData['publicationDate'] = $publicationDate;
+		$press = $this->getSubmissionPress($submission, $publication, $context, $pressData);
+		$press->insertTitlePage();
 	}
 
 
