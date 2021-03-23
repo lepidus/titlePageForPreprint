@@ -71,7 +71,8 @@ class TitlePagePlugin extends GenericPlugin {
 
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
 		$publication = $arguments[0];
-		$this->insertTitlePage($publication, strftime('%Y-%m-%d', time()));
+		$datePublished = ($publication->getData('datePublished')) ? ($publication->getData('datePublished')) : (strftime('%Y-%m-%d', time()));
+		$this->insertTitlePage($publication, $datePublished);
 	}
 
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
