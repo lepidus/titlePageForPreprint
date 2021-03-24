@@ -102,6 +102,7 @@ class TitlePagePlugin extends GenericPlugin {
 		$data['doi'] = $publication->getStoredPubId('doi');
 		$data['doiJournal'] = $publication->getData('vorDoi');
 		$data['authors'] = $this->getAuthors($publication);
+		$data['version'] = $publication->getData('version');
 
 		$dateSubmitted = strtotime($submission->getData('dateSubmitted'));
 		$data['submissionDate'] = date('Y-m-d', $dateSubmitted);
@@ -165,6 +166,10 @@ class TitlePagePlugin extends GenericPlugin {
 			$submissionGalleys[] = $this->createGalleyAdapter($submission, $galley);	
 		}
 
-		return new SubmissionPressPKP($logoPath, new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $submissionGalleys), new TranslatorPKP($context, $submission, $publication));
+		return new SubmissionPressPKP(
+			$logoPath,
+			new SubmissionModel($data['status'], $data['doi'], $data['doiJournal'], $data['authors'], $data['submissionDate'], $data['publicationDate'], $data['version'], $submissionGalleys),
+			new TranslatorPKP($context, $submission, $publication)
+		);
 	}
 }

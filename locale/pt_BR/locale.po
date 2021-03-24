@@ -21,10 +21,13 @@ msgid "plugins.generic.titlePageForPreprint.checklistLabel"
 msgstr "Este preprint foi submetido sob as seguintes condições"
 
 msgid "plugins.generic.titlePageForPreprint.publicationDate"
-msgstr "Postado em (AAAA-MM-DD)"
+msgstr "Postado em: {$postDate} (versão {$version})"
 
 msgid "plugins.generic.titlePageForPreprint.submissionDate"
-msgstr "Submetido em (AAAA-MM-DD)"
+msgstr "Submetido em: {$subDate}"
 
 msgid "plugins.generic.titlePageForPreprint.headerText"
 msgstr "SciELO Preprints - Este documento é um preprint e sua situação atual está disponível em: {$doiPreprint}"
+
+msgid "plugins.generic.titlePageForPreprint.dateFormat"
+msgstr "(AAAA-MM-DD)"
