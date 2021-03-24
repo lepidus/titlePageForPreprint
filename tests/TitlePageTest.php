@@ -4,7 +4,7 @@ require_once ("PdfHandlingTest.php");
 class TitlePageTest extends PdfHandlingTest {
     
     private function getTitlePageForTests(): TitlePage {
-        return new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, $this->locale, $this->translator);
+        return new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
     }
 
     private function convertPdfToImage(string $pdfPath, $imagePath): imagick {
@@ -182,7 +182,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithRelationTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -194,7 +194,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithChecklistLabelTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -206,7 +206,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithChecklistTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -222,7 +222,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithSubmissionDateTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
@@ -234,13 +234,37 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithPublicationDateTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = "Date published: ". $this->publicationDate;
+        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $this->assertEquals($expectedText, $searchResult);
+    }
+
+    public function testStampsTitlePageWithVersionNumber(): void {
+        $titlePage = $this->getTitlePageForTests();
+        $pdf = new Pdf($this->pathOfTestPdf);
+        
+        $titlePage->insert($pdf);
+
+        $this->convertPdfToText($pdf);
+        $expectedText = "(AAAA-MM-DD)";
+        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $this->assertEquals($expectedText, $searchResult);
+    }
+
+    public function testStampsTitlePageWithVersionNumberTranslatedToGalleyLanguage(): void {
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
+        $pdf = new Pdf($this->pathOfTestPdf);
+        
+        $titlePage->insert($pdf);
+
+        $this->convertPdfToText($pdf);
+        $expectedText = "(YYYY-MM-DD)";
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }

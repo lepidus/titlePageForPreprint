@@ -61,6 +61,7 @@ class TitlePage {
         $titlePage->Ln(5);
         $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale) . ": " . $this->submission->getSubmissionDate(), '', 0, 'JUSTIFY', true, 0, false, false, 0);
         $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale) . ": " . $this->submission->getPublicationDate(), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.dateFormat', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
       
         $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
         $titlePage->Output($TitlePageFile, 'F');

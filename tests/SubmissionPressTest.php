@@ -6,7 +6,7 @@ class SubmissionPressTest extends PdfHandlingTest {
     public function testWithOnlyOnePdfTitlePageMustBeIncluded(): void {   
         $galleyPath = $this->pathOfTestPdf;
         $galley = new GalleyAdapter($galleyPath, $this->locale, 1, 2);
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($galley));
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, array($galley));
         $press = new SubmissionPressForTests($this->logo, $submission, $this->translator);
 
         $press->insertTitlePage();
@@ -20,7 +20,7 @@ class SubmissionPressTest extends PdfHandlingTest {
         $secondGalleyPath = $this->pathOfTestPdf2;
         $firstGalley = new GalleyAdapter($fistGalleyPath, $this->locale, 2, 2);
         $secondGalley = new GalleyAdapter($secondGalleyPath, "en_US", 3, 2);
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($firstGalley, $secondGalley));
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, array($firstGalley, $secondGalley));
         
         $press = new SubmissionPressForTests($this->logo, $submission, $this->translator);
         $press->insertTitlePage();
@@ -37,7 +37,7 @@ class SubmissionPressTest extends PdfHandlingTest {
         $secondGalleyPath = "tests" . DIRECTORY_SEPARATOR . "fileNotPdf.odt";
         $firstGalley = new GalleyAdapter($fistGalleyPath, $this->locale, 4, 2);
         $secondGalley = new GalleyAdapter($secondGalleyPath, $this->locale, 5, 2);
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, array($firstGalley, $secondGalley));
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, array($firstGalley, $secondGalley));
 
         $hashOfNotPdfGalley = md5_file($secondGalleyPath);
         $press = new SubmissionPressForTests($this->logo, $submission, $this->translator);

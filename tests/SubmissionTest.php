@@ -11,10 +11,11 @@ class SubmissionTest extends TestCase {
     private $authors = "Clarice Linspector, Atila Iamarino";
     private $submissionDate = "10/06/2020";
     private $publicationDate = "12/06/2020";
+    private $version = "1";
     private $galleys = array();
     
     private function getSubmissionForTests() {
-        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->galleys);
+        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
     }
 
     public function testHasSubmissionStatus(): void {
@@ -28,7 +29,7 @@ class SubmissionTest extends TestCase {
     }
 
     public function testDoiNotInformed(): void {
-        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->galleys);
+        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -38,7 +39,7 @@ class SubmissionTest extends TestCase {
     }
 
     public function testDoiJournalNotInformed(): void {
-        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->galleys);
+        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 
@@ -60,6 +61,11 @@ class SubmissionTest extends TestCase {
     public function testPublicationDate(): void {
         $submission = $this->getSubmissionForTests();
         $this->assertEquals($this->publicationDate, $submission->getPublicationDate());
+    }
+
+    public function testHasVersionNumber(): void {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->version, $submission->getversion());
     }
 }
 ?>
