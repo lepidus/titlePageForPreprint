@@ -245,7 +245,7 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals($expectedText, $searchResult);
     }
 
-    public function testStampsTitlePageWithVersionNumber(): void {
+    public function testStampsTitlePageWithDateFormat(): void {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
@@ -257,7 +257,7 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals($expectedText, $searchResult);
     }
 
-    public function testStampsTitlePageWithVersionNumberTranslatedToGalleyLanguage(): void {
+    public function testStampsTitlePageWithDateFormatTranslatedToGalleyLanguage(): void {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
