@@ -72,18 +72,18 @@ class TitlePagePlugin extends GenericPlugin {
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
 		$publication = $arguments[0];
 		$datePublished = ($publication->getData('datePublished')) ? ($publication->getData('datePublished')) : (strftime('%Y-%m-%d', time()));
-		$this->insertTitlePage($publication, $datePublished);
+		$this->insertTitlePageInPreprint($publication, $datePublished);
 	}
 
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
 		$params = $arguments[2];
 		$publication = $arguments[0];
 		if (array_key_exists('relationStatus',$params) && $publication->getData('datePublished')){
-			$this->insertTitlePage($publication, $publication->getData('datePublished'));
+			$this->insertTitlePageInPreprint($publication, $publication->getData('datePublished'));
 		}
 	}
 
-	public function insertTitlePage($publication, $publicationDate){
+	public function insertTitlePageInPreprint($publication, $publicationDate){
 		$submission = Services::get('submission')->get($publication->getData('submissionId'));
 		$context = Application::getContextDAO()->getById($submission->getContextId());
 		$this->addLocaleData("pt_BR");
