@@ -71,26 +71,24 @@ class TitlePagePlugin extends GenericPlugin {
 
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
 		$publication = $arguments[0];
-		$datePublished = ($publication->getData('datePublished')) ? ($publication->getData('datePublished')) : (strftime('%Y-%m-%d', time()));
-		$this->insertTitlePageInPreprint($publication, $datePublished);
+		$this->insertTitlePageInPreprint($publication);
 	}
 
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
 		$params = $arguments[2];
 		$publication = $arguments[0];
 		if (array_key_exists('relationStatus',$params) && $publication->getData('datePublished')){
-			$this->insertTitlePageInPreprint($publication, $publication->getData('datePublished'));
+			$this->insertTitlePageInPreprint($publication);
 		}
 	}
 
-	public function insertTitlePageInPreprint($publication, $publicationDate){
+	public function insertTitlePageInPreprint($publication){
 		$submission = Services::get('submission')->get($publication->getData('submissionId'));
 		$context = Application::getContextDAO()->getById($submission->getContextId());
 		$this->addLocaleData("pt_BR");
 		$this->addLocaleData("en_US");
 		$this->addLocaleData("es_ES");
 		$pressData = $this->getDataForPress($submission, $publication);
-		$pressData['publicationDate'] = $publicationDate;
 		$press = $this->getSubmissionPress($submission, $publication, $context, $pressData);
 		$press->insertTitlePage();
 	}
@@ -106,6 +104,8 @@ class TitlePagePlugin extends GenericPlugin {
 
 		$dateSubmitted = strtotime($submission->getData('dateSubmitted'));
 		$data['submissionDate'] = date('Y-m-d', $dateSubmitted);
+		$datePublished = strtotime($publication->getData('datePublished'));
+		$data['publicationDate'] = date('Y-m-d', $datePublished);
 
 		$status = $publication->getData('relationStatus');
 		$relation = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
