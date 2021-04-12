@@ -2,9 +2,9 @@
 /**
  * @file plugins/generic/TitlePageForPreprint/TitlePagePlugin.inc.php
  * 
- * Copyright (c) 2017-2019 Simon Fraser University
- * Copyright (c) 2017-2019 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ * Copyright (c) 2019-2021 Lepidus Tecnologia
+ * Copyright (c) 2020-2021 SciELO
+ * Distributed under the GNU GPL v3. For full terms see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
  *
  * @class TitlePagePlugin
  * @ingroup plugins_generic_TitlePageForPreprint
