@@ -137,7 +137,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage->insert($pdf);
         
         $this->convertPdfToText($pdf);
-        $expectedText = "Data de submissão: ". $this->submissionDate;
+        $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate',  $this->locale, ['subDate' => $this->submissionDate]); 
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
@@ -149,7 +149,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage->insert($pdf);
 
         $this->convertPdfToText($pdf);
-        $expectedText = "Data de postagem: ". $this->publicationDate;
+        $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate',  $this->locale,  ['postDate' => $this->publicationDate, 'version' => $this->version]);
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
@@ -194,53 +194,52 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithChecklistLabelTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
         
         $this->convertPdfToText($pdf);
-        $expectedText = "This preprint was submitted under the following conditions:";
+        $expectedText = $this->translator->translate("plugins.generic.titlePageForPreprint.checklistLabel", $this->locale) . ':';
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
 
     public function testStampsTitlePageWithChecklistTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
         
         $this->convertPdfToText($pdf);
-
-        $firstItem = "The submission has not been previously published.";
+        $firstItem = $this->translator->translate("item1CheckList", $this->locale);
         $resultOfSearchForFirstItemOfChecklist = $this->searchInTextFiles($firstItem, $this->pdfAsText);
         $this->assertEquals($firstItem, $resultOfSearchForFirstItemOfChecklist);
-        $secondItem = "Where available, URLs for the references have been provided.";
+        $secondItem = $this->translator->translate("item2CheckList", $this->locale);
         $resultOfSearchForSecondItemOfChecklist = $this->searchInTextFiles($secondItem, $this->pdfAsText);
         $this->assertEquals($secondItem, $resultOfSearchForSecondItemOfChecklist);
     }
 
     public function testStampsTitlePageWithSubmissionDateTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo,  $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
         
         $this->convertPdfToText($pdf);
-        $expectedText = "Date submitted: ". $this->submissionDate;
+        $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate',  $this->locale, ['subDate' => $this->submissionDate]);
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
 
     public function testStampsTitlePageWithPublicationDateTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo,  $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
         
         $this->convertPdfToText($pdf);
-        $expectedText = "Date published: ". $this->publicationDate;
+        $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale, ['postDate' => $this->publicationDate, 'version' => $this->version]);
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
@@ -258,13 +257,13 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     public function testStampsTitlePageWithDateFormatTranslatedToGalleyLanguage(): void {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo,  $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->insert($pdf);
 
         $this->convertPdfToText($pdf);
-        $expectedText = "(YYYY-MM-DD)";
+        $expectedText =  $this->translator->translate('plugins.generic.titlePageForPreprint.dateFormat', $this->locale);
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }

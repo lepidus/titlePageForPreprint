@@ -39,5 +39,9 @@ class PdfHandlingTest extends TestCase {
             unlink($this->pdfAsText);
         }
     }
+
+    public function testDummy(): void {
+        $this->assertTrue(true);
+    }
 }
 ?>

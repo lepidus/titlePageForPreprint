@@ -11,8 +11,8 @@ class TranslatorForTests implements Translator {
                                                     "publication.relation.published" => "Preprint has been published in a journal as an article",
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "plugins.generic.titlePageForPreprint.checklistLabel" => "This preprint was submitted under the following conditions",
-                                                    "plugins.generic.titlePageForPreprint.submissionDate" => "Date submitted",
-                                                    "plugins.generic.titlePageForPreprint.publicationDate" => "Date published",
+                                                    "plugins.generic.titlePageForPreprint.submissionDate" => "Submitted on: {!subDate}",
+                                                    "plugins.generic.titlePageForPreprint.publicationDate" => "Posted on: {!postDate} (version {!version}",
                                                     "plugins.generic.titlePageForPreprint.dateFormat" => "(YYYY-MM-DD)",
                                                     "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - this preprint has not been peer reviewed",
                                                     "item1CheckList" => "The submission has not been previously published.",
@@ -25,8 +25,8 @@ class TranslatorForTests implements Translator {
                                                     "publication.relation.published" => "O preprint foi publicado em um periódico como um artigo",
                                                     "metadata.property.displayName.doi" => "DOI",
                                                     "plugins.generic.titlePageForPreprint.checklistLabel" => "Este preprint foi submetido sob as seguintes condições",
-                                                    "plugins.generic.titlePageForPreprint.submissionDate" => "Data de submissão",
-                                                    "plugins.generic.titlePageForPreprint.publicationDate" => "Data de postagem",
+                                                    "plugins.generic.titlePageForPreprint.submissionDate" => "Submetido em: {!subDate}",
+                                                    "plugins.generic.titlePageForPreprint.publicationDate" => "Postado em: {!postDate} (versão {!version})",
                                                     "plugins.generic.titlePageForPreprint.dateFormat" => "(AAAA-MM-DD)",
                                                     "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - este preprint não foi revisado por pares",
                                                     "item1CheckList" => "A submissão não foi publicado anteriormente.",
@@ -37,7 +37,13 @@ class TranslatorForTests implements Translator {
 
     public function translate($key, $locale, $params = null) {
         $language = $this->languageMap[$locale];
-        return $language[$key];
+        $translatedString = $language[$key];
+        if($params) {
+            foreach ($params as $key => $value) {
+                $translatedString = strtr($translatedString, ['{!' . $key . '}' => $value]);
+            }
+        }
+        return $translatedString;
     }
 
     public function getTranslatedChecklist($locale) {
