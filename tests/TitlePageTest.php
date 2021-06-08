@@ -55,12 +55,12 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->addChecklistPage($pdf);
         
         $this->convertPdfToText($pdf);
 
         $expectedLabel = "Este preprint foi submetido sob as seguintes condições:";
-        $labelSearchResults = $this->searchInTextFiles($expectedLabel, $this->pdfAsText);
+        $labelSearchResults = substr($this->searchInTextFiles($expectedLabel, $this->pdfAsText), 1);
         $this->assertEquals($expectedLabel, $labelSearchResults);
 
         $firstItem = $this->checklist[0];
@@ -197,11 +197,11 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->addChecklistPage($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = $this->translator->translate("plugins.generic.titlePageForPreprint.checklistLabel", $this->locale) . ':';
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $searchResult = substr($this->searchInTextFiles($expectedText, $this->pdfAsText), 1);
         $this->assertEquals($expectedText, $searchResult);
     }
 
@@ -209,7 +209,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->addChecklistPage($pdf);
         
         $this->convertPdfToText($pdf);
         $firstItem = $this->translator->translate("item1CheckList", $this->locale);
