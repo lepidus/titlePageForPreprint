@@ -38,6 +38,7 @@ To download the plugin, go to the [Releases page](https://github.com/lepidus/tit
 3. Navigate to `Settings`>` Website`> `Plugins`> `Upload a new plugin`.
 4. Under __Upload file__ select the file __titlePageForPreprint.tar.gz__.
 5. Click __Save__ and the plugin will be installed on your website.
+6. The plugin requires a logo defined on Website Settings -> Apearance -> Logo, so you need to upload an image. Images with any kind of transparency (alpha channel) are not supported and **should not** be used.
 
 ## Installation for development
 1. Install the development dependencies.
