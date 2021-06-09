@@ -26,8 +26,8 @@ class TitlePageTest extends PdfHandlingTest {
         return $extractedImage;
     }
 
-    private function convertPdfToText(pdf $pdf): void {
-        shell_exec("pdftotext ". $pdf->getPath() . " " . $this->pdfAsText);
+    private function convertPdfToText(pdf $pdf, int $startPage = 1): void {
+        shell_exec("pdftotext -f " . $startPage . " ". $pdf->getPath() . " " . $this->pdfAsText);
     }
 
     private function searchInTextFiles($targetString, $filePath): string {
@@ -51,16 +51,17 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals(1, $pdf->getNumberOfPages());
     }
 
-    public function testInsertingInExistingPdfStampsOnChecklist(): void {
+    public function testInsertingInExistingPdfStampsChecklistOnLastPage(): void {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $titlePage->addChecklistPage($pdf);
         
-        $this->convertPdfToText($pdf);
+        $numberOfPages = $pdf->getNumberOfPages();
+        $this->convertPdfToText($pdf, $numberOfPages);
 
         $expectedLabel = "Este preprint foi submetido sob as seguintes condições:";
-        $labelSearchResults = substr($this->searchInTextFiles($expectedLabel, $this->pdfAsText), 1);
+        $labelSearchResults = $this->searchInTextFiles($expectedLabel, $this->pdfAsText);
         $this->assertEquals($expectedLabel, $labelSearchResults);
 
         $firstItem = $this->checklist[0];
