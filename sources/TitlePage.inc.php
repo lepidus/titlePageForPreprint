@@ -48,17 +48,7 @@ class TitlePage {
         $titlePage->Ln(5);
         $titlePage->Write(0, "https://doi.org/" . $this->submission->getDOI(), "https://doi.org/" . $this->submission->getDOI(), 0, 'C', true, 0, false, false, 0);
         $titlePage->Ln(10);
-        $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.checklistLabel', $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        $titlePage->SetFont($this->fontName, '', 10, '', false);
-        $titlePage->Ln(5);
-
-        $checklistText = '';
-        foreach ($this->translator->getTranslatedChecklist($this->locale) as $item) {
-            $checklistText = $checklistText. "<ul style=\"text-align:justify;\"><li>". $item . "</li></ul>";
-        }
-        $titlePage->writeHTMLCell(0, 0, '', '',$checklistText, 1, 1, false, true, 'JUSTIFY', false);
-        $titlePage->SetFont($this->fontName, '', 11, '', false);
-        $titlePage->Ln(5);
+        
         $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale, ['subDate' => $this->submission->getSubmissionDate()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
         $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale, ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
         $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.dateFormat', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
@@ -146,6 +136,45 @@ class TitlePage {
         }
 
         $this->unitePages($pdf, 1);
+    }
+
+    private function generateChecklistPage(): string {
+        $checklistPage = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $checklistPage->setPrintHeader(false);
+        $checklistPage->setPrintFooter(false);
+        $checklistPage->AddPage();
+
+        $checklistPage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.checklistLabel', $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $checklistPage->SetFont($this->fontName, '', 10, '', false);
+        $checklistPage->Ln(5);
+
+        $checklistText = '';
+        foreach ($this->translator->getTranslatedChecklist($this->locale) as $item) {
+            $checklistText = $checklistText. "<ul style=\"text-align:justify;\"><li>". $item . "</li></ul>";
+        }
+        $checklistPage->writeHTMLCell(0, 0, '', '',$checklistText, 1, 1, false, true, 'JUSTIFY', false);
+        $checklistPage->SetFont($this->fontName, '', 11, '', false);
+        $checklistPage->Ln(5);
+
+        $checklistPageFile = self::OUTPUT_DIRECTORY . 'checklistPage.pdf';
+        $checklistPage->Output($checklistPageFile, 'F');
+        return $checklistPageFile;
+    }
+
+    private function concatenateChecklistPage(string $checklistPageFile, pdf $pdf): void {
+        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        copy($pdf->getPath(), $originalFileCopy);
+        $modifiedFile = self::OUTPUT_DIRECTORY . "withChecklistPage.pdf";
+        $uniteCommand = 'pdfunite '.  $originalFileCopy . ' '. $checklistPageFile . ' ' . $modifiedFile;
+        shell_exec($uniteCommand);
+        rename($modifiedFile, $pdf->getPath());
+        $this->removeTemporaryFiles($checklistPageFile);
+        $this->removeTemporaryFiles($originalFileCopy);
+    }
+
+    public function addChecklistPage(pdf $pdf) {
+        $checklistPageFile = $this->generateChecklistPage();
+        $this->concatenateChecklistPage($checklistPageFile, $pdf);
     }
 
 }

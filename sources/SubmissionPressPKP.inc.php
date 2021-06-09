@@ -35,6 +35,7 @@ class SubmissionPressPKP implements SubmissionPress {
         }
         else {
             $titlePage->addDocumentHeader($pdf);
+            $titlePage->addChecklistPage($pdf);
             array_push($revisions, $revisionId);
         }
 
