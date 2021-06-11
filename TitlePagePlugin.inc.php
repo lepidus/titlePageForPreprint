@@ -20,6 +20,7 @@ import('plugins.generic.titlePageForPreprint.sources.Pdf');
 import('plugins.generic.titlePageForPreprint.sources.TitlePage');
 import('plugins.generic.titlePageForPreprint.sources.Translator');
 import('plugins.generic.titlePageForPreprint.sources.TranslatorPKP');
+import('plugins.generic.titlePageForPreprint.sources.TitlePageDAO');
 
 class TitlePagePlugin extends GenericPlugin {
 	const STEPS_TO_INSERT_TITLE_PAGE = 4;
@@ -142,20 +143,25 @@ class TitlePagePlugin extends GenericPlugin {
 
 	private function createGalleyAdapter($submission, $galley) {
 		$submissionFile = $galley->getFile();
-		list($revisionId, $revisionPath) = $this->getLatestRevision($submissionFile->getId());
+		list($lastRevisionId, $lastRevisionPath) = $this->getLatestRevision($submissionFile->getId());
 		
-		if($submissionFile->getData('folhaDeRosto')) {
+		if(!empty($submissionFile->getData('folhaDeRosto'))){
 			$revisionIds = $submissionFile->getData('revisoes');
 			$revisionIds = json_decode($revisionIds);
 
-			if($revisionId != end($revisionIds)) {
-				Services::get('submissionFile')->edit($submissionFile, [
-					'folhaDeRosto' => 'nao',
-				], Application::get()->getRequest());
+			if($lastRevisionId != end($revisionIds)) {
+				$titlePageDao = new TitlePageDAO();
+				$numberOfRevisions = $titlePageDao->getNumberOfRevisions($submissionFile->getId());
+
+				if($numberOfRevisions != end($revisionIds)) {
+					Services::get('submissionFile')->edit($submissionFile, [
+						'folhaDeRosto' => 'nao',
+					], Application::get()->getRequest());
+				}
 			}
 		}
 
-		return new GalleyAdapter($revisionPath, $galley->getLocale(), $submissionFile->getId(), $revisionId);
+		return new GalleyAdapter($lastRevisionPath, $galley->getLocale(), $submissionFile->getId(), $lastRevisionId);
 	}
 
 	private function getSubmissionPress($submission, $publication, $context, $data) {
