@@ -1,12 +1,14 @@
 <?php
 use PHPUnit\Framework\TestCase;
+import ('plugins.generic.titlePageForPreprint.sources.TranslatorForTests');
 
 class PdfHandlingTest extends TestCase {
+    protected const TESTS_DIRECTORY = 'plugins' . DIRECTORY_SEPARATOR . 'generic' . DIRECTORY_SEPARATOR . 'titlePageForPreprint' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR;
 
     protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";
     protected $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
-    protected $logo = 'tests' . DIRECTORY_SEPARATOR . "logo_noAlphaChannel.png";
+    protected $logo = self::TESTS_DIRECTORY . "logo_noAlphaChannel.png";
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     protected $locale = "pt_BR";
     protected $title = "Assim Falou Zaratustra";
@@ -18,13 +20,13 @@ class PdfHandlingTest extends TestCase {
 
     protected function setUp(): void {
         $this->translator = new TranslatorForTests();
-        $this->pathOfTestPdf = "tests" . DIRECTORY_SEPARATOR . "testOnePage.pdf";
-        $this->copyOfTestPdfToRestore = "tests" . DIRECTORY_SEPARATOR . "testOnePage_copy.pdf";
+        $this->pathOfTestPdf = self::TESTS_DIRECTORY . "testOnePage.pdf";
+        $this->copyOfTestPdfToRestore = self::TESTS_DIRECTORY . "testOnePage_copy.pdf";
         copy($this->pathOfTestPdf, $this->copyOfTestPdfToRestore);
-        $this->pdfAsText = "tests" . DIRECTORY_SEPARATOR . "testOnePage.txt";
+        $this->pdfAsText = self::TESTS_DIRECTORY . "testOnePage.txt";
 
-        $this->pathOfTestPdf2 = "tests" . DIRECTORY_SEPARATOR . "testTwoPages.pdf";
-        $this->copyOfTestPdfToRestore2 = "tests" . DIRECTORY_SEPARATOR . "testTwoPages_copy.pdf";
+        $this->pathOfTestPdf2 = self::TESTS_DIRECTORY . "testTwoPages.pdf";
+        $this->copyOfTestPdfToRestore2 = self::TESTS_DIRECTORY . "testTwoPages_copy.pdf";
         copy($this->pathOfTestPdf2, $this->copyOfTestPdfToRestore2);
     }
     

@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
+import ('plugins.generic.titlePageForPreprint.sources.Pdf');
 
 class TitlePage { 
 

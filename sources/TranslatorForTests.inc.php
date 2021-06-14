@@ -1,4 +1,5 @@
 <?php
+import ('plugins.generic.titlePageForPreprint.sources.Translator');
 
 class TranslatorForTests implements Translator {
 

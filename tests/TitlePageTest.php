@@ -1,5 +1,8 @@
 <?php
 require_once ("PdfHandlingTest.php");
+import ('plugins.generic.titlePageForPreprint.sources.TitlePage');
+import ('plugins.generic.titlePageForPreprint.sources.Pdf');
+import ('plugins.generic.titlePageForPreprint.sources.SubmissionModel');
 
 class TitlePageTest extends PdfHandlingTest {
     
@@ -20,7 +23,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     private function extractImageFromPdf(pdf $pdf): string {
-        $pathOfExtractedImage = "tests" . DIRECTORY_SEPARATOR;
+        $pathOfExtractedImage = self::TESTS_DIRECTORY;
         $result = shell_exec("pdfimages -f 1 -png ". $pdf->getPath() . " " . $pathOfExtractedImage);
         $extractedImage = $pathOfExtractedImage . DIRECTORY_SEPARATOR . "-000.png";
         return $extractedImage;
