@@ -4,7 +4,7 @@ import('classes.submission.Submission');
 import('lib.pkp.classes.file.PKPFile');
 import('lib.pkp.classes.submission.SubmissionFile');
 import('plugins.generic.titlePageForPreprint.tests.TitlePageTestsDAO');
-import('plugins.generic.titlePageForPreprint.TitlePagePlugin');
+import('plugins.generic.titlePageForPreprint.classes.GalleyAdapterFactory');
 import('lib.pkp.classes.services.PKPSchemaService');
 
 class TitlePageOnDatabaseTest extends DatabaseTestCase {
@@ -74,10 +74,10 @@ class TitlePageOnDatabaseTest extends DatabaseTestCase {
     }
 
     private function checkIfLastRevisionHasTitlePage() {
-        $titlePagePlugin = new TitlePagePlugin();
-        list($lastRevisionId, $lastRevisionPath) = $titlePagePlugin->getLatestRevision($this->submissionFile->getId());
+        $galleyAdapterFactory = new GalleyAdapterFactory();
+        list($lastRevisionId, $lastRevisionPath) = $galleyAdapterFactory->getLatestRevision($this->submissionFile->getId());
 
-        $lastRevisionHasTitlePage = !$titlePagePlugin->submissionFileHasNewRevisionWithoutTitlePage($this->submissionFile, $lastRevisionId);
+        $lastRevisionHasTitlePage = !$galleyAdapterFactory->submissionFileHasNewRevisionWithoutTitlePage($this->submissionFile, $lastRevisionId);
         return $lastRevisionHasTitlePage;
     }
     
