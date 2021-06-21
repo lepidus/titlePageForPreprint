@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file plugins/reports/titlePageForPreprint/sources/TitlePageDAO.inc.php
+ * @file plugins/reports/titlePageForPreprint/classes/TitlePageDAO.inc.php
  *
  * @class TitlePageDAO
  * @ingroup plugins_generic_titlePageForPreprint

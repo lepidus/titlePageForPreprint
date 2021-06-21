@@ -1,8 +1,8 @@
 <?php
 require_once ("PdfHandlingTest.php");
-import ('plugins.generic.titlePageForPreprint.sources.TitlePage');
-import ('plugins.generic.titlePageForPreprint.sources.Pdf');
-import ('plugins.generic.titlePageForPreprint.sources.SubmissionModel');
+import ('plugins.generic.titlePageForPreprint.classes.TitlePage');
+import ('plugins.generic.titlePageForPreprint.classes.Pdf');
+import ('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
 
 class TitlePageTest extends PdfHandlingTest {
     

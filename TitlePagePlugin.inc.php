@@ -12,15 +12,15 @@
  * @brief Plugin class for the TitlePageForPreprint plugin.
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
-import('plugins.generic.titlePageForPreprint.sources.SubmissionModel');
-import('plugins.generic.titlePageForPreprint.sources.GalleyAdapter');
-import('plugins.generic.titlePageForPreprint.sources.SubmissionPress');
-import('plugins.generic.titlePageForPreprint.sources.SubmissionPressPKP');
-import('plugins.generic.titlePageForPreprint.sources.Pdf');
-import('plugins.generic.titlePageForPreprint.sources.TitlePage');
-import('plugins.generic.titlePageForPreprint.sources.Translator');
-import('plugins.generic.titlePageForPreprint.sources.TranslatorPKP');
-import('plugins.generic.titlePageForPreprint.sources.TitlePageDAO');
+import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+import('plugins.generic.titlePageForPreprint.classes.GalleyAdapter');
+import('plugins.generic.titlePageForPreprint.classes.SubmissionPress');
+import('plugins.generic.titlePageForPreprint.classes.SubmissionPressPKP');
+import('plugins.generic.titlePageForPreprint.classes.Pdf');
+import('plugins.generic.titlePageForPreprint.classes.TitlePage');
+import('plugins.generic.titlePageForPreprint.classes.Translator');
+import('plugins.generic.titlePageForPreprint.classes.TranslatorPKP');
+import('plugins.generic.titlePageForPreprint.classes.TitlePageDAO');
 
 class TitlePagePlugin extends GenericPlugin {
 	const STEPS_TO_INSERT_TITLE_PAGE = 4;

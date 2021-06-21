@@ -1,6 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
-import('plugins.generic.titlePageForPreprint.sources.Pdf');
+import('plugins.generic.titlePageForPreprint.classes.Pdf');
 
 final class PdfTest extends TestCase {
 

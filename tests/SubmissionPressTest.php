@@ -1,9 +1,9 @@
 <?php
 require_once ("PdfHandlingTest.php");
-import ('plugins.generic.titlePageForPreprint.sources.GalleyAdapter');
-import ('plugins.generic.titlePageForPreprint.sources.SubmissionModel');
-import ('plugins.generic.titlePageForPreprint.sources.SubmissionPressForTests');
-import ('plugins.generic.titlePageForPreprint.sources.Pdf');
+import ('plugins.generic.titlePageForPreprint.classes.GalleyAdapter');
+import ('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+import ('plugins.generic.titlePageForPreprint.classes.SubmissionPressForTests');
+import ('plugins.generic.titlePageForPreprint.classes.Pdf');
 
 class SubmissionPressTest extends PdfHandlingTest {
 

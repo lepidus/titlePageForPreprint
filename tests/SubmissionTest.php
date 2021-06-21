@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-import('plugins.generic.titlePageForPreprint.sources.SubmissionModel');
+import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
 
 class SubmissionTest extends TestCase {
 

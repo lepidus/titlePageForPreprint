@@ -1,6 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
-import ('plugins.generic.titlePageForPreprint.sources.TranslatorForTests');
+import ('plugins.generic.titlePageForPreprint.classes.TranslatorForTests');
 
 class PdfHandlingTest extends TestCase {
     protected const TESTS_DIRECTORY = 'plugins' . DIRECTORY_SEPARATOR . 'generic' . DIRECTORY_SEPARATOR . 'titlePageForPreprint' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR;
