@@ -1,5 +1,9 @@
 <?php
 require_once ("PdfHandlingTest.php");
+import ('plugins.generic.titlePageForPreprint.classes.GalleyAdapter');
+import ('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+import ('plugins.generic.titlePageForPreprint.classes.SubmissionPressForTests');
+import ('plugins.generic.titlePageForPreprint.classes.Pdf');
 
 class SubmissionPressTest extends PdfHandlingTest {
 
@@ -34,7 +38,7 @@ class SubmissionPressTest extends PdfHandlingTest {
 
     public function testMustIgnoreNotPdfFiles(): void {
         $fistGalleyPath = $this->pathOfTestPdf;
-        $secondGalleyPath = "tests" . DIRECTORY_SEPARATOR . "fileNotPdf.odt";
+        $secondGalleyPath = self::TESTS_DIRECTORY . "fileNotPdf.odt";
         $firstGalley = new GalleyAdapter($fistGalleyPath, $this->locale, 4, 2);
         $secondGalley = new GalleyAdapter($secondGalleyPath, $this->locale, 5, 2);
         $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, array($firstGalley, $secondGalley));

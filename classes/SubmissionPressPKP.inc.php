@@ -1,4 +1,10 @@
 <?php
+import ('plugins.generic.titlePageForPreprint.classes.Pdf');
+import ('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+import ('plugins.generic.titlePageForPreprint.classes.SubmissionPress');
+import ('plugins.generic.titlePageForPreprint.classes.Translator');
+import ('plugins.generic.titlePageForPreprint.classes.TitlePage');
+
 class SubmissionPressPKP implements SubmissionPress {
 
     private $logoForTitlePage;
