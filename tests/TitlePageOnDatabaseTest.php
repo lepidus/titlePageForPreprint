@@ -67,10 +67,10 @@ class TitlePageOnDatabaseTest extends DatabaseTestCase {
     private function addTitlePageDataToSubmissionFile() {
         $titlePageTestsDao = new TitlePageTestsDAO();
 
-        $titlePageTestsDao->addFolhaDeRostoSettingToSubmissionFile($this->submissionFile, 'sim');
+        $titlePageTestsDao->addTitlePagePresenceSettingToSubmissionFile($this->submissionFile, 'sim');
         
         $revisoes = json_encode([$this->fileId]);
-        $titlePageTestsDao->addRevisoesSettingToSubmissionFile($this->submissionFile, $revisoes);
+        $titlePageTestsDao->addRevisionsWithTitlePageSettingToSubmissionFile($this->submissionFile, $revisoes);
     }
 
     private function checkIfLastRevisionHasTitlePage() {
@@ -89,7 +89,7 @@ class TitlePageOnDatabaseTest extends DatabaseTestCase {
         $titlePageTestsDao = new TitlePageTestsDAO();
         $numberOfRevisions = 1;
         $newRevisoes = json_encode([$numberOfRevisions]);
-        $titlePageTestsDao->updateRevisoesFromSubmissionFile($this->submissionFile, $newRevisoes);
+        $titlePageTestsDao->updateRevisionsWithTitlePageSettingFromSubmissionFile($this->submissionFile, $newRevisoes);
 
         $this->assertTrue($this->checkIfLastRevisionHasTitlePage());
     }
