@@ -64,7 +64,12 @@ class TitlePage {
         copy($pdf->getPath(), $originalFileCopy);
         $modifiedFile = self::OUTPUT_DIRECTORY . "withTitlePage.pdf";
         $uniteCommand = 'pdfunite '.  $TitlePageFile . ' '. $originalFileCopy . ' ' . $modifiedFile;
-        shell_exec($uniteCommand);
+        exec($uniteCommand, $output, $resulCode);
+
+        if ($resulCode != 0) {
+            throw new Exception('Final Union Failure ');
+        }
+
         rename($modifiedFile, $pdf->getPath());
         $this->removeTemporaryFiles($TitlePageFile);
         $this->removeTemporaryFiles($originalFileCopy);
@@ -76,12 +81,19 @@ class TitlePage {
 
     public function insert(pdf $pdf): void {
         $TitlePageFile = $this->generateTitlePage();
-        $this->concatenateTitlePage($TitlePageFile, $pdf);
+        try {
+            $this->concatenateTitlePage($TitlePageFile, $pdf);
+        } catch (Exception $e) {
+            error_log('Caught exception: ' .  $e->getMessage());
+        }
     }
 
     private function separatePages(pdf $pdf, $initialPage) {
         $separateCommand = "pdfseparate -f {$initialPage} {$pdf->getPath()} %d.pdf";
-        shell_exec($separateCommand);
+        exec($separateCommand, $output, $resulCode);
+        if ($resulCode != 0) {
+            throw new Exception('Separation Failure ');
+        }
     }
 
     private function unitePages(pdf $pdf, $initialPage) {
@@ -94,7 +106,12 @@ class TitlePage {
         }
 
         $uniteCommand .= $modifiedFile;
-        shell_exec($uniteCommand);
+        exec($uniteCommand, $output, $resulCode);
+        
+        if ($resulCode != 0) {
+            throw new Exception('Union Failure');
+        }
+
         rename($modifiedFile, $pdf->getPath());
 
         for ($i = $initialPage; $i <= $pages; $i++){
@@ -103,8 +120,18 @@ class TitlePage {
     }
 
     public function remove(pdf $pdf): void {
-        $this->separatePages($pdf, 2);
-        $this->unitePages($pdf, 2);
+        try {
+            $this->separatePages($pdf, 2);
+        } catch (Exception $e) {
+            error_log('Caught exception: ' . $e->getMessage());
+            
+        }
+
+        try {
+            $this->unitePages($pdf, 2);
+        } catch (Exception $e) {
+            error_log('Caught exception: ' .  $e->getMessage());
+        }
     }
 
     private function addPageHeader($pagePath) {
