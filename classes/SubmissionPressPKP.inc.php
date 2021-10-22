@@ -37,7 +37,11 @@ class SubmissionPressPKP implements SubmissionPress {
         $revisions = ($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : array();
 
         if($hasTitlePage == 'sim') {
-            $titlePage->remove($pdf);
+            try {
+                $titlePage->remove($pdf);
+            } catch (Exception $e) {
+                error_log('Caught exception: ' .  $e->getMessage());
+            }
         }
         else {
             $titlePage->addDocumentHeader($pdf);
