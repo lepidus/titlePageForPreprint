@@ -59,6 +59,13 @@ class TitlePage {
         return $TitlePageFile;
     }
 
+    private function commandSuccessful(int $resultCode): bool{
+        if ($resultCode != 0) {
+            return false;
+        }
+        return true;
+    }
+
     private function concatenateTitlePage(string $TitlePageFile, pdf $pdf): void {
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($pdf->getPath(), $originalFileCopy);
@@ -68,7 +75,7 @@ class TitlePage {
 
         exec($uniteCommand, $output, $resultCode);
 
-        if ($resultCode != 0) {
+        if (!$this->commandSuccessful($resultCode)) {
             throw new Exception('Final Union Failure');
         }
 
@@ -93,7 +100,7 @@ class TitlePage {
     private function separatePages(pdf $pdf) {
         $separateCommand = "pdftk {$pdf->getPath()} burst output %d.pdf";
         exec($separateCommand, $output, $resultCode);
-        if ($resultCode != 0) {
+        if (!$this->commandSuccessful($resultCode)) {
             throw new Exception('Separation Failure ');
         }
     }
@@ -110,7 +117,7 @@ class TitlePage {
         $uniteCommand .= 'cat output ' .$modifiedFile;
         exec($uniteCommand, $output, $resultCode);
 
-        if ($resultCode != 0) {
+        if (!$this->commandSuccessful($resultCode)) {
             throw new Exception('Union Failure');
         }
 
@@ -126,7 +133,7 @@ class TitlePage {
         $separateCommand = "pdftk {$pdf->getPath()} cat 2-end output {$modifiedFile}";
         exec($separateCommand, $output, $resultCode);
 
-        if ($resultCode != 0) {
+        if (!$this->commandSuccessful($resultCode)) {
             throw new Exception('Title Page Remove Failure');
         }
 
@@ -203,7 +210,7 @@ class TitlePage {
         $uniteCommand = 'pdftk '.  $originalFileCopy . ' '. $checklistPageFile . ' cat output ' . $modifiedFile;
         exec($uniteCommand, $output, $resultCode);
 
-        if ($resultCode != 0) {
+        if (!$this->commandSuccessful($resultCode)) {
             throw new Exception('Checklist Page Concatenation Failure');
         }
 
