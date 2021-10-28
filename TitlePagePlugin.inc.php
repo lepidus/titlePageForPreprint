@@ -62,7 +62,8 @@ class TitlePagePlugin extends GenericPlugin {
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
 		$params = $arguments[2];
 		$publication = $arguments[0];
-		if (array_key_exists('relationStatus',$params) && $publication->getData('datePublished')){
+	
+        if (array_key_exists('relationStatus',$params) && ($publication->getData('status') == STATUS_PUBLISHED)){
 			$this->insertTitlePageInPreprint($publication);
 		}
 	}
@@ -77,5 +78,6 @@ class TitlePagePlugin extends GenericPlugin {
 		$press = $submissionPressFactory->createSubmissionPress($submission, $publication, $context);
 		$press->insertTitlePage();
 	}
+
 
 }
