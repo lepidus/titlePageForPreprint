@@ -59,12 +59,26 @@ class TitlePage {
         return $TitlePageFile;
     }
 
+    private function commandSuccessful(int $resultCode): bool{
+        if ($resultCode != 0) {
+            return false;
+        }
+        return true;
+    }
+
     private function concatenateTitlePage(string $TitlePageFile, pdf $pdf): void {
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($pdf->getPath(), $originalFileCopy);
         $modifiedFile = self::OUTPUT_DIRECTORY . "withTitlePage.pdf";
-        $uniteCommand = 'pdfunite '.  $TitlePageFile . ' '. $originalFileCopy . ' ' . $modifiedFile;
-        shell_exec($uniteCommand);
+
+        $uniteCommand = 'pdftk '.  $TitlePageFile . ' '. $originalFileCopy . ' cat output ' . $modifiedFile;
+
+        exec($uniteCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Final Union Failure');
+        }
+
         rename($modifiedFile, $pdf->getPath());
         $this->removeTemporaryFiles($TitlePageFile);
         $this->removeTemporaryFiles($originalFileCopy);
@@ -76,16 +90,23 @@ class TitlePage {
 
     public function insert(pdf $pdf): void {
         $TitlePageFile = $this->generateTitlePage();
-        $this->concatenateTitlePage($TitlePageFile, $pdf);
+        try {
+            $this->concatenateTitlePage($TitlePageFile, $pdf);
+        } catch (Exception $e) {
+            error_log('Caught exception: ' .  $e->getMessage());
+        }
     }
 
-    private function separatePages(pdf $pdf, $initialPage) {
-        $separateCommand = "pdfseparate -f {$initialPage} {$pdf->getPath()} %d.pdf";
-        shell_exec($separateCommand);
+    private function separatePages(pdf $pdf) {
+        $separateCommand = "pdftk {$pdf->getPath()} burst output %d.pdf";
+        exec($separateCommand, $output, $resultCode);
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Separation Failure ');
+        }
     }
 
     private function unitePages(pdf $pdf, $initialPage) {
-        $uniteCommand = 'pdfunite ';
+        $uniteCommand = 'pdftk ';
         $modifiedFile = self::OUTPUT_DIRECTORY . "withoutTitlePage.pdf";
         $pages = $pdf->getNumberOfPages();
 
@@ -93,8 +114,13 @@ class TitlePage {
             $uniteCommand .= ($i .'.pdf ');
         }
 
-        $uniteCommand .= $modifiedFile;
-        shell_exec($uniteCommand);
+        $uniteCommand .= 'cat output ' .$modifiedFile;
+        exec($uniteCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Union Failure');
+        }
+
         rename($modifiedFile, $pdf->getPath());
 
         for ($i = $initialPage; $i <= $pages; $i++){
@@ -103,8 +129,15 @@ class TitlePage {
     }
 
     public function remove(pdf $pdf): void {
-        $this->separatePages($pdf, 2);
-        $this->unitePages($pdf, 2);
+        $modifiedFile = self::OUTPUT_DIRECTORY . "withoutTitlePage.pdf";
+        $separateCommand = "pdftk {$pdf->getPath()} cat 2-end output {$modifiedFile}";
+        exec($separateCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Title Page Remove Failure');
+        }
+
+        rename($modifiedFile, $pdf->getPath());
     }
 
     private function addPageHeader($pagePath) {
@@ -129,14 +162,22 @@ class TitlePage {
     }
 
     public function addDocumentHeader(pdf $pdf): void {
-        $this->separatePages($pdf, 1);
+        try {
+            $this->separatePages($pdf);
+        } catch (Exception $e) {
+            error_log('Caught exception: ' .  $e->getMessage());
+        }
 
         $pages = $pdf->getNumberOfPages();
         for($i = 1; $i <= $pages; $i++) {
             $this->addPageHeader("{$i}.pdf");
         }
 
-        $this->unitePages($pdf, 1);
+        try {
+            $this->unitePages($pdf, 1);
+        } catch (Exception $e) {
+            error_log('Caught exception: ' .  $e->getMessage());
+        }
     }
 
     private function generateChecklistPage(): string {
@@ -166,8 +207,13 @@ class TitlePage {
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($pdf->getPath(), $originalFileCopy);
         $modifiedFile = self::OUTPUT_DIRECTORY . "withChecklistPage.pdf";
-        $uniteCommand = 'pdfunite '.  $originalFileCopy . ' '. $checklistPageFile . ' ' . $modifiedFile;
-        shell_exec($uniteCommand);
+        $uniteCommand = 'pdftk '.  $originalFileCopy . ' '. $checklistPageFile . ' cat output ' . $modifiedFile;
+        exec($uniteCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Checklist Page Concatenation Failure');
+        }
+
         rename($modifiedFile, $pdf->getPath());
         $this->removeTemporaryFiles($checklistPageFile);
         $this->removeTemporaryFiles($originalFileCopy);
@@ -175,7 +221,13 @@ class TitlePage {
 
     public function addChecklistPage(pdf $pdf) {
         $checklistPageFile = $this->generateChecklistPage();
-        $this->concatenateChecklistPage($checklistPageFile, $pdf);
+
+        try {
+            $this->concatenateChecklistPage($checklistPageFile, $pdf);
+        } catch (Exception $e) {
+            error_log('Caught exception: ' .  $e->getMessage());
+        }
+        
     }
 
 }

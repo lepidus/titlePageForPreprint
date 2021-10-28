@@ -25,9 +25,11 @@ To download the plugin, go to the [Releases page](https://github.com/lepidus/tit
 
 ## Installation dependencies 
 * [poppler-utils](https://poppler.freedesktop.org/)
+* [pdftk](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
 
 ## Development dependencies
 * [poppler-utils](https://poppler.freedesktop.org/)
+* [pdftk](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
 * [php-imagick](https://www.php.net/manual/pt_BR/imagick.compareimages.php) - needed for unit tests.
 * [phpunit](https://phpunit.de/) - version 8, to run unit tests.
 
