@@ -1,4 +1,4 @@
-
+import 'core-js/modules/es.regexp.exec';
 describe('Title Page Plugin relation test', function() {
     it('Change relation tests', function() {
         cy.visit(Cypress.env('baseUrl') + 'index.php/f/submissions');
@@ -15,5 +15,32 @@ describe('Title Page Plugin relation test', function() {
 
         cy.get('input[value^=2]').check();
         cy.get('button[class=pkpButton]').contains('Save').click();
+        cy.contains('Save');
+
+        cy.get('a.pkpButton').click();
+        cy.get('.obj_galley_link').click();
+        cy.get('.download').then((anchor) => {
+            const url = anchor.attr('href');
+            const directory = './plugins/generic/titlePageForPreprint/cypress/tests/result/';
+            const receivedFile = directory +'receivedFile.pdf ';
+            const textFile = directory + 'titlePage.txt';
+
+            let commandLineForCreateDirectory = 'mkdir ' + directory;
+            let commandLineForDownload = 'curl -o ' + receivedFile + url;
+            let CommandLineForPdfToText = 'pdftotext -f 1 -l 1 ' + receivedFile + textFile;
+            let CommandLineForRemoveDirectory = 'rm -R ' + directory;
+
+            cy.exec(commandLineForCreateDirectory).its('code').should('eq', 0);
+
+            cy.exec(commandLineForDownload).its('code').should('eq', 0);
+
+            cy.exec(CommandLineForPdfToText).its('code').should('eq', 0);
+
+            cy.readFile(textFile).should('contain','Preprint has been submitted for publication in journal');
+
+            cy.exec(CommandLineForRemoveDirectory).its('code').should('eq', 0);
+        });
+
     });
 })
+
