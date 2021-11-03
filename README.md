@@ -49,6 +49,7 @@ To download the plugin, go to the [Releases page](https://github.com/lepidus/tit
 4. Run `composer install` inside the repository.
 5. Modify the file: `/etc/ImageMagick-6/policy.xml` , to allow read/write permissions to PDF, changing this specific line: `<policy domain=“coder” rights="none" pattern=“PDF” />` 
 to this:            `<policy domain=“coder” rights=“read|write” pattern=“PDF” />`
+6. Run `npm install` inside the repository to install module for the automated acceptance test.
 
 # License
 __This plugin is licensed under the GNU General Public License v3.0__
