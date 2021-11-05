@@ -1,4 +1,29 @@
 import 'core-js/modules/es.regexp.exec';
+
+function createDirectory(directory) {
+    let commandLineForCreateDirectory = 'mkdir ' + directory;
+    cy.exec(commandLineForCreateDirectory).its('code').should('eq', 0);
+}
+
+function downloadFile(receivedFile, url) {
+    let commandLineForDownload = 'curl -o ' + receivedFile + url;
+    cy.exec(commandLineForDownload).its('code').should('eq', 0);
+}
+
+function changeOnePageOfPdfToText(receivedFile, textFile) {
+    let CommandLineForPdfToText = 'pdftotext -f 1 -l 1 ' + receivedFile + textFile;
+    cy.exec(CommandLineForPdfToText).its('code').should('eq', 0);
+}
+
+function removeDirectory(directory) { 
+    let CommandLineForRemoveDirectory = 'rm -R ' + directory;
+    cy.exec(CommandLineForRemoveDirectory).its('code').should('eq', 0);
+}
+
+function checkRelationAfterChoice(textFile) { 
+    cy.readFile(textFile).should('contain','Preprint has been submitted for publication in journal');
+}
+
 describe('Title Page Plugin relation test', function() {
     it('Change relation tests', function() {
         cy.visit(Cypress.env('baseUrl') + 'index.php/f/submissions');
@@ -25,20 +50,15 @@ describe('Title Page Plugin relation test', function() {
             const receivedFile = directory +'receivedFile.pdf ';
             const textFile = directory + 'titlePage.txt';
 
-            let commandLineForCreateDirectory = 'mkdir ' + directory;
-            let commandLineForDownload = 'curl -o ' + receivedFile + url;
-            let CommandLineForPdfToText = 'pdftotext -f 1 -l 1 ' + receivedFile + textFile;
-            let CommandLineForRemoveDirectory = 'rm -R ' + directory;
+            createDirectory(directory);
 
-            cy.exec(commandLineForCreateDirectory).its('code').should('eq', 0);
+            downloadFile(receivedFile, url);
+            
+            changeOnePageOfPdfToText(receivedFile, textFile);
 
-            cy.exec(commandLineForDownload).its('code').should('eq', 0);
+            checkRelationAfterChoice(textFile);
 
-            cy.exec(CommandLineForPdfToText).its('code').should('eq', 0);
-
-            cy.readFile(textFile).should('contain','Preprint has been submitted for publication in journal');
-
-            cy.exec(CommandLineForRemoveDirectory).its('code').should('eq', 0);
+            removeDirectory(directory);
         });
 
     });
