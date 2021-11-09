@@ -1,0 +1,22 @@
+{
+  "name": "titlepageforpreprint",
+  "version": "1.4.4",
+  "description": "This plugin creates a title page on PDF files submitted to preprint servers. The title page is a page added to the beginning of the PDF file, containing a series of information about the preprint when it is posted. After the preprint is posted, the title page is also updated if the preprint relations are changed.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.lepidus.com.br/softwares-pkp/plugins_ojs/folhaDeRostoDoPDF.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "core-js": "^3.19.1"
+  },
+  "dependencies": {}
+}
