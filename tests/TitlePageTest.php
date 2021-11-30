@@ -93,7 +93,19 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage->insert($pdf);
 
         $this->convertPdfToText($pdf);
-        $expectedText = "Situação: O preprint não foi submetido para publicação";
+        $expectedText = "Estado da publicação: O preprint não foi submetido para publicação";
+        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $this->assertEquals($expectedText, $searchResult);
+    }
+
+    public function testInsertingInExistingPdfStampsNotInformedRelation(): void {
+        $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
+        $pdf = new Pdf($this->pathOfTestPdf);
+        
+        $titlePage->insert($pdf);
+
+        $this->convertPdfToText($pdf);
+        $expectedText = "Estado da publicação: Não informado pelo autor submissor";
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
@@ -192,7 +204,19 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage->insert($pdf);
         
         $this->convertPdfToText($pdf);
-        $expectedText = "Status: Preprint has not been submitted for publication";
+        $expectedText = "Publication status: Preprint has not been submitted for publication";
+        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $this->assertEquals($expectedText, $searchResult);
+    }
+
+    public function testInsertingInExistingPdfStampsNotInformedRelationTranslated(): void {
+        $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
+        $pdf = new Pdf($this->pathOfTestPdf);
+        
+        $titlePage->insert($pdf);
+
+        $this->convertPdfToText($pdf);
+        $expectedText = "Publication status: Not informed by the submitting author";
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
