@@ -17,6 +17,12 @@ msgstr "Title Page For Preprint"
 msgid "plugins.generic.titlePageForPreprint.description"
 msgstr "Add a title page with essential information about the preprint"
 
+msgid "plugins.generic.titlePageForPreprint.publicationStatus"
+msgstr "Publication status"
+
+msgid "plugins.generic.titlePageForPreprint.emptyPublicationStatus"
+msgstr "Not informed by the submitting author"
+
 msgid "plugins.generic.titlePageForPreprint.checklistLabel"
 msgstr "This preprint was submitted under the following conditions"
 

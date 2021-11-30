@@ -33,13 +33,7 @@ class TitlePage {
         $titlePage->Image($this->logo, '', '', '', '20', $this->getLogoType(), 'false', 'C', false, 400, 'C', false, false, 0, false, false, false);
         $titlePage->Ln(25);
         
-        $titlePage->SetFont($this->fontName, '', 10, '', false);
-        $titlePage->Write(0, $this->translator->translate('common.status', $this->locale) . ": " . $this->translator->translate($this->submission->getStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        if($this->submission->getStatus() == 'publication.relation.published'){
-            $titlePage->Write(0, $this->translator->translate('publication.relation.vorDoi', $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
-            $titlePage->write(0, $this->submission->getJournalDOI(), $this->submission->getJournalDOI(), 0, 'JUSTIFY', true, 0, false, false, 0);
-        }
-        $titlePage->Ln(5);
+        $this->writePublicationStatusOnTitlePage($titlePage);
         
         $titlePage->SetFont($this->fontName, '', 18, '', false);
         $titlePage->Write(0, $this->translator->getTranslatedTitle($this->locale), '', 0, 'C', true, 0, false, false, 0);
@@ -57,6 +51,24 @@ class TitlePage {
         $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
         $titlePage->Output($TitlePageFile, 'F');
         return $TitlePageFile;
+    }
+
+    private function writePublicationStatusOnTitlePage($titlePage) {
+        $titlePage->SetFont($this->fontName, '', 10, '', false);
+        
+        if(!empty($this->submission->getStatus())){
+            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate($this->submission->getStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            
+            if($this->submission->getStatus() == 'publication.relation.published'){
+                $titlePage->Write(0, $this->translator->translate('publication.relation.vorDoi', $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
+                $titlePage->write(0, $this->submission->getJournalDOI(), $this->submission->getJournalDOI(), 0, 'JUSTIFY', true, 0, false, false, 0);
+            }
+        }
+        else {
+            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate('plugins.generic.titlePageForPreprint.emptyPublicationStatus', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        }
+
+        $titlePage->Ln(5);
     }
 
     private function commandSuccessful(int $resultCode): bool{
