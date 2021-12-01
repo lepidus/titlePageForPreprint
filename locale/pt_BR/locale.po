@@ -17,6 +17,12 @@ msgstr "Folha de Rosto para Preprint"
 msgid "plugins.generic.titlePageForPreprint.description"
 msgstr "Adiciona uma folha de rosto com informações essenciais sobre o preprint"
 
+msgid "plugins.generic.titlePageForPreprint.publicationStatus"
+msgstr "Estado da publicação"
+
+msgid "plugins.generic.titlePageForPreprint.emptyPublicationStatus"
+msgstr "Não informado pelo autor submissor"
+
 msgid "plugins.generic.titlePageForPreprint.checklistLabel"
 msgstr "Este preprint foi submetido sob as seguintes condições"
 
