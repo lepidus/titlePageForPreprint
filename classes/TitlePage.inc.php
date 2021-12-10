@@ -11,6 +11,7 @@ class TitlePage {
     private $translator;
     private $fontName;
     const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
+    const CPDF_PATH = __DIR__ . "/../tools/cpdf";
 
     public function __construct(SubmissionModel $submission, string $logo, string $locale, translator $translator) {
         $this->submission = $submission;
@@ -83,7 +84,7 @@ class TitlePage {
         copy($pdf->getPath(), $originalFileCopy);
         $modifiedFile = self::OUTPUT_DIRECTORY . "withTitlePage.pdf";
 
-        $uniteCommand = __DIR__."/cpdf -merge {$TitlePageFile} {$originalFileCopy} -o {$modifiedFile} > /dev/null 2>&1";
+        $uniteCommand = self::CPDF_PATH . " -merge {$TitlePageFile} {$originalFileCopy} -o {$modifiedFile} > /dev/null 2>&1";
 
         exec($uniteCommand, $output, $resultCode);
 
@@ -111,7 +112,7 @@ class TitlePage {
 
     public function remove(pdf $pdf): void {
         $modifiedFile = self::OUTPUT_DIRECTORY . "withoutTitlePage.pdf";
-        $separateCommand = __DIR__."/cpdf {$pdf->getPath()} 2-end -o {$modifiedFile} > /dev/null 2>&1";
+        $separateCommand = self::CPDF_PATH . " {$pdf->getPath()} 2-end -o {$modifiedFile} > /dev/null 2>&1";
         exec($separateCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
@@ -126,7 +127,7 @@ class TitlePage {
         
         $linkDOI = "https://doi.org/".$this->submission->getDOI();
         $headerText = $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]);
-        $addHeaderCommand = __DIR__."/cpdf -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf->getPath()} -o {$withHeaders} > /dev/null 2>&1";
+        $addHeaderCommand = self::CPDF_PATH . " -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf->getPath()} -o {$withHeaders} > /dev/null 2>&1";
         exec($addHeaderCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
@@ -163,7 +164,7 @@ class TitlePage {
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($pdf->getPath(), $originalFileCopy);
         $modifiedFile = self::OUTPUT_DIRECTORY . "withChecklistPage.pdf";
-        $uniteCommand = __DIR__."/cpdf -merge {$originalFileCopy} {$checklistPageFile} -o {$modifiedFile} > /dev/null 2>&1";
+        $uniteCommand = self::CPDF_PATH . " -merge {$originalFileCopy} {$checklistPageFile} -o {$modifiedFile} > /dev/null 2>&1";
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
