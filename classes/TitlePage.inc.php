@@ -11,6 +11,7 @@ class TitlePage {
     private $translator;
     private $fontName;
     const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
+    const CPDF_PATH = __DIR__ . "/../tools/cpdf";
 
     public function __construct(SubmissionModel $submission, string $logo, string $locale, translator $translator) {
         $this->submission = $submission;
@@ -83,7 +84,7 @@ class TitlePage {
         copy($pdf->getPath(), $originalFileCopy);
         $modifiedFile = self::OUTPUT_DIRECTORY . "withTitlePage.pdf";
 
-        $uniteCommand = 'pdftk '.  $TitlePageFile . ' '. $originalFileCopy . ' cat output ' . $modifiedFile;
+        $uniteCommand = self::CPDF_PATH . " -merge {$TitlePageFile} {$originalFileCopy} -o {$modifiedFile} > /dev/null 2>&1";
 
         exec($uniteCommand, $output, $resultCode);
 
@@ -109,40 +110,9 @@ class TitlePage {
         }
     }
 
-    private function separatePages(pdf $pdf) {
-        $separateCommand = "pdftk {$pdf->getPath()} burst output %d.pdf";
-        exec($separateCommand, $output, $resultCode);
-        if (!$this->commandSuccessful($resultCode)) {
-            throw new Exception('Separation Failure ');
-        }
-    }
-
-    private function unitePages(pdf $pdf, $initialPage) {
-        $uniteCommand = 'pdftk ';
-        $modifiedFile = self::OUTPUT_DIRECTORY . "withoutTitlePage.pdf";
-        $pages = $pdf->getNumberOfPages();
-
-        for ($i = $initialPage; $i <= $pages; $i++){
-            $uniteCommand .= ($i .'.pdf ');
-        }
-
-        $uniteCommand .= 'cat output ' .$modifiedFile;
-        exec($uniteCommand, $output, $resultCode);
-
-        if (!$this->commandSuccessful($resultCode)) {
-            throw new Exception('Union Failure');
-        }
-
-        rename($modifiedFile, $pdf->getPath());
-
-        for ($i = $initialPage; $i <= $pages; $i++){
-            $this->removeTemporaryFiles( $i .'.pdf');
-        }
-    }
-
     public function remove(pdf $pdf): void {
         $modifiedFile = self::OUTPUT_DIRECTORY . "withoutTitlePage.pdf";
-        $separateCommand = "pdftk {$pdf->getPath()} cat 2-end output {$modifiedFile}";
+        $separateCommand = self::CPDF_PATH . " {$pdf->getPath()} 2-end -o {$modifiedFile} > /dev/null 2>&1";
         exec($separateCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
@@ -152,44 +122,19 @@ class TitlePage {
         rename($modifiedFile, $pdf->getPath());
     }
 
-    private function addPageHeader($pagePath) {
-        $pdf = new Pdf($pagePath);
-        $pageOrientation = $pdf->getPageOrientation();
-        
-        $pdf = new TCPDI($pageOrientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $pdf->SetPrintHeader(false);
-        $pdf->AddPage();
-        $pdf->setSourceFile($pagePath);
-        $tplIdx = $pdf->importPage(1);
-        $pdf->useTemplate($tplIdx);
-
-        $linkDOI = "https://doi.org/".$this->submission->getDOI();
-        $pdf->SetY(1);
-        $pdf->SetFont($this->fontName, '', 8);
-        $pdf->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]), $linkDOI, 0, 'C', true, 0, false, false, 0);
-
-        $outputPath = self::OUTPUT_DIRECTORY . "pageHeader";
-        $pdf->Output($outputPath, "F");
-        rename($outputPath, $pagePath);
-    }
-
     public function addDocumentHeader(pdf $pdf): void {
-        try {
-            $this->separatePages($pdf);
-        } catch (Exception $e) {
-            error_log('Caught exception: ' .  $e->getMessage());
+        $withHeaders = self::OUTPUT_DIRECTORY . "withoutHeaders.pdf";
+        
+        $linkDOI = "https://doi.org/".$this->submission->getDOI();
+        $headerText = $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]);
+        $addHeaderCommand = self::CPDF_PATH . " -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf->getPath()} -o {$withHeaders} > /dev/null 2>&1";
+        exec($addHeaderCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Title Page Remove Failure');
         }
 
-        $pages = $pdf->getNumberOfPages();
-        for($i = 1; $i <= $pages; $i++) {
-            $this->addPageHeader("{$i}.pdf");
-        }
-
-        try {
-            $this->unitePages($pdf, 1);
-        } catch (Exception $e) {
-            error_log('Caught exception: ' .  $e->getMessage());
-        }
+        rename($withHeaders, $pdf->getPath());
     }
 
     private function generateChecklistPage(): string {
@@ -219,7 +164,7 @@ class TitlePage {
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($pdf->getPath(), $originalFileCopy);
         $modifiedFile = self::OUTPUT_DIRECTORY . "withChecklistPage.pdf";
-        $uniteCommand = 'pdftk '.  $originalFileCopy . ' '. $checklistPageFile . ' cat output ' . $modifiedFile;
+        $uniteCommand = self::CPDF_PATH . " -merge {$originalFileCopy} {$checklistPageFile} -o {$modifiedFile} > /dev/null 2>&1";
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
