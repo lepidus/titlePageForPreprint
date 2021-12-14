@@ -15,7 +15,7 @@ import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.titlePageForPreprint.classes.SubmissionPressFactory');
 
 class TitlePagePlugin extends GenericPlugin {
-	const STEPS_TO_INSERT_TITLE_PAGE = 4;
+	const CPDF_PATH = __DIR__ . "/tools/cpdf";
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$registeredPlugin = parent::register($category, $path);
@@ -25,8 +25,16 @@ class TitlePagePlugin extends GenericPlugin {
 			HookRegistry::register('Publication::publish::before', [$this, 'insertTitlePageWhenPublishing']);
 			HookRegistry::register('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
 			HookRegistry::register('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
+
+			$this->ensureCpdfExecutable();
 		}
 		return $registeredPlugin;
+	}
+
+	private function ensureCpdfExecutable() {
+		if(!is_executable(self::CPDF_PATH)) {
+			chmod(self::CPDF_PATH, 0111);
+		}
 	}
 
 	public function getDisplayName() {

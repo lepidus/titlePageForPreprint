@@ -131,7 +131,7 @@ class TitlePage {
         exec($addHeaderCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
-            throw new Exception('Title Page Remove Failure');
+            throw new Exception('Headers Stamping Failure');
         }
 
         rename($withHeaders, $pdf->getPath());
