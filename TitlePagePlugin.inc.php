@@ -21,20 +21,15 @@ class TitlePagePlugin extends GenericPlugin {
 		$registeredPlugin = parent::register($category, $path);
 		
 		if ($registeredPlugin && $this->getEnabled()) {
-			
 			HookRegistry::register('Publication::publish::before', [$this, 'insertTitlePageWhenPublishing']);
 			HookRegistry::register('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
 			HookRegistry::register('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
-
-			$this->ensureCpdfExecutable();
 		}
 		return $registeredPlugin;
 	}
 
-	private function ensureCpdfExecutable() {
-		if(!is_executable(self::CPDF_PATH)) {
-			chmod(self::CPDF_PATH, 0111);
-		}
+	private function cpdfBinaryIsExecutable() {
+		return is_executable(self::CPDF_PATH);
 	}
 
 	public function getDisplayName() {
@@ -63,16 +58,20 @@ class TitlePagePlugin extends GenericPlugin {
 	}
 
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
-		$publication = $arguments[0];
-		$this->insertTitlePageInPreprint($publication);
+		if($this->cpdfBinaryIsExecutable()) {
+			$publication = $arguments[0];
+			$this->insertTitlePageInPreprint($publication);
+		}
 	}
 
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
-		$params = $arguments[2];
-		$publication = $arguments[0];
-	
-        if (array_key_exists('relationStatus',$params) && ($publication->getData('status') == STATUS_PUBLISHED)){
-			$this->insertTitlePageInPreprint($publication);
+		if($this->cpdfBinaryIsExecutable()) {
+			$params = $arguments[2];
+			$publication = $arguments[0];
+		
+			if (array_key_exists('relationStatus',$params) && ($publication->getData('status') == STATUS_PUBLISHED)){
+				$this->insertTitlePageInPreprint($publication);
+			}
 		}
 	}
 
