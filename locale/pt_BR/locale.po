@@ -37,3 +37,6 @@ msgstr "SciELO Preprints - Este documento é um preprint e sua situação atual 
 
 msgid "plugins.generic.titlePageForPreprint.dateFormat"
 msgstr "(AAAA-MM-DD)"
+
+msgid "plugins.generic.titlePageForPreprint.binaryShouldBeExecutable"
+msgstr "Folha de Rosto - Este plugin precisa que o binário do CPDF na sua pasta tools/ esteja como executável no seu servidor. O plugin não irá executar suas funcionalidades até que este binário esteja marcado como executável. Por favor, contate sua equipe de suporte."

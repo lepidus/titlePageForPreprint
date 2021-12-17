@@ -37,3 +37,6 @@ msgstr "SciELO Preprints - This document is a preprint and its current status is
 
 msgid "plugins.generic.titlePageForPreprint.dateFormat"
 msgstr "(YYYY-MM-DD)"
+
+msgid "plugins.generic.titlePageForPreprint.binaryShouldBeExecutable"
+msgstr "Title Page - This plugin requires the CPDF binary at its tools/ directory being executable at your server. This plugin won't execute its features until this binary is marked as executable. Please, contact your support team."

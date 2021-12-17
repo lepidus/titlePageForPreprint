@@ -32,6 +32,16 @@ class TitlePagePlugin extends GenericPlugin {
 		return is_executable(self::CPDF_PATH);
 	}
 
+	function setEnabled($enabled) {
+		if($enabled && !$this->cpdfBinaryIsExecutable()) {
+			$currentUser = Application::get()->getRequest()->getUser();
+			$notificationMgr = new NotificationManager();
+			$notificationMessage = __('plugins.generic.titlePageForPreprint.binaryShouldBeExecutable');
+			$notificationMgr->createTrivialNotification($currentUser->getId(), NOTIFICATION_TYPE_WARNING, array('contents' => $notificationMessage));
+		}
+		parent::setEnabled($enabled);
+	}
+
 	public function getDisplayName() {
 		return __('plugins.generic.titlePageForPreprint.displayName');
 	}
