@@ -14,7 +14,7 @@ class TitlePageRequirements {
             return false;
         }
         return true;
-	}
+    }
 
     private function checkPdfGenerator() {
         $checkingCommand = "dpkg -l | grep poppler-utils";
