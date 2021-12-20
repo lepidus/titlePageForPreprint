@@ -38,5 +38,8 @@ msgstr "SciELO Preprints - Este documento es un preprint y su situación actual 
 msgid "plugins.generic.titlePageForPreprint.dateFormat"
 msgstr "(AAAA-MM-DD)"
 
-msgid "plugins.generic.titlePageForPreprint.binaryShouldBeExecutable"
-msgstr "Este módulo necesita que el binario CPDF en el sus directorio tools/ sea ejecutable en su servidor. El módulo no ejecutará su funcionalidad hasta que este binario se marque como ejecutable. Comuníquese con su equipo de soporte."
+msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
+msgstr "Página de título para preprint - Este módulo necesita que el binario CPDF en el sus directorio tools/ sea ejecutable en su servidor. El módulo no ejecutará su funcionalidad hasta que este binario se marque como ejecutable. Comuníquese con su equipo de soporte."
+
+msgid "plugins.generic.titlePageForPreprint.requirements.pdfGeneratorMissing"
+msgstr "Página de título para preprint - Este módulo necesita que el paquete poppler-utils esté instalado en su servidor. El módulo no ejecutará su funcionalidad hasta que se instale este paquete. Comuníquese con su equipo de soporte."

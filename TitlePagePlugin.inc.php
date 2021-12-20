@@ -31,7 +31,7 @@ class TitlePagePlugin extends GenericPlugin {
 	function setEnabled($enabled) {
 		if($enabled) {
 			$titlePageRequirements = new TitlePageRequirements();
-			$titlePageRequirements->checkPdfManipulator();
+			$titlePageRequirements->checkRequirements();
 		}
 		parent::setEnabled($enabled);
 	}
@@ -64,7 +64,7 @@ class TitlePagePlugin extends GenericPlugin {
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
 		$titlePageRequirements = new TitlePageRequirements();
 		
-		if($titlePageRequirements->checkPdfManipulator()) {
+		if($titlePageRequirements->checkRequirements()) {
 			$publication = $arguments[0];
 			$this->insertTitlePageInPreprint($publication);
 		}
@@ -73,7 +73,7 @@ class TitlePagePlugin extends GenericPlugin {
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
 		$titlePageRequirements = new TitlePageRequirements();
 		
-		if($titlePageRequirements->checkPdfManipulator()) {
+		if($titlePageRequirements->checkRequirements()) {
 			$params = $arguments[2];
 			$publication = $arguments[0];
 		
