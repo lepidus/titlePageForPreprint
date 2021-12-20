@@ -13,9 +13,9 @@
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.titlePageForPreprint.classes.SubmissionPressFactory');
+import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
 
 class TitlePagePlugin extends GenericPlugin {
-	const CPDF_PATH = __DIR__ . "/tools/cpdf";
 
 	public function register($category, $path, $mainContextId = NULL) {
 		$registeredPlugin = parent::register($category, $path);
@@ -28,16 +28,10 @@ class TitlePagePlugin extends GenericPlugin {
 		return $registeredPlugin;
 	}
 
-	private function cpdfBinaryIsExecutable() {
-		return is_executable(self::CPDF_PATH);
-	}
-
 	function setEnabled($enabled) {
-		if($enabled && !$this->cpdfBinaryIsExecutable()) {
-			$currentUser = Application::get()->getRequest()->getUser();
-			$notificationMgr = new NotificationManager();
-			$notificationMessage = __('plugins.generic.titlePageForPreprint.binaryShouldBeExecutable');
-			$notificationMgr->createTrivialNotification($currentUser->getId(), NOTIFICATION_TYPE_WARNING, array('contents' => $notificationMessage));
+		if($enabled) {
+			$titlePageRequirements = new TitlePageRequirements();
+			$titlePageRequirements->checkPdfManipulator();
 		}
 		parent::setEnabled($enabled);
 	}
@@ -68,14 +62,18 @@ class TitlePagePlugin extends GenericPlugin {
 	}
 
 	public function insertTitlePageWhenPublishing($hookName, $arguments) {
-		if($this->cpdfBinaryIsExecutable()) {
+		$titlePageRequirements = new TitlePageRequirements();
+		
+		if($titlePageRequirements->checkPdfManipulator()) {
 			$publication = $arguments[0];
 			$this->insertTitlePageInPreprint($publication);
 		}
 	}
 
 	public function insertTitlePageWhenChangeRelation($hookName, $arguments){
-		if($this->cpdfBinaryIsExecutable()) {
+		$titlePageRequirements = new TitlePageRequirements();
+		
+		if($titlePageRequirements->checkPdfManipulator()) {
 			$params = $arguments[2];
 			$publication = $arguments[0];
 		
