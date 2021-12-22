@@ -17,14 +17,6 @@ class TitlePageRequirements {
     }
 
     private function checkPdfGenerator() {
-        $checkingCommand = "dpkg -l | grep poppler-utils";
-        exec($checkingCommand, $output, $resultCode);
-        
-        if(empty($output) && $resultCode == 1) {
-            $this->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.pdfGeneratorMissing');
-            return false;
-        }
-        
         return true;
     }
 
