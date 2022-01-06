@@ -89,6 +89,7 @@ class TitlePage {
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->removeTemporaryFiles($pdf->getPath());
             throw new Exception('Final Union Failure');
         }
 
@@ -103,11 +104,8 @@ class TitlePage {
 
     public function insert(pdf $pdf): void {
         $TitlePageFile = $this->generateTitlePage();
-        try {
-            $this->concatenateTitlePage($TitlePageFile, $pdf);
-        } catch (Exception $e) {
-            error_log('Caught exception: ' .  $e->getMessage());
-        }
+        $this->concatenateTitlePage($TitlePageFile, $pdf);
+        rename($pdf->getPath(), $pdf->getOriginalPath());
     }
 
     public function remove(pdf $pdf): void {
@@ -131,6 +129,7 @@ class TitlePage {
         exec($addHeaderCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->removeTemporaryFiles($pdf->getPath());
             throw new Exception('Headers Stamping Failure');
         }
 
@@ -168,6 +167,7 @@ class TitlePage {
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->removeTemporaryFiles($pdf->getPath());
             throw new Exception('Checklist Page Concatenation Failure');
         }
 
@@ -175,16 +175,10 @@ class TitlePage {
         $this->removeTemporaryFiles($checklistPageFile);
         $this->removeTemporaryFiles($originalFileCopy);
     }
-
+    
     public function addChecklistPage(pdf $pdf) {
         $checklistPageFile = $this->generateChecklistPage();
-
-        try {
-            $this->concatenateChecklistPage($checklistPageFile, $pdf);
-        } catch (Exception $e) {
-            error_log('Caught exception: ' .  $e->getMessage());
-        }
-        
+        $this->concatenateChecklistPage($checklistPageFile, $pdf);
     }
 
 }

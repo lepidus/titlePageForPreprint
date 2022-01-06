@@ -1,12 +1,15 @@
 <?php
 class Pdf {
     private $path;
+    private $originalPath;
     
     public function __construct(string $path){
         if (!self::isPdf($path)) {
             throw new InvalidArgumentException('File is not PDF.'); 
         }
-        $this->path = $path;
+
+        $this->originalPath = $path;
+        $this->path = $this->generateFileCopy($path);
     }
 
     public function getNumberOfPages(): int {
@@ -28,7 +31,17 @@ class Pdf {
         return $this->path;
     }
 
+    public function getOriginalPath(): string {
+        return $this->originalPath;
+    }
+
     public static function isPdf(string $path): bool {
         return mime_content_type($path) == "application/pdf";
+    }
+
+    private static function generateFileCopy($path): string {
+        $securityCopy = substr($path, 0, -4)."-copy.pdf";
+        copy($path, $securityCopy);
+        return $securityCopy;
     }
 }
