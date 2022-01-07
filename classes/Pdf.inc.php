@@ -40,7 +40,7 @@ class Pdf {
     }
 
     private static function generateFileCopy($path): string {
-        $securityCopy = substr($path, 0, -4)."-copy.pdf";
+        $securityCopy = "original-file-copy.pdf";
         copy($path, $securityCopy);
         return $securityCopy;
     }
