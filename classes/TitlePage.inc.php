@@ -114,6 +114,7 @@ class TitlePage {
         exec($separateCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->removeTemporaryFiles($pdf->getPath());
             throw new Exception('Title Page Remove Failure');
         }
 
