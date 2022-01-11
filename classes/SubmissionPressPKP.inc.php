@@ -35,8 +35,6 @@ class SubmissionPressPKP implements SubmissionPress {
         $submissionFile = $submissionFileDao->getById($galley->submissionFileId);
 
         $hasTitlePage = $submissionFile->getData('folhaDeRosto');
-        error_log("\n\n > $hasTitlePage");
-
         return $hasTitlePage == 'sim';
     }
 
