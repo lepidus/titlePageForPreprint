@@ -35,6 +35,8 @@ class SubmissionPressPKP implements SubmissionPress {
         $submissionFile = $submissionFileDao->getById($galley->submissionFileId);
 
         $hasTitlePage = $submissionFile->getData('folhaDeRosto');
+        error_log("\n\n > $hasTitlePage");
+
         return $hasTitlePage == 'sim';
     }
 
@@ -46,23 +48,12 @@ class SubmissionPressPKP implements SubmissionPress {
             if (Pdf::isPdf($pdfPath)) {
                 $pdf = new Pdf($pdfPath);
                 $submissionFileId = $galley->submissionFileId;
-                
-                if($this->galleyHasTitlePage($galley)) {
-                    //precisa atualizar a folha de rosto
-                    try {
-                        $titlePage->remove($pdf);
-                    } catch (Exception $e) {
-                        error_log('Caught exception: ' .  $e->getMessage());
-                    }
 
-                    $titlePage->insert($pdf);
+                if($this->galleyHasTitlePage($galley)) {
+                    $titlePage->updateTitlePage($pdf);
                     $this->updateRevisions($submissionFileId, $galley->revisionId, true);
-                }
-                else {
-                    //inserindo pela primeira vez
-                    $titlePage->addDocumentHeader($pdf);
-                    $titlePage->addChecklistPage($pdf);
-                    $titlePage->insert($pdf);
+                } else {
+                    $titlePage->insertTitlePageFirstTime($pdf);
                     $this->updateRevisions($submissionFileId, $galley->revisionId, false);
                 }
             }
