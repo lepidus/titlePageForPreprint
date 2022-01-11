@@ -17,39 +17,25 @@ class SubmissionPressPKP implements SubmissionPress {
         $this->translator = $translator;
     }
 
-    public function insertInDB($id, $json){
+    public function updateRevisions($submissionFileId, $newRevisionId, $hasTitlePage){
         $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-        $submissionFile = $submissionFileDao->getById($id);
+        $submissionFile = $submissionFileDao->getById($submissionFileId);
+        $revisions = ($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : array();
+        
+        if($hasTitlePage) array_push($revisions, $newRevisionId);
 
         Services::get('submissionFile')->edit($submissionFile, [
             'folhaDeRosto' => 'sim',
-            'revisoes' => $json
+            'revisoes' => json_encode($revisions)
         ], Application::get()->getRequest());
     }
 
-    private function verifyInDB($titlePage, $galley, $pdf) {
+    private function galleyHasTitlePage($galley) {
         $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-
         $submissionFile = $submissionFileDao->getById($galley->submissionFileId);
-        $revisionId = $galley->revisionId;
 
         $hasTitlePage = $submissionFile->getData('folhaDeRosto');
-        $revisions = ($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : array();
-
-        if($hasTitlePage == 'sim') {
-            try {
-                $titlePage->remove($pdf);
-            } catch (Exception $e) {
-                error_log('Caught exception: ' .  $e->getMessage());
-            }
-        }
-        else {
-            $titlePage->addDocumentHeader($pdf);
-            $titlePage->addChecklistPage($pdf);
-            array_push($revisions, $revisionId);
-        }
-
-        return json_encode($revisions);
+        return $hasTitlePage == 'sim';
     }
 
     public function insertTitlePage(): void {
@@ -60,9 +46,25 @@ class SubmissionPressPKP implements SubmissionPress {
             if (Pdf::isPdf($pdfPath)) {
                 $pdf = new Pdf($pdfPath);
                 $submissionFileId = $galley->submissionFileId;
-                $revisionsJSON = $this->verifyInDB($titlePage, $galley, $pdf);
-                $titlePage->insert($pdf);
-                $this->insertInDB($submissionFileId, $revisionsJSON);
+                
+                if($this->galleyHasTitlePage($galley)) {
+                    //precisa atualizar a folha de rosto
+                    try {
+                        $titlePage->remove($pdf);
+                    } catch (Exception $e) {
+                        error_log('Caught exception: ' .  $e->getMessage());
+                    }
+
+                    $titlePage->insert($pdf);
+                    $this->updateRevisions($submissionFileId, $galley->revisionId, true);
+                }
+                else {
+                    //inserindo pela primeira vez
+                    $titlePage->addDocumentHeader($pdf);
+                    $titlePage->addChecklistPage($pdf);
+                    $titlePage->insert($pdf);
+                    $this->updateRevisions($submissionFileId, $galley->revisionId, false);
+                }
             }
         }   
     }

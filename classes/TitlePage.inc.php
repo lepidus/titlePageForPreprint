@@ -182,5 +182,20 @@ class TitlePage {
         $this->concatenateChecklistPage($checklistPageFile, $pdf);
     }
 
+    public function insertTitlePageFirstTime() {
+        //gerar uma copia do arquivo original
+        
+        //cabecalho
+        //checklist
+        //concatenar folhar de rosto
+
+        //se um deles da erro, nao executa os seguintes e apaga o arquivo cópia
+        //se chega ao final de todos, substitui o original pela copia
+    }
+
+    public function updateTitlePage() {
+
+    }
+
 }
 ?>
