@@ -20,9 +20,9 @@ class SubmissionPressPKP implements SubmissionPress {
     public function updateRevisions($submissionFileId, $newRevisionId, $hasTitlePage){
         $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
         $submissionFile = $submissionFileDao->getById($submissionFileId);
-        $revisions = ($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : array();
+        $revisions = !is_null($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : array();
         
-        if($hasTitlePage) array_push($revisions, $newRevisionId);
+        if(!$hasTitlePage) array_push($revisions, $newRevisionId);
 
         Services::get('submissionFile')->edit($submissionFile, [
             'folhaDeRosto' => 'sim',
@@ -47,13 +47,9 @@ class SubmissionPressPKP implements SubmissionPress {
                 $pdf = new Pdf($pdfPath);
                 $submissionFileId = $galley->submissionFileId;
 
-                if($this->galleyHasTitlePage($galley)) {
-                    $titlePage->updateTitlePage($pdf);
-                    $this->updateRevisions($submissionFileId, $galley->revisionId, false);
-                } else {
-                    $titlePage->insertTitlePageFirstTime($pdf);
-                    $this->updateRevisions($submissionFileId, $galley->revisionId, true);
-                }
+                $hasTitlePage = $this->galleyHasTitlePage($galley);
+                $hasTitlePage ? $titlePage->updateTitlePage($pdf) : $titlePage->insertTitlePageFirstTime($pdf);
+                $this->updateRevisions($submissionFileId, $galley->revisionId, $hasTitlePage);
             }
         }   
     }
