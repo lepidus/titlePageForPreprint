@@ -49,10 +49,10 @@ class SubmissionPressPKP implements SubmissionPress {
 
                 if($this->galleyHasTitlePage($galley)) {
                     $titlePage->updateTitlePage($pdf);
-                    $this->updateRevisions($submissionFileId, $galley->revisionId, true);
+                    $this->updateRevisions($submissionFileId, $galley->revisionId, false);
                 } else {
                     $titlePage->insertTitlePageFirstTime($pdf);
-                    $this->updateRevisions($submissionFileId, $galley->revisionId, false);
+                    $this->updateRevisions($submissionFileId, $galley->revisionId, true);
                 }
             }
         }   
