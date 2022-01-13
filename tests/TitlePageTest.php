@@ -230,7 +230,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        originalFile = $pdf->getPath();
+        $originalFile = $pdf->getPath();
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($originalFile, $originalFileCopy);
 
@@ -248,7 +248,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        originalFile = $pdf->getPath();
+        $originalFile = $pdf->getPath();
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($originalFile, $originalFileCopy);
 
