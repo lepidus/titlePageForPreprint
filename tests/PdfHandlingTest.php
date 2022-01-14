@@ -4,6 +4,7 @@ import ('plugins.generic.titlePageForPreprint.classes.TranslatorForTests');
 
 class PdfHandlingTest extends TestCase {
     protected const TESTS_DIRECTORY = 'plugins' . DIRECTORY_SEPARATOR . 'generic' . DIRECTORY_SEPARATOR . 'titlePageForPreprint' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR;
+    protected const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
 
     protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";

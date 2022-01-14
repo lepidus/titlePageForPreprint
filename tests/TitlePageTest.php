@@ -38,12 +38,12 @@ class TitlePageTest extends PdfHandlingTest {
         return trim($searchResult);
     }
 
-    public function testInsertInExistingPdfFileCreatesNewPage(): void {
+    public function testInsertInExistingPdfFileCreatesNewPages(): void {
         $titlePage = $this->getTitlePageForTests();
 
         $pdf = new Pdf($this->pathOfTestPdf);
         $titlePage->insertTitlePageFirstTime($pdf);
-        $this->assertEquals(2, $pdf->getNumberOfPages());
+        $this->assertEquals(3, $pdf->getNumberOfPages());
     }
 
     public function testInExistingPdfRemovePage(): void {
@@ -179,7 +179,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
 
-        $titlePage->addDocumentHeader($pdf);
+        $titlePage->addDocumentHeader($this->pathOfTestPdf);
 
         $this->convertPdfToText($pdf);
         $expectedText = "SciELO Preprints - este preprint não foi revisado por pares";
@@ -189,17 +189,21 @@ class TitlePageTest extends PdfHandlingTest {
 
     public function testInsertingInExistingPdfDontChangeOriginal(): void {
         $titlePage = $this->getTitlePageForTests();
-        $newPdf = new Pdf($this->pathOfTestPdf);
-        $titlePage->insertTitlePageFirstTime($newPdf);
-        $originalPdf = new Pdf($this->copyOfTestPdfToRestore);
+        $pdfOriginalWithHeaders = self::OUTPUT_DIRECTORY . "originalWithHeaders.pdf";
+        copy($this->pathOfTestPdf, $pdfOriginalWithHeaders);
+        $titlePage->addDocumentHeader($pdfOriginalWithHeaders);
+        
+        $pdfWithTitlePage = new Pdf($this->pathOfTestPdf);
+        $titlePage->insertTitlePageFirstTime($pdfWithTitlePage);
 
-        $fileImageOfOriginalPdf = 'imagem_pdf_original.jpg';
-        $fileImageOfPdfWithTitlePage = 'imagem_pdf_folhaderosto.jpg';
-        $imageOfOriginalPdf = $this->convertPdfToImage($originalPdf->getPath().'[0]', $fileImageOfOriginalPdf);
-        $imageOfPdfWithTitlePage = $this->convertPdfToImage($newPdf->getPath().'[1]', $fileImageOfPdfWithTitlePage);
+        $fileImageOriginalWithHeaders = 'imagem_pdf_original.jpg';
+        $fileImagePdfWithTitlePage = 'imagem_pdf_folhaderosto.jpg';
+        $imageOfOriginalPdf = $this->convertPdfToImage($pdfOriginalWithHeaders.'[0]', $fileImageOriginalWithHeaders);
+        $imageOfPdfWithTitlePage = $this->convertPdfToImage($pdfWithTitlePage->getPath().'[1]', $fileImagePdfWithTitlePage);
         $this->imagesAreEqual($imageOfOriginalPdf, $imageOfPdfWithTitlePage);
-        unlink($fileImageOfOriginalPdf);
-        unlink($fileImageOfPdfWithTitlePage);
+        unlink($pdfOriginalWithHeaders);
+        unlink($fileImageOriginalWithHeaders);
+        unlink($fileImagePdfWithTitlePage);
     }
 
     public function testStampsTitlePageWithRelationTranslatedToGalleyLanguage(): void {

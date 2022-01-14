@@ -88,7 +88,7 @@ class TitlePage {
         return $TitlePageFile;
     }
 
-    private function generateChecklistPage(): string {
+    public function generateChecklistPage(): string {
         $checklistPage = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $checklistPage->setPrintHeader(false);
         $checklistPage->setPrintFooter(false);
@@ -131,7 +131,7 @@ class TitlePage {
         }
     }
 
-    private function concatenateChecklistPage($pdf, $checklistPage): void {
+    public function concatenateChecklistPage($pdf, $checklistPage): void {
         $uniteCommand = self::CPDF_PATH . " -merge {$pdf} {$checklistPage} -o {$pdf}";
         exec($uniteCommand, $output, $resultCode);
 

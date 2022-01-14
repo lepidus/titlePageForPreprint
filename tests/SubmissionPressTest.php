@@ -7,7 +7,7 @@ import ('plugins.generic.titlePageForPreprint.classes.Pdf');
 
 class SubmissionPressTest extends PdfHandlingTest {
 
-    public function testWithOnlyOnePdfTitlePageMustBeIncluded(): void {   
+    public function testInsertsCorrectlySingleGalley(): void {   
         $galleyPath = $this->pathOfTestPdf;
         $galley = new GalleyAdapter($galleyPath, $this->locale, 1, 2);
         $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, array($galley));
@@ -16,10 +16,10 @@ class SubmissionPressTest extends PdfHandlingTest {
         $press->insertTitlePage();
         
         $pdfOfGalley = new Pdf($galleyPath);
-        $this->assertEquals(2, $pdfOfGalley->getNumberOfPages());
+        $this->assertEquals(3, $pdfOfGalley->getNumberOfPages());
     }
 
-    public function testWithMoreThanOnePdfTitlePageMustBeIncluded(): void {
+    public function testInsertsCorrectlyMultipleGalleys(): void {
         $fistGalleyPath = $this->pathOfTestPdf;
         $secondGalleyPath = $this->pathOfTestPdf2;
         $firstGalley = new GalleyAdapter($fistGalleyPath, $this->locale, 2, 2);
@@ -32,8 +32,8 @@ class SubmissionPressTest extends PdfHandlingTest {
         $pdfOfFirstGalley = new Pdf($fistGalleyPath);
         $pdfOfSecondGalley = new Pdf($secondGalleyPath);
 
-        $this->assertEquals(2, $pdfOfFirstGalley->getNumberOfPages());
-        $this->assertEquals(3, $pdfOfSecondGalley->getNumberOfPages());
+        $this->assertEquals(3, $pdfOfFirstGalley->getNumberOfPages());
+        $this->assertEquals(4, $pdfOfSecondGalley->getNumberOfPages());
     }
 
     public function testMustIgnoreNotPdfFiles(): void {
@@ -49,7 +49,7 @@ class SubmissionPressTest extends PdfHandlingTest {
 
         $pdfOfFirstGalley = new Pdf($fistGalleyPath);
 
-        $this->assertEquals(2, $pdfOfFirstGalley->getNumberOfPages());
+        $this->assertEquals(3, $pdfOfFirstGalley->getNumberOfPages());
         $this->assertEquals($hashOfNotPdfGalley, md5_file($secondGalleyPath));
     }
 }
