@@ -23,7 +23,7 @@ class SubmissionPressForTests implements SubmissionPress {
 
            if (Pdf::isPdf($galley->file)) {               
                $pdf = new Pdf($galley->file);
-               $titlePage->insert($pdf);
+               $titlePage->insertTitlePageFirstTime($pdf);
            }
        }   
     }
