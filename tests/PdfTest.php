@@ -34,10 +34,5 @@ final class PdfTest extends TestCase {
     public function testIsNotPdf() : void {
         $this->assertFalse(Pdf::isPdf(self::TESTS_DIRECTORY . "fileNotPdf.odt"));
     }
-
-    public function testGetPageOrientation() : void {
-        $pdf = new Pdf(self::TESTS_DIRECTORY . "testOnePage.pdf");
-        $this->assertEquals("P", $pdf->getPageOrientation());
-    }
 }
 ?> 
