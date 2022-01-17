@@ -18,13 +18,13 @@ class SubmissionPressForTests implements SubmissionPress {
     }
 
     public function insertTitlePage(): void {
-       foreach($this->submission->getGalleys() as $galley){
-           $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $galley->locale, $this->translator);
+        foreach($this->submission->getGalleys() as $galley){
+            $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $galley->locale, $this->translator);
 
-           if (Pdf::isPdf($galley->file)) {               
-               $pdf = new Pdf($galley->file);
-               $titlePage->insert($pdf);
-           }
-       }   
+            if (Pdf::isPdf($galley->file)) {               
+                $pdf = new Pdf($galley->file);
+                $titlePage->insertTitlePageFirstTime($pdf);
+            }
+        }   
     }
 }

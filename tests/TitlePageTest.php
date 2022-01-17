@@ -38,27 +38,32 @@ class TitlePageTest extends PdfHandlingTest {
         return trim($searchResult);
     }
 
-    public function testInsertInExistingPdfFileCreatesNewPage(): void {
+    public function testInsertInExistingPdfFileCreatesNewPages(): void {
         $titlePage = $this->getTitlePageForTests();
 
         $pdf = new Pdf($this->pathOfTestPdf);
-        $titlePage->insert($pdf);
-        $this->assertEquals(2, $pdf->getNumberOfPages());
+        $titlePage->insertTitlePageFirstTime($pdf);
+        $this->assertEquals(3, $pdf->getNumberOfPages());
     }
 
     public function testInExistingPdfRemovePage(): void {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
-        $titlePage->insert($pdf);
-        $titlePage->remove($pdf);
+        $titlePage->updateTitlePage($pdf);
         $this->assertEquals(1, $pdf->getNumberOfPages());
     }
 
     public function testInsertingInExistingPdfStampsChecklistOnLastPage(): void {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
-        
-        $titlePage->addChecklistPage($pdf);
+
+        $originalFile = $pdf->getPath();
+        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        copy($originalFile, $originalFileCopy);
+
+        $checklistPage = $titlePage->generateChecklistPage();
+        $titlePage->concatenateChecklistPage($originalFileCopy, $checklistPage);
+        rename($originalFileCopy, $originalFile);
         
         $numberOfPages = $pdf->getNumberOfPages();
         $this->convertPdfToText($pdf, $numberOfPages);
@@ -79,7 +84,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $extractedImage = $this->extractImageFromPdf($pdf);
         $this->imagesAreEqual(new imagick($this->logo), new imagick($extractedImage));
@@ -90,7 +95,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
         $expectedText = "Estado da publicação: O preprint não foi submetido para publicação";
@@ -102,7 +107,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
         $expectedText = "Estado da publicação: Não informado pelo autor submissor";
@@ -114,7 +119,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = $this->title;
@@ -126,7 +131,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = $this->authors;
@@ -138,7 +143,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = "https://doi.org/" . $this->doi;
@@ -150,7 +155,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate',  $this->locale, ['subDate' => $this->submissionDate]); 
@@ -162,7 +167,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
         $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate',  $this->locale,  ['postDate' => $this->publicationDate, 'version' => $this->version]);
@@ -174,7 +179,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
 
-        $titlePage->addDocumentHeader($pdf);
+        $titlePage->addDocumentHeader($this->pathOfTestPdf);
 
         $this->convertPdfToText($pdf);
         $expectedText = "SciELO Preprints - este preprint não foi revisado por pares";
@@ -184,24 +189,28 @@ class TitlePageTest extends PdfHandlingTest {
 
     public function testInsertingInExistingPdfDontChangeOriginal(): void {
         $titlePage = $this->getTitlePageForTests();
-        $newPdf = new Pdf($this->pathOfTestPdf);
-        $titlePage->insert($newPdf);
-        $originalPdf = new Pdf($this->copyOfTestPdfToRestore);
+        $pdfOriginalWithHeaders = self::OUTPUT_DIRECTORY . "originalWithHeaders.pdf";
+        copy($this->pathOfTestPdf, $pdfOriginalWithHeaders);
+        $titlePage->addDocumentHeader($pdfOriginalWithHeaders);
+        
+        $pdfWithTitlePage = new Pdf($this->pathOfTestPdf);
+        $titlePage->insertTitlePageFirstTime($pdfWithTitlePage);
 
-        $fileImageOfOriginalPdf = 'imagem_pdf_original.jpg';
-        $fileImageOfPdfWithTitlePage = 'imagem_pdf_folhaderosto.jpg';
-        $imageOfOriginalPdf = $this->convertPdfToImage($originalPdf->getPath().'[0]', $fileImageOfOriginalPdf);
-        $imageOfPdfWithTitlePage = $this->convertPdfToImage($newPdf->getPath().'[1]', $fileImageOfPdfWithTitlePage);
+        $fileImageOriginalWithHeaders = 'imagem_pdf_original.jpg';
+        $fileImagePdfWithTitlePage = 'imagem_pdf_folhaderosto.jpg';
+        $imageOfOriginalPdf = $this->convertPdfToImage($pdfOriginalWithHeaders.'[0]', $fileImageOriginalWithHeaders);
+        $imageOfPdfWithTitlePage = $this->convertPdfToImage($pdfWithTitlePage->getPath().'[1]', $fileImagePdfWithTitlePage);
         $this->imagesAreEqual($imageOfOriginalPdf, $imageOfPdfWithTitlePage);
-        unlink($fileImageOfOriginalPdf);
-        unlink($fileImageOfPdfWithTitlePage);
+        unlink($pdfOriginalWithHeaders);
+        unlink($fileImageOriginalWithHeaders);
+        unlink($fileImagePdfWithTitlePage);
     }
 
     public function testStampsTitlePageWithRelationTranslatedToGalleyLanguage(): void {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = "Publication status: Preprint has not been submitted for publication";
@@ -213,7 +222,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
         $expectedText = "Publication status: Not informed by the submitting author";
@@ -225,7 +234,13 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->addChecklistPage($pdf);
+        $originalFile = $pdf->getPath();
+        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        copy($originalFile, $originalFileCopy);
+
+        $checklistPage = $titlePage->generateChecklistPage();
+        $titlePage->concatenateChecklistPage($originalFileCopy, $checklistPage);
+        rename($originalFileCopy, $originalFile);
         
         $this->convertPdfToText($pdf);
         $expectedText = $this->translator->translate("plugins.generic.titlePageForPreprint.checklistLabel", $this->locale) . ':';
@@ -237,7 +252,13 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->addChecklistPage($pdf);
+        $originalFile = $pdf->getPath();
+        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        copy($originalFile, $originalFileCopy);
+
+        $checklistPage = $titlePage->generateChecklistPage();
+        $titlePage->concatenateChecklistPage($originalFileCopy, $checklistPage);
+        rename($originalFileCopy, $originalFile);
         
         $this->convertPdfToText($pdf);
         $firstItem = $this->translator->translate("item1CheckList", $this->locale);
@@ -252,7 +273,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo,  $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate',  $this->locale, ['subDate' => $this->submissionDate]);
@@ -264,7 +285,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo,  $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
         
         $this->convertPdfToText($pdf);
         $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale, ['postDate' => $this->publicationDate, 'version' => $this->version]);
@@ -276,7 +297,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
         $expectedText = "(AAAA-MM-DD)";
@@ -288,7 +309,7 @@ class TitlePageTest extends PdfHandlingTest {
         $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo,  $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
         
-        $titlePage->insert($pdf);
+        $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
         $expectedText =  $this->translator->translate('plugins.generic.titlePageForPreprint.dateFormat', $this->locale);

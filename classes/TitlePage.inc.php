@@ -21,9 +21,43 @@ class TitlePage {
         $this->fontName = TCPDF_FONTS::addTTFfont(__DIR__.'/../resources/opensans.ttf', 'TrueTypeUnicode', '', 32);
     }
 
+    private function commandSuccessful(int $resultCode): bool{
+        if ($resultCode != 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public function removeTitlePage($pdf): void {
+        $separateCommand = self::CPDF_PATH . " {$pdf} 2-end -o {$pdf}";
+        exec($separateCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Title Page Remove Failure');
+        }
+    }
+
     public function getLogoType(): string {
         $fileType = pathinfo($this->logo, PATHINFO_EXTENSION);
         return strtoupper($fileType);
+    }
+
+    private function writePublicationStatusOnTitlePage($titlePage) {
+        $titlePage->SetFont($this->fontName, '', 10, '', false);
+        
+        if(!empty($this->submission->getStatus())){
+            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate($this->submission->getStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            
+            if($this->submission->getStatus() == 'publication.relation.published'){
+                $titlePage->Write(0, $this->translator->translate('publication.relation.vorDoi', $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
+                $titlePage->write(0, $this->submission->getJournalDOI(), $this->submission->getJournalDOI(), 0, 'JUSTIFY', true, 0, false, false, 0);
+            }
+        }
+        else {
+            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate('plugins.generic.titlePageForPreprint.emptyPublicationStatus', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        }
+
+        $titlePage->Ln(5);
     }
     
     private function generateTitlePage(): string {
@@ -54,90 +88,7 @@ class TitlePage {
         return $TitlePageFile;
     }
 
-    private function writePublicationStatusOnTitlePage($titlePage) {
-        $titlePage->SetFont($this->fontName, '', 10, '', false);
-        
-        if(!empty($this->submission->getStatus())){
-            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate($this->submission->getStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-            
-            if($this->submission->getStatus() == 'publication.relation.published'){
-                $titlePage->Write(0, $this->translator->translate('publication.relation.vorDoi', $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
-                $titlePage->write(0, $this->submission->getJournalDOI(), $this->submission->getJournalDOI(), 0, 'JUSTIFY', true, 0, false, false, 0);
-            }
-        }
-        else {
-            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate('plugins.generic.titlePageForPreprint.emptyPublicationStatus', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        }
-
-        $titlePage->Ln(5);
-    }
-
-    private function commandSuccessful(int $resultCode): bool{
-        if ($resultCode != 0) {
-            return false;
-        }
-        return true;
-    }
-
-    private function concatenateTitlePage(string $TitlePageFile, pdf $pdf): void {
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
-        copy($pdf->getPath(), $originalFileCopy);
-        $modifiedFile = self::OUTPUT_DIRECTORY . "withTitlePage.pdf";
-
-        $uniteCommand = self::CPDF_PATH . " -merge {$TitlePageFile} {$originalFileCopy} -o {$modifiedFile}";
-
-        exec($uniteCommand, $output, $resultCode);
-
-        if (!$this->commandSuccessful($resultCode)) {
-            throw new Exception('Final Union Failure');
-        }
-
-        rename($modifiedFile, $pdf->getPath());
-        $this->removeTemporaryFiles($TitlePageFile);
-        $this->removeTemporaryFiles($originalFileCopy);
-    }
-    
-    private function removeTemporaryFiles($file) {
-        unlink($file);
-    }
-
-    public function insert(pdf $pdf): void {
-        $TitlePageFile = $this->generateTitlePage();
-        try {
-            $this->concatenateTitlePage($TitlePageFile, $pdf);
-        } catch (Exception $e) {
-            error_log('Caught exception: ' .  $e->getMessage());
-        }
-    }
-
-    public function remove(pdf $pdf): void {
-        $modifiedFile = self::OUTPUT_DIRECTORY . "withoutTitlePage.pdf";
-        $separateCommand = self::CPDF_PATH . " {$pdf->getPath()} 2-end -o {$modifiedFile}";
-        exec($separateCommand, $output, $resultCode);
-
-        if (!$this->commandSuccessful($resultCode)) {
-            throw new Exception('Title Page Remove Failure');
-        }
-
-        rename($modifiedFile, $pdf->getPath());
-    }
-
-    public function addDocumentHeader(pdf $pdf): void {
-        $withHeaders = self::OUTPUT_DIRECTORY . "withoutHeaders.pdf";
-        
-        $linkDOI = "https://doi.org/".$this->submission->getDOI();
-        $headerText = $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]);
-        $addHeaderCommand = self::CPDF_PATH . " -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf->getPath()} -o {$withHeaders}";
-        exec($addHeaderCommand, $output, $resultCode);
-
-        if (!$this->commandSuccessful($resultCode)) {
-            throw new Exception('Headers Stamping Failure');
-        }
-
-        rename($withHeaders, $pdf->getPath());
-    }
-
-    private function generateChecklistPage(): string {
+    public function generateChecklistPage(): string {
         $checklistPage = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $checklistPage->setPrintHeader(false);
         $checklistPage->setPrintFooter(false);
@@ -160,32 +111,70 @@ class TitlePage {
         return $checklistPageFile;
     }
 
-    private function concatenateChecklistPage(string $checklistPageFile, pdf $pdf): void {
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
-        copy($pdf->getPath(), $originalFileCopy);
-        $modifiedFile = self::OUTPUT_DIRECTORY . "withChecklistPage.pdf";
-        $uniteCommand = self::CPDF_PATH . " -merge {$originalFileCopy} {$checklistPageFile} -o {$modifiedFile}";
+    public function addDocumentHeader($pdf): void {
+        $linkDOI = "https://doi.org/".$this->submission->getDOI();
+        $headerText = $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]);
+        $addHeaderCommand = self::CPDF_PATH . " -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf} -o {$pdf}";
+        exec($addHeaderCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Headers Stamping Failure');
+        }
+    }
+
+    private function concatenateTitlePage($pdf, $titlePage): void {
+        $uniteCommand = self::CPDF_PATH . " -merge {$titlePage} {$pdf} -o {$pdf}";
+        exec($uniteCommand, $output, $resultCode);
+
+        if (!$this->commandSuccessful($resultCode)) {
+            throw new Exception('Title Page Concatenation Failure');
+        }
+    }
+
+    public function concatenateChecklistPage($pdf, $checklistPage): void {
+        $uniteCommand = self::CPDF_PATH . " -merge {$pdf} {$checklistPage} -o {$pdf}";
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
             throw new Exception('Checklist Page Concatenation Failure');
         }
-
-        rename($modifiedFile, $pdf->getPath());
-        $this->removeTemporaryFiles($checklistPageFile);
-        $this->removeTemporaryFiles($originalFileCopy);
     }
 
-    public function addChecklistPage(pdf $pdf) {
-        $checklistPageFile = $this->generateChecklistPage();
+    public function insertTitlePageFirstTime(pdf $pdf) {
+        $originalFile = $pdf->getPath();
+        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        copy($originalFile, $originalFileCopy);
 
         try {
-            $this->concatenateChecklistPage($checklistPageFile, $pdf);
-        } catch (Exception $e) {
+            $this->addDocumentHeader($originalFileCopy);
+
+            $titlePage = $this->generateTitlePage();
+            $this->concatenateTitlePage($originalFileCopy, $titlePage);
+
+            $checklistPage = $this->generateChecklistPage();
+            $this->concatenateChecklistPage($originalFileCopy, $checklistPage);
+
+            rename($originalFileCopy, $originalFile);
+        } catch(Exception $e) {
             error_log('Caught exception: ' .  $e->getMessage());
         }
-        
     }
 
+    public function updateTitlePage(pdf $pdf) {
+        $originalFile = $pdf->getPath();
+        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        copy($originalFile, $originalFileCopy);
+
+        try {
+            $this->removeTitlePage($originalFileCopy);
+            
+            $titlePage = $this->generateTitlePage();
+            $this->concatenateTitlePage($originalFileCopy, $titlePage);
+
+            rename($originalFileCopy, $originalFile);
+        } catch(Exception $e) {
+            error_log('Caught exception: ' .  $e->getMessage());
+        } 
+    }
 }
 ?>

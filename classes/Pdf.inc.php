@@ -6,6 +6,7 @@ class Pdf {
         if (!self::isPdf($path)) {
             throw new InvalidArgumentException('File is not PDF.'); 
         }
+
         $this->path = $path;
     }
 
