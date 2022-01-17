@@ -23,23 +23,18 @@ The latest release of this plugin is compatible with the following PKP applicati
 
 To download the plugin, go to the [Releases page](https://github.com/lepidus/titlePageForPreprint/releases) and download the tar.gz package of the latest release compatible with your website.
 
-## Installation dependencies 
-* [poppler-utils](https://poppler.freedesktop.org/)
-
 ## Development dependencies
-* [poppler-utils](https://poppler.freedesktop.org/)
 * [php-imagick](https://www.php.net/manual/pt_BR/imagick.compareimages.php) - needed for unit tests.
 * [phpunit](https://phpunit.de/) - version 8, to run unit tests.
 
 ## Installation
 
-1. Install the 'poppler-utils' dependency.
-2. Enter the administration area of ​​your OPS website through the __Dashboard__. In case OPS raise the file size error, check out the variables on ´php.ini´: `upload_max_filesize` and `post_max_size` wich the values must be at least 17M.
-3. Navigate to `Settings`>` Website`> `Plugins`> `Upload a new plugin`.
-4. Under __Upload file__ select the file __titlePageForPreprint.tar.gz__.
-5. Click __Save__ and the plugin will be installed on your website.
-6. This plugin requires the CPDF binary at `tools/` being executable at your server. The plugin won't execute its features until this binary is marked as executable.
-7. This plugin also requires a logo defined on `Website Settings` > `Apearance` > `Logo`, so you need to upload an image. Images with any kind of transparency (alpha channel) are not supported and **should not** be used.
+1. Enter the administration area of ​​your OPS website through the __Dashboard__. In case OPS raise the file size error, check out the variables on ´php.ini´: `upload_max_filesize` and `post_max_size` wich the values must be at least 17M.
+2. Navigate to `Settings`>` Website`> `Plugins`> `Upload a new plugin`.
+3. Under __Upload file__ select the file __titlePageForPreprint.tar.gz__.
+4. Click __Save__ and the plugin will be installed on your website.
+5. This plugin requires the CPDF binary at `tools/` being executable at your server. The plugin won't execute its features until this binary is marked as executable.
+6. This plugin also requires a logo defined on `Website Settings` > `Apearance` > `Logo`, so you need to upload an image. Images with any kind of transparency (alpha channel) are not supported and **should not** be used.
 
 ## Installation for development
 1. Install the development dependencies.

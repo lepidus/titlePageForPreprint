@@ -40,6 +40,3 @@ msgstr "(YYYY-MM-DD)"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
 msgstr "Title Page - This plugin requires the CPDF binary at its tools/ directory being executable at your server. This plugin won't execute its features until this binary is marked as executable. Please, contact your support team."
-
-msgid "plugins.generic.titlePageForPreprint.requirements.pdfGeneratorMissing"
-msgstr "Title Page - This plugin requires the poppler-utils package being installed at your server. This plugin won't execute its features until this package is installed. Please, contact your support team."
