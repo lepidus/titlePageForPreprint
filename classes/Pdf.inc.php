@@ -1,6 +1,7 @@
 <?php
 class Pdf {
     private $path;
+    const CPDF_PATH = __DIR__ . "/../tools/cpdf";
     
     public function __construct(string $path){
         if (!self::isPdf($path)) {
@@ -11,18 +12,9 @@ class Pdf {
     }
 
     public function getNumberOfPages(): int {
-        $countPagesCommandLine = shell_exec("pdfinfo ". $this->path ." | grep 'Pages:'");
-        $pagesAsText = explode(":", $countPagesCommandLine);
-        return (int)$pagesAsText[1];
-    }
-
-    public function getPageOrientation(): string {
-        $sizePagesCommandLine = shell_exec("pdfinfo -box -f 1 -l 1 {$this->path} | grep '1 size: '");
-        preg_match('~(\d+(\.\d+)?) x (\d+(\.\d+)?)~', $sizePagesCommandLine, $occurrences);
-        $width = (float) $occurrences[1];
-        $height = (float) $occurrences[3];
-
-        return ($width > $height) ? ("L") : ("P");
+        $numberOfPages = exec(self::CPDF_PATH . " -pages {$this->path}");
+        
+        return (int)$numberOfPages;
     }
 
     public function getPath(): string {
