@@ -145,19 +145,15 @@ class TitlePage {
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($originalFile, $originalFileCopy);
 
-        try {
-            $this->addDocumentHeader($originalFileCopy);
+        $this->addDocumentHeader($originalFileCopy);
 
-            $titlePage = $this->generateTitlePage();
-            $this->concatenateTitlePage($originalFileCopy, $titlePage);
+        $titlePage = $this->generateTitlePage();
+        $this->concatenateTitlePage($originalFileCopy, $titlePage);
 
-            $checklistPage = $this->generateChecklistPage();
-            $this->concatenateChecklistPage($originalFileCopy, $checklistPage);
+        $checklistPage = $this->generateChecklistPage();
+        $this->concatenateChecklistPage($originalFileCopy, $checklistPage);
 
-            rename($originalFileCopy, $originalFile);
-        } catch(Exception $e) {
-            error_log('Caught exception: ' .  $e->getMessage());
-        }
+        rename($originalFileCopy, $originalFile);
     }
 
     public function updateTitlePage(pdf $pdf) {
@@ -165,16 +161,12 @@ class TitlePage {
         $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($originalFile, $originalFileCopy);
 
-        try {
-            $this->removeTitlePage($originalFileCopy);
-            
-            $titlePage = $this->generateTitlePage();
-            $this->concatenateTitlePage($originalFileCopy, $titlePage);
+        $this->removeTitlePage($originalFileCopy);
+        
+        $titlePage = $this->generateTitlePage();
+        $this->concatenateTitlePage($originalFileCopy, $titlePage);
 
-            rename($originalFileCopy, $originalFile);
-        } catch(Exception $e) {
-            error_log('Caught exception: ' .  $e->getMessage());
-        } 
+        rename($originalFileCopy, $originalFile);
     }
 }
 ?>

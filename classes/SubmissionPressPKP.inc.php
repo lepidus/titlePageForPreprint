@@ -48,8 +48,13 @@ class SubmissionPressPKP implements SubmissionPress {
                 $submissionFileId = $galley->submissionFileId;
 
                 $hasTitlePage = $this->galleyHasTitlePage($galley);
-                $hasTitlePage ? $titlePage->updateTitlePage($pdf) : $titlePage->insertTitlePageFirstTime($pdf);
-                $this->updateRevisions($submissionFileId, $galley->revisionId, $hasTitlePage);
+
+                try {
+                    $hasTitlePage ? $titlePage->updateTitlePage($pdf) : $titlePage->insertTitlePageFirstTime($pdf);
+                    $this->updateRevisions($submissionFileId, $galley->revisionId, $hasTitlePage);
+                } catch(Exception $e) {
+                    error_log('Caught exception: ' .  $e->getMessage());
+                }
             }
         }   
     }
