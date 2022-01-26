@@ -46,13 +46,6 @@ class TitlePageTest extends PdfHandlingTest {
         $this->assertEquals(3, $pdf->getNumberOfPages());
     }
 
-    public function testInExistingPdfRemovePage(): void {
-        $titlePage = $this->getTitlePageForTests();
-        $pdf = new Pdf($this->pathOfTestPdf);
-        $titlePage->updateTitlePage($pdf);
-        $this->assertEquals(1, $pdf->getNumberOfPages());
-    }
-
     public function testInsertingInExistingPdfStampsChecklistOnLastPage(): void {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
