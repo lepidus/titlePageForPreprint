@@ -1,8 +1,7 @@
 <?php
 import('plugins.generic.titlePageForPreprint.classes.SubmissionPress');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionPressPKP');
 import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
-import('plugins.generic.titlePageForPreprint.classes.TranslatorPKP');
+import('plugins.generic.titlePageForPreprint.classes.Translator');
 import('plugins.generic.titlePageForPreprint.classes.GalleyAdapterFactory');
 
 class SubmissionPressFactory {
@@ -17,10 +16,10 @@ class SubmissionPressFactory {
             $submissionGalleys[] = $galleyAdapterFactory->createGalleyAdapter($submission, $galley);	
         }
 
-        return new SubmissionPressPKP(
+        return new SubmissionPress(
             $logoPath,
             new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['version'], $submissionGalleys),
-            new TranslatorPKP($context, $submission, $publication)
+            new Translator($context, $submission, $publication)
         );
     }
 

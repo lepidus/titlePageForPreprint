@@ -1,4 +1,5 @@
 <?php
+
 class GalleyAdapter {
 
     public $file;
