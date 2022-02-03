@@ -20,7 +20,7 @@ class TitlePageRequirements {
         return true;
     }
 
-    private function showMissingRequirementNotification($notificationMessage) {
+    public function showMissingRequirementNotification($notificationMessage) {
         $currentUser = Application::get()->getRequest()->getUser();
         $notificationMgr = new NotificationManager();
         $notificationMgr->createTrivialNotification($currentUser->getId(), NOTIFICATION_TYPE_WARNING, array('contents' => __($notificationMessage)));

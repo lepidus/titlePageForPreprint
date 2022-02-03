@@ -2,6 +2,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 import ('plugins.generic.titlePageForPreprint.classes.Pdf');
+import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
 define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
 
 class TitlePage { 
@@ -11,6 +12,7 @@ class TitlePage {
     private $locale;
     private $translator;
     private $fontName;
+    private $titlePageRequirements;
     const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
     const CPDF_PATH = __DIR__ . "/../tools/cpdf";
 
@@ -20,6 +22,7 @@ class TitlePage {
         $this->locale = $locale;
         $this->translator = $translator;
         $this->fontName = TCPDF_FONTS::addTTFfont(__DIR__.'/../resources/opensans.ttf', 'TrueTypeUnicode', '', 32);
+        $this->titlePageRequirements = new TitlePageRequirements();
     }
 
     private function commandSuccessful(int $resultCode): bool{
@@ -34,6 +37,7 @@ class TitlePage {
         exec($separateCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing');
             throw new Exception('Title Page Remove Failure');
         }
     }
@@ -88,6 +92,7 @@ class TitlePage {
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
             $titlePage->Output($TitlePageFile, 'F');
         } catch(Exception $e) {
+            $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.generateTitlePagePageMissing');
             throw new Exception('Title Page Generation Failure');
         }
 
@@ -116,6 +121,7 @@ class TitlePage {
             $checklistPageFile = self::OUTPUT_DIRECTORY . 'checklistPage.pdf';
             $checklistPage->Output($checklistPageFile, 'F');
         } catch(Exception $e) {
+            $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.generateChecklistPageMissing');
             throw new Exception('Checklist Page Generation Failure');
         }
 
@@ -129,6 +135,7 @@ class TitlePage {
         exec($addHeaderCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.addDocumentHeaderMissing');
             throw new Exception('Headers Stamping Failure');
         }
     }
@@ -138,6 +145,7 @@ class TitlePage {
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.concatenateTitlePageMissing');
             throw new Exception('Title Page Concatenation Failure');
         }
     }
@@ -147,6 +155,7 @@ class TitlePage {
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
+            $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing');
             throw new Exception('Checklist Page Concatenation Failure');
         }
     }
