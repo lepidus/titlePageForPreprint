@@ -40,3 +40,22 @@ msgstr "(AAAA-MM-DD)"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
 msgstr "Folha de Rosto - Este plugin precisa que o binário do CPDF na sua pasta tools/ esteja como executável no seu servidor. O plugin não irá executar suas funcionalidades até que este binário esteja marcado como executável. Por favor, contate sua equipe de suporte."
+
+msgid "plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing"
+msgstr "Falha ao Remover Folha de Rosto"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.generateTitlePageMissing"
+msgstr "Falha na Geração da Folha de Rosto"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.generateChecklistPageMissing"
+msgstr "Falha na Geração da Página de Checklist"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.addDocumentHeaderMissing"
+msgstr "Falha ao Carimbar o cabeçalhos"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.concatenateTitlePageMissing"
+msgstr "Falha de Concatenação da Folha de Rosto"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing"
+msgstr "Falha de Concatenação da Página de Checklist"
+

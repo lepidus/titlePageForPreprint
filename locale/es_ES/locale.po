@@ -40,3 +40,21 @@ msgstr "(AAAA-MM-DD)"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
 msgstr "Página de título para preprint - Este módulo necesita que el binario CPDF en el sus directorio tools/ sea ejecutable en su servidor. El módulo no ejecutará su funcionalidad hasta que este binario se marque como ejecutable. Comuníquese con su equipo de soporte."
+
+msgid "plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing"
+msgstr "No se Pudo Quitar la Portada"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.generateTitlePageMissing"
+msgstr "No se Pudo Generar la Portada"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.generateChecklistPageMissing"
+msgstr "La generación de la Página de Checklist Falló"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.addDocumentHeaderMissing"
+msgstr "No se Pudieron Sellar Los Encabezados"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.concatenateTitlePageMissing"
+msgstr "Error de Concatenación de Portada"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing"
+msgstr "Error de Concatenación de Página de Lista Checklist"

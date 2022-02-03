@@ -40,3 +40,21 @@ msgstr "(YYYY-MM-DD)"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
 msgstr "Title Page - This plugin requires the CPDF binary at its tools/ directory being executable at your server. This plugin won't execute its features until this binary is marked as executable. Please, contact your support team."
+
+msgid "plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing"
+msgstr "Title Page Remove Failure"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.generateTitlePagePageMissing"
+msgstr "Title Page Generation Failure"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.generateChecklistPageMissing"
+msgstr "Checklist Page Generation Failure"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.addDocumentHeaderMissing"
+msgstr "Headers Stamping Failure"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.concatenateTitlePageMissing"
+msgstr "Title Page Concatenation Failure"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing"
+msgstr "Checklist Page Concatenation Failure"
