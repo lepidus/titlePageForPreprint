@@ -66,16 +66,20 @@ class TitlePage {
     }
     
     private function generateTitlePage(): string {
+        $errorMessage = 'plugins.generic.titlePageForPreprint.requirements.generateTitlePageMissing';
         try {
             $titlePage = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $titlePage->setPrintHeader(false);
             $titlePage->setPrintFooter(false);
             $titlePage->AddPage();
-            $titlePage->Image($this->logo, '', '', '', '20', $this->getLogoType(), 'false', 'C', false, 400, 'C', false, false, 0, false, false, false);
+            $logoType = $this->getLogoType();
+
+            if(!$logoType) 
+                $errorMessage = 'plugins.generic.titlePageForPreprint.requirements.logoMissing';
+            
+            $titlePage->Image($this->logo, '', '', '', '20', $logoType, 'false', 'C', false, 400, 'C', false, false, 0, false, false, false);
             $titlePage->Ln(25);
-            
             $this->writePublicationStatusOnTitlePage($titlePage);
-            
             $titlePage->SetFont($this->fontName, '', 18, '', false);
             $titlePage->Write(0, $this->translator->getTranslatedTitle($this->locale), '', 0, 'C', true, 0, false, false, 0);
             $titlePage->SetFont($this->fontName, '', 12, '', false);
@@ -92,7 +96,7 @@ class TitlePage {
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
             $titlePage->Output($TitlePageFile, 'F');
         } catch(Exception $e) {
-            $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.generateTitlePagePageMissing');
+            $this->titlePageRequirements->showMissingRequirementNotification($errorMessage);
             throw new Exception('Title Page Generation Failure');
         }
 
