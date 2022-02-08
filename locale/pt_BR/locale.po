@@ -59,3 +59,5 @@ msgstr "Falha de Concatenação da Folha de Rosto"
 msgid "plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing"
 msgstr "Falha de Concatenação da Página de Checklist"
 
+msgid "plugins.generic.titlePageForPreprint.requirements.logoMissing"
+msgstr "Logotipo ausente - Este plugin também requer um logotipo definido em Configurações do site > Aparência > Logo, então você precisa fazer upload de uma imagem"

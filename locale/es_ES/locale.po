@@ -58,3 +58,6 @@ msgstr "Error de Concatenación de Portada"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing"
 msgstr "Error de Concatenación de Página de Lista Checklist"
+
+msgid "plugins.generic.titlePageForPreprint.requirements.logoMissing"
+msgstr "logotipo faltante - Este complemento también requiere un conjunto de logotipos en Configuración del  Ajustes del sitio web> Apariencia> Logotipo, por lo que debe cargar una imagen"

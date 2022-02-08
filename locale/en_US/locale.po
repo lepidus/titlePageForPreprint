@@ -44,7 +44,7 @@ msgstr "Title Page - This plugin requires the CPDF binary at its tools/ director
 msgid "plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing"
 msgstr "Title Page Remove Failure"
 
-msgid "plugins.generic.titlePageForPreprint.requirements.generateTitlePagePageMissing"
+msgid "plugins.generic.titlePageForPreprint.requirements.generateTitlePageMissing"
 msgstr "Title Page Generation Failure"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.generateChecklistPageMissing"
@@ -56,5 +56,5 @@ msgstr "Headers Stamping Failure"
 msgid "plugins.generic.titlePageForPreprint.requirements.concatenateTitlePageMissing"
 msgstr "Title Page Concatenation Failure"
 
-msgid "plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing"
-msgstr "Checklist Page Concatenation Failure"
+msgid "plugins.generic.titlePageForPreprint.requirements.logoMissing"
+msgstr "Logo Missing - This plugin also requires a logo defined on Website Settings > Apearance > Logo, so you need to upload an image"
