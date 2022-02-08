@@ -62,7 +62,7 @@ class TitlePage {
     }
     
     private function generateTitlePage(): string {
-        try {
+        // try {
             $titlePage = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $titlePage->setPrintHeader(false);
             $titlePage->setPrintFooter(false);
@@ -87,9 +87,9 @@ class TitlePage {
           
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
             $titlePage->Output($TitlePageFile, 'F');
-        } catch(Exception $e) {
-            throw new Exception('Title Page Generation Failure');
-        }
+        // } catch(Exception $e) {
+        //     throw new Exception('Title Page Generation Failure');
+        // }
 
         return $TitlePageFile;
     }
@@ -116,7 +116,7 @@ class TitlePage {
             $checklistPageFile = self::OUTPUT_DIRECTORY . 'checklistPage.pdf';
             $checklistPage->Output($checklistPageFile, 'F');
         } catch(Exception $e) {
-            throw new Exception('Checklist Page Generation Failure');
+            throw new Exception('Checklist Page Generation Failure: ' . $e->getMessage());
         }
 
         return $checklistPageFile;

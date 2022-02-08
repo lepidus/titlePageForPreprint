@@ -1,11 +1,10 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+import('lib.pkp.tests.PKPTestCase');
 import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
 
-class SubmissionTest extends TestCase {
+class SubmissionTest extends PKPTestCase {
 
-    
     private $status = "publication.relation.none";
     private $doi = "10.1000/182";
     private $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";

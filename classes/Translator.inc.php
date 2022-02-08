@@ -6,9 +6,8 @@ class Translator {
     private $submission;
     private $publication;
 
-    public function __construct($context, $submission, $publication) {
+    public function __construct($context, $publication) {
         $this->context = $context;
-        $this->submission = $submission;
         $this->publication = $publication;
     }
 
@@ -27,6 +26,7 @@ class Translator {
         }
         return $checklist;
     }
+    
     public function getTranslatedTitle($locale){
         return $this->publication->getLocalizedTitle($locale);
     }

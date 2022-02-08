@@ -40,7 +40,7 @@ class SubmissionPress {
     public function insertTitlePage(): void {
         foreach($this->submission->getGalleys() as $galley) {
             $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $galley->locale, $this->translator);
-            $pdfPath = \Config::getVar('files', 'files_dir') . DIRECTORY_SEPARATOR . $galley->file;
+            $pdfPath = $galley->getFullFilePath();
 
             if (Pdf::isPdf($pdfPath)) {
                 $pdf = new Pdf($pdfPath);
