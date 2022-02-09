@@ -3,9 +3,6 @@
 import('lib.pkp.tests.PKPTestCase');
 import('plugins.generic.titlePageForPreprint.classes.Pdf');
 
-// define('TESTS_DIRECTORY', (dirname(__FILE__)));
-// define('ASSETS_DIRECTORY', DIRECTORY_SEPARATOR. 'assets'. DIRECTORY_SEPARATOR);
-
 final class PdfTest extends PKPTestCase {
 
     public function testGetNumberOfPagesWhenPdfHasOnePage() : void {
