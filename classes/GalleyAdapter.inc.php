@@ -1,4 +1,5 @@
 <?php
+
 class GalleyAdapter {
 
     public $file;
@@ -11,5 +12,9 @@ class GalleyAdapter {
         $this->locale = $locale;
         $this->submissionFileId = $submissionFileId;
         $this->revisionId = $revisionId;
+    }
+
+    public function getFullFilePath(): string {
+        return \Config::getVar('files', 'files_dir') . DIRECTORY_SEPARATOR . $this->file;
     }
 }
