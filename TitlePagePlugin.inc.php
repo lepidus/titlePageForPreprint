@@ -85,7 +85,6 @@ class TitlePagePlugin extends GenericPlugin {
 	}
 
 	public function insertTitlePageInPreprint($publication){
-		error_log("ifakdbakjbdçkjabfdçikjabfçkjabfçkjabfkjbk");
 		$submission = Services::get('submission')->get($publication->getData('submissionId'));
 		$context = Application::getContextDAO()->getById($submission->getContextId());
 		$this->addLocaleData("pt_BR");
