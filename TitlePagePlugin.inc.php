@@ -13,6 +13,7 @@
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.titlePageForPreprint.classes.SubmissionPressFactory');
+import('plugins.generic.titlePageForPreprint.classes.SubmissionFileUpdater');
 import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
 
 class TitlePagePlugin extends GenericPlugin {
@@ -84,14 +85,16 @@ class TitlePagePlugin extends GenericPlugin {
 	}
 
 	public function insertTitlePageInPreprint($publication){
+		error_log("ifakdbakjbdçkjabfdçikjabfçkjabfçkjabfkjbk");
 		$submission = Services::get('submission')->get($publication->getData('submissionId'));
 		$context = Application::getContextDAO()->getById($submission->getContextId());
 		$this->addLocaleData("pt_BR");
 		$this->addLocaleData("en_US");
 		$this->addLocaleData("es_ES");
 		$submissionPressFactory = new SubmissionPressFactory();
+		$submissionFileUpdater = new SubmissionFileUpdater();
 		$press = $submissionPressFactory->createSubmissionPress($submission, $publication, $context);
-		$press->insertTitlePage();
+		$press->insertTitlePage($submissionFileUpdater);
 	}
 
 
