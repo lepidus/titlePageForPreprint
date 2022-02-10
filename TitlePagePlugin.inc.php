@@ -13,6 +13,7 @@
  */
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('plugins.generic.titlePageForPreprint.classes.SubmissionPressFactory');
+import('plugins.generic.titlePageForPreprint.classes.SubmissionFileUpdater');
 import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
 
 class TitlePagePlugin extends GenericPlugin {
@@ -90,8 +91,9 @@ class TitlePagePlugin extends GenericPlugin {
 		$this->addLocaleData("en_US");
 		$this->addLocaleData("es_ES");
 		$submissionPressFactory = new SubmissionPressFactory();
+		$submissionFileUpdater = new SubmissionFileUpdater();
 		$press = $submissionPressFactory->createSubmissionPress($submission, $publication, $context);
-		$press->insertTitlePage();
+		$press->insertTitlePage($submissionFileUpdater);
 	}
 
 
