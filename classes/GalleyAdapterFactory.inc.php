@@ -40,7 +40,7 @@ class GalleyAdapterFactory {
 				$titlePageDao = new TitlePageDAO();
 				$numberOfRevisions = $titlePageDao->getNumberOfRevisions($submissionFile->getId());
 
-				if($numberOfRevisions != end($revisionIds)) { //Check for legacy cases
+				if($numberOfRevisions != end($revisionIds)) {
 					return true;
 				}
 			}

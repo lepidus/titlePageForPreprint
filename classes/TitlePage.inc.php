@@ -1,6 +1,7 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
+require_once dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'tecnickcom'.DIRECTORY_SEPARATOR.'tcpdf'.DIRECTORY_SEPARATOR.'tcpdf.php';
 import ('plugins.generic.titlePageForPreprint.classes.Pdf');
 import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
 define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
@@ -92,7 +93,7 @@ class TitlePage {
             $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale, ['subDate' => $this->submission->getSubmissionDate()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
             $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale, ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
             $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.dateFormat', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-          
+        
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
             $titlePage->Output($TitlePageFile, 'F');
         } catch(Exception $e) {

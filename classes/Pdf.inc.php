@@ -1,7 +1,9 @@
 <?php
+
+define('CPDF_PATH', dirname((dirname(__FILE__))).DIRECTORY_SEPARATOR.'tools'.DIRECTORY_SEPARATOR.'cpdf');
+
 class Pdf {
     private $path;
-    const CPDF_PATH = __DIR__ . "/../tools/cpdf";
     
     public function __construct(string $path){
         if (!self::isPdf($path)) {
@@ -12,7 +14,7 @@ class Pdf {
     }
 
     public function getNumberOfPages(): int {
-        $numberOfPages = exec(self::CPDF_PATH . " -pages {$this->path}");
+        $numberOfPages = exec(CPDF_PATH . " -pages {$this->path}");
         
         return (int)$numberOfPages;
     }

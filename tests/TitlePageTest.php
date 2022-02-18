@@ -1,5 +1,5 @@
 <?php
-require_once ("PdfHandlingTest.php");
+
 import ('plugins.generic.titlePageForPreprint.classes.TitlePage');
 import ('plugins.generic.titlePageForPreprint.classes.Pdf');
 import ('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
@@ -23,7 +23,7 @@ class TitlePageTest extends PdfHandlingTest {
     }
 
     private function extractImageFromPdf(pdf $pdf): string {
-        $pathOfExtractedImage = self::TESTS_DIRECTORY;
+        $pathOfExtractedImage = TESTS_DIRECTORY;
         $result = shell_exec("pdfimages -f 1 -png ". $pdf->getPath() . " " . $pathOfExtractedImage);
         $extractedImage = $pathOfExtractedImage . DIRECTORY_SEPARATOR . "-000.png";
         return $extractedImage;
@@ -51,7 +51,7 @@ class TitlePageTest extends PdfHandlingTest {
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $originalFile = $pdf->getPath();
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        $originalFileCopy = OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($originalFile, $originalFileCopy);
 
         $checklistPage = $titlePage->generateChecklistPage();
@@ -182,7 +182,7 @@ class TitlePageTest extends PdfHandlingTest {
 
     public function testInsertingInExistingPdfDontChangeOriginal(): void {
         $titlePage = $this->getTitlePageForTests();
-        $pdfOriginalWithHeaders = self::OUTPUT_DIRECTORY . "originalWithHeaders.pdf";
+        $pdfOriginalWithHeaders = OUTPUT_DIRECTORY . "originalWithHeaders.pdf";
         copy($this->pathOfTestPdf, $pdfOriginalWithHeaders);
         $titlePage->addDocumentHeader($pdfOriginalWithHeaders);
         
@@ -228,7 +228,7 @@ class TitlePageTest extends PdfHandlingTest {
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $originalFile = $pdf->getPath();
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        $originalFileCopy = OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($originalFile, $originalFileCopy);
 
         $checklistPage = $titlePage->generateChecklistPage();
@@ -246,7 +246,7 @@ class TitlePageTest extends PdfHandlingTest {
         $pdf = new Pdf($this->pathOfTestPdf);
         
         $originalFile = $pdf->getPath();
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+        $originalFileCopy = OUTPUT_DIRECTORY . "original_file_copy.pdf";
         copy($originalFile, $originalFileCopy);
 
         $checklistPage = $titlePage->generateChecklistPage();
