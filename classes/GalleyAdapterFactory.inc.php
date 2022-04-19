@@ -3,6 +3,11 @@ import('plugins.generic.titlePageForPreprint.classes.GalleyAdapter');
 import('plugins.generic.titlePageForPreprint.classes.TitlePageDAO');
 
 class GalleyAdapterFactory {
+		private $submissionFileDao;
+
+		public function __construct($submissionFileDao) {
+			$this->submissionFileDao = $submissionFileDao;
+		}
     
     public function createGalleyAdapter($submission, $galley): GalleyAdapter {
 		$submissionFile = $galley->getFile();
@@ -17,9 +22,8 @@ class GalleyAdapterFactory {
 		return new GalleyAdapter($lastRevisionPath, $galley->getLocale(), $submissionFile->getId(), $lastRevisionId);
 	}
 
-    public function getLatestRevision($submissionFileId) {
-		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		$revisions = $submissionFileDao->getRevisions($submissionFileId)->toArray();
+  public function getLatestRevision($submissionFileId) {
+		$revisions = $this->submissionFileDao->getRevisions($submissionFileId)->toArray();
 		$lastRevision = get_object_vars($revisions[0]);
 
 		foreach($revisions as $revision){
