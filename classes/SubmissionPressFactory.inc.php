@@ -12,7 +12,8 @@ class SubmissionPressFactory {
         $galleys = $publication->getData('galleys');
 
         foreach ($galleys as $galley) {
-            $galleyAdapterFactory = new GalleyAdapterFactory();
+						$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+            $galleyAdapterFactory = new GalleyAdapterFactory($submissionFileDao);
             $submissionGalleys[] = $galleyAdapterFactory->createGalleyAdapter($submission, $galley);	
         }
 
