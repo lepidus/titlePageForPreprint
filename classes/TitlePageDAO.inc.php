@@ -14,14 +14,14 @@ import('lib.pkp.classes.db.DAO');
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Collection;
 
-class TitlePageDAO extends DAO {
-
-    public function getNumberOfRevisions(int $submissionFileId): int {
+class TitlePageDAO extends DAO
+{
+    public function getNumberOfRevisions(int $submissionFileId): int
+    {
         $numberOfRevisions = Capsule::table('submission_file_revisions')
-		->where('submission_file_id', $submissionFileId)
-		->count();
+        ->where('submission_file_id', $submissionFileId)
+        ->count();
 
         return $numberOfRevisions;
     }
-
 }

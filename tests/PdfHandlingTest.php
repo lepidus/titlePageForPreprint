@@ -4,11 +4,11 @@ import('lib.pkp.tests.PKPTestCase');
 import('plugins.generic.titlePageForPreprint.classes.Translator');
 
 define('TESTS_DIRECTORY', (dirname(__FILE__)).DIRECTORY_SEPARATOR);
-define('ASSETS_DIRECTORY','assets'.DIRECTORY_SEPARATOR);
+define('ASSETS_DIRECTORY', 'assets'.DIRECTORY_SEPARATOR);
 define('OUTPUT_DIRECTORY', DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR);
 
-class PdfHandlingTest extends PKPTestCase {
-
+class PdfHandlingTest extends PKPTestCase
+{
     protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";
     protected $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
@@ -22,7 +22,8 @@ class PdfHandlingTest extends PKPTestCase {
     protected $version = "1";
     protected $translator;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $this->registerMockSubmissionFileDAO();
@@ -38,26 +39,29 @@ class PdfHandlingTest extends PKPTestCase {
         copy($this->pathOfTestPdf2, $this->copyOfTestPdfToRestore2);
     }
 
-    protected function getMockedDAOs() {
-		return array('SubmissionFileDAO');
-	}
+    protected function getMockedDAOs()
+    {
+        return array('SubmissionFileDAO');
+    }
 
-    private function registerMockSubmissionFileDAO(): void {
+    private function registerMockSubmissionFileDAO(): void
+    {
         $submissionFileDAO = $this->getMockBuilder(SubmissionFileDAO::class)
-			->setMethods(array('getById'))
-			->getMock();
+            ->setMethods(array('getById'))
+            ->getMock();
 
-		$submissionFile = new SubmissionFile();
+        $submissionFile = new SubmissionFile();
         $submissionFile->setData('folhaDeRosto', 'nao');
 
-		$submissionFileDAO->expects($this->any())
+        $submissionFileDAO->expects($this->any())
                           ->method('getById')
                           ->will($this->returnValue($submissionFile));
 
-		DAORegistry::registerDAO('SubmissionFileDAO', $submissionFileDAO);
+        DAORegistry::registerDAO('SubmissionFileDAO', $submissionFileDAO);
     }
 
-    private function buildMockTranslator(): Translator {
+    private function buildMockTranslator(): Translator
+    {
         $mockContext = $this->getMockBuilder(Context::class)
             ->setMethods(array('getData'))
             ->getMock();
@@ -78,7 +82,7 @@ class PdfHandlingTest extends PKPTestCase {
         $mockTranslator->expects($this->any())
                        ->method('translate')
                        ->will($this->returnCallback(array($this, 'getTranslation')));
-        
+
         $mockTranslator->expects($this->any())
                        ->method('getTranslatedTitle')
                        ->will($this->returnValue($this->getLanguageMap($this->locale)["title"]));
@@ -86,10 +90,11 @@ class PdfHandlingTest extends PKPTestCase {
         return $mockTranslator;
     }
 
-    public function getTranslation($key, $locale, $params): string {
+    public function getTranslation($key, $locale, $params): string
+    {
         $language = $this->getLanguageMap($locale);
         $translatedString = $language[$key];
-        if($params) {
+        if ($params) {
             foreach ($params as $key => $value) {
                 $translatedString = strtr($translatedString, ['{!' . $key . '}' => $value]);
             }
@@ -97,7 +102,8 @@ class PdfHandlingTest extends PKPTestCase {
         return $translatedString;
     }
 
-    private function getLanguageMap($locale): array {
+    private function getLanguageMap($locale): array
+    {
         $languageMap["en_US"] = [
             "publication.relation.none" => "Preprint has not been submitted for publication",
             "publication.relation.submitted" => "Preprint has been submitted for publication in journal",
@@ -134,13 +140,14 @@ class PdfHandlingTest extends PKPTestCase {
 
         return $languageMap[$locale];
     }
-    
-    protected function tearDown(): void {
+
+    protected function tearDown(): void
+    {
         parent::tearDown();
 
         $this->assertTrue(unlink($this->pathOfTestPdf));
         rename($this->copyOfTestPdfToRestore, $this->pathOfTestPdf);
-        
+
         $this->assertTrue(unlink($this->pathOfTestPdf2));
         rename($this->copyOfTestPdfToRestore2, $this->pathOfTestPdf2);
 
@@ -149,8 +156,8 @@ class PdfHandlingTest extends PKPTestCase {
         }
     }
 
-    public function testDummy(): void {
+    public function testDummy(): void
+    {
         $this->assertTrue(true);
     }
 }
-?>

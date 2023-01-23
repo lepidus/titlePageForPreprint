@@ -1,22 +1,25 @@
 <?php
-import ('plugins.generic.titlePageForPreprint.classes.Pdf');
-import ('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
-import ('plugins.generic.titlePageForPreprint.classes.Translator');
-import ('plugins.generic.titlePageForPreprint.classes.TitlePage');
 
-class SubmissionPress {
+import('plugins.generic.titlePageForPreprint.classes.Pdf');
+import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+import('plugins.generic.titlePageForPreprint.classes.Translator');
+import('plugins.generic.titlePageForPreprint.classes.TitlePage');
 
+class SubmissionPress
+{
     private $logoForTitlePage;
     private $submission;
     private $translator;
 
-    public function __construct(string $logoForTitlePage, SubmissionModel $submission, Translator $translator) {
+    public function __construct(string $logoForTitlePage, SubmissionModel $submission, Translator $translator)
+    {
         $this->logoForTitlePage = $logoForTitlePage;
         $this->submission = $submission;
         $this->translator = $translator;
     }
 
-    private function galleyHasTitlePage($galley) {
+    private function galleyHasTitlePage($galley)
+    {
         $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
         $submissionFile = $submissionFileDao->getById($galley->submissionFileId);
 
@@ -24,8 +27,9 @@ class SubmissionPress {
         return $hasTitlePage == 'sim';
     }
 
-    public function insertTitlePage($submissionFileUpdater): void {
-        foreach($this->submission->getGalleys() as $galley) {
+    public function insertTitlePage($submissionFileUpdater): void
+    {
+        foreach ($this->submission->getGalleys() as $galley) {
             $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $galley->locale, $this->translator);
             $pdfPath = $galley->getFullFilePath();
 
@@ -42,6 +46,6 @@ class SubmissionPress {
                     error_log('Caught exception: ' .  $e->getMessage());
                 }
             }
-        }   
+        }
     }
 }
