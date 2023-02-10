@@ -9,6 +9,6 @@ include:
       - 'templates/groups/ops_plugins_unit_tests_model.yml'
 
 before_script:
-  - apt update && apt install poppler-utils imagemagick php-imagick -yqq
+  - apt update && apt install poppler-utils imagemagick php-imagick xmlstarlet -yqq
   - composer install
   - xmlstarlet edit --inplace -u "policymap/policy[@pattern='PDF']/@rights" -v 'read|write' /etc/ImageMagick-6/policy.xml
