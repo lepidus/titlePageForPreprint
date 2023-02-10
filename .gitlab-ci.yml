@@ -1,5 +1,15 @@
+variables:
+  PLUGIN_NAME: 'titlePageForPreprint'
+
 include:
   - project: 'documentacao-e-tarefas/modelosparaintegracaocontinua'
     ref: main
     file:
       - 'templates/groups/pkp_plugin.yml'
+      - 'templates/groups/ops_plugins_unit_tests_model.yml'
+
+before_script:
+  - apt update && apt install poppler-utils imagemagick php-imagick xmlstarlet -yqq
+  - composer install
+  - sed -i 's/stealth="true"\/>/stealth="true"\/> -->/' /etc/ImageMagick-6/policy.xml
+  - xmlstarlet edit --inplace -u "policymap/policy[@pattern='PDF']/@rights" -v 'read|write' /etc/ImageMagick-6/policy.xml
