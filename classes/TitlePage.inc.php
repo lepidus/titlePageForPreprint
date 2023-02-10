@@ -4,7 +4,6 @@ require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARA
 require_once dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'tecnickcom'.DIRECTORY_SEPARATOR.'tcpdf'.DIRECTORY_SEPARATOR.'tcpdf.php';
 import('plugins.generic.titlePageForPreprint.classes.Pdf');
 import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
-define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
 
 class TitlePage
 {
