@@ -1,5 +1,13 @@
+variables:
+  PLUGIN_NAME: 'titlePageForPreprint'
+
 include:
   - project: 'documentacao-e-tarefas/modelosparaintegracaocontinua'
     ref: main
     file:
       - 'templates/groups/pkp_plugin.yml'
+      - 'templates/groups/ops_plugins_unit_tests_model.yml'
+
+before_script:
+  - apt update && apt install poppler-utils imagemagick php-imagick -yqq
+  - composer install
