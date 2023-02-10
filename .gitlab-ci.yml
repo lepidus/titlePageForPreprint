@@ -11,4 +11,5 @@ include:
 before_script:
   - apt update && apt install poppler-utils imagemagick php-imagick xmlstarlet -yqq
   - composer install
+  - cat /etc/ImageMagick-6/policy.xml
   - xmlstarlet edit --inplace -u "policymap/policy[@pattern='PDF']/@rights" -v 'read|write' /etc/ImageMagick-6/policy.xml
