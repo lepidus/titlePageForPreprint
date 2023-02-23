@@ -86,8 +86,11 @@ class TitlePage
             $titlePage->Image($this->logo, '', '', '', '20', $logoType, 'false', 'C', false, 400, 'C', false, false, 0, false, false, false);
             $titlePage->Ln(25);
             $this->writePublicationStatusOnTitlePage($titlePage);
+            
             $titlePage->SetFont($this->fontName, '', 18, '', false);
-            $titlePage->Write(0, $this->translator->getTranslatedTitle($this->locale), '', 0, 'C', true, 0, false, false, 0);
+            $normalizedTitle = Normalizer::normalize($this->translator->getTranslatedTitle($this->locale));
+            $titlePage->Write(0, $normalizedTitle, '', 0, 'C', true, 0, false, false, 0);
+            
             $titlePage->SetFont($this->fontName, '', 12, '', false);
             $titlePage->Write(0, $this->submission->getAuthors(), '', 0, 'C', true, 0, false, false, 0);
             $titlePage->SetFont($this->fontName, '', 11, '', false);
