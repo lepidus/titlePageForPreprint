@@ -15,7 +15,7 @@ class PdfHandlingTest extends PKPTestCase
     protected $logo = TESTS_DIRECTORY.ASSETS_DIRECTORY."logo_noAlphaChannel.png";
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     protected $locale = "pt_BR";
-    protected $title = "Assim Falou Zaratustra";
+    protected $title = "Assim Falou Zaratustra-àáâã";
     protected $authors = "Cleide Silva; João Carlos";
     protected $submissionDate = "31/06/2020";
     protected $publicationDate = "02/07/2020";
@@ -135,7 +135,7 @@ class PdfHandlingTest extends PKPTestCase
             "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - este preprint não foi revisado por pares",
             "item1CheckList" => "A submissão não foi publicado anteriormente.",
             "item2CheckList" => "As URLs das referências foram fornecidas.",
-            "title" => "Assim Falou Zaratustra"
+            "title" => "Assim Falou Zaratustra-àáâã"
         ];
 
         return $languageMap[$locale];
