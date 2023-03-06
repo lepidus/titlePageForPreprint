@@ -19,6 +19,7 @@ class PdfHandlingTest extends PKPTestCase
     protected $authors = "Cleide Silva; João Carlos";
     protected $submissionDate = "31/06/2020";
     protected $publicationDate = "02/07/2020";
+    protected $viewUrl = 'http://localhost:8000/index.php/server/preprint/view/1234';
     protected $version = "1";
     protected $translator;
 
