@@ -83,7 +83,7 @@ class TitlePage
                 $errorMessage = 'plugins.generic.titlePageForPreprint.requirements.logoMissing';
             }
 
-            $titlePage->Image($this->logo, '', '', '', '20', $logoType, 'false', 'C', false, 400, 'C', false, false, 0, false, false, false);
+            $titlePage->Image($this->logo, '', '', '', '20', $logoType, $this->submission->getViewUrl(), 'C', false, 400, 'C', false, false, 0, false, false, false);
             $titlePage->Ln(25);
             $this->writePublicationStatusOnTitlePage($titlePage);
             

@@ -11,12 +11,13 @@ class SubmissionTest extends PKPTestCase
     private $authors = "Clarice Linspector, Atila Iamarino";
     private $submissionDate = "10/06/2020";
     private $publicationDate = "12/06/2020";
+    private $viewUrl = 'http://localhost:8000/index.php/server/preprint/view/1234';
     private $version = "1";
     private $galleys = array();
 
     private function getSubmissionForTests()
     {
-        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
+        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->viewUrl, $this->version, $this->galleys);
     }
 
     public function testHasSubmissionStatus(): void
@@ -33,7 +34,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
+        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->viewUrl, $this->version, $this->galleys);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -45,7 +46,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiJournalNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
+        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->viewUrl, $this->version, $this->galleys);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 
@@ -71,6 +72,12 @@ class SubmissionTest extends PKPTestCase
     {
         $submission = $this->getSubmissionForTests();
         $this->assertEquals($this->publicationDate, $submission->getPublicationDate());
+    }
+
+    public function testViewUrl(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->viewUrl, $submission->getViewUrl());
     }
 
     public function testHasVersionNumber(): void
