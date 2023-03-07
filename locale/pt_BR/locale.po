@@ -39,7 +39,10 @@ msgid "plugins.generic.titlePageForPreprint.dateFormat"
 msgstr "(AAAA-MM-DD)"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
-msgstr "Folha de Rosto - Este plugin precisa que o binário do CPDF na sua pasta tools/ esteja como executável no seu servidor. O plugin não irá executar suas funcionalidades até que este binário esteja marcado como executável. Por favor, contate sua equipe de suporte."
+msgstr "Folha de Rosto - Este plugin precisa que o binário do CPDF esteja presente no diretório /usr/local/bin do seu servidor. O plugin não irá executar suas funcionalidades até que este binário esteja presente. Por favor, contate sua equipe de suporte."
+
+msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorNotExecutable"
+msgstr "Folha de Rosto - Este plugin precisa que o binário presente no diretório /usr/local/bin do seu servidor seja executável. O plugin não irá executar suas funcionalidades até que este binário esteja marcado como executável. Por favor, contate sua equipe de suporte."
 
 msgid "plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing"
 msgstr "Falha ao Remover Folha de Rosto"
