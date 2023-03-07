@@ -2,24 +2,24 @@
 
 class TitlePageRequirements
 {
-    public const CPDF_PATH = __DIR__ . "/../tools/cpdf";
+    public const CPDF_PATH = "/usr/local/bin/cpdf";
 
     public function checkRequirements()
     {
-        return $this->checkPdfManipulator() && $this->checkPdfGenerator();
+        return $this->checkPdfManipulator();
     }
 
     private function checkPdfManipulator()
     {
-        if (!is_executable(self::CPDF_PATH)) {
+        if(!file_exists(self::CPDF_PATH)) {
             $this->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing');
             return false;
         }
-        return true;
-    }
-
-    private function checkPdfGenerator()
-    {
+        
+        if (!is_executable(self::CPDF_PATH)) {
+            $this->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.pdfManipulatorNotExecutable');
+            return false;
+        }
         return true;
     }
 

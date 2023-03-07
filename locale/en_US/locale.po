@@ -39,7 +39,10 @@ msgid "plugins.generic.titlePageForPreprint.dateFormat"
 msgstr "(YYYY-MM-DD)"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
-msgstr "Title Page - This plugin requires the CPDF binary at its tools/ directory being executable at your server. This plugin won't execute its features until this binary is marked as executable. Please, contact your support team."
+msgstr "Title Page - This plugin requires the CPDF binary to be present at the /usr/local/bin directory of your server. This plugin won't execute its features until this binary is present. Please, contact your support team."
+
+msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorNotExecutable"
+msgstr "Title Page - This plugin requires the CPDF binary at the /usr/local/bin directory of your server being executable. This plugin won't execute its features until this binary is marked as executable. Please, contact your support team."
 
 msgid "plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing"
 msgstr "Title Page Remove Failure"

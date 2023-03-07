@@ -14,7 +14,6 @@ class TitlePage
     private $fontName;
     private $titlePageRequirements;
     public const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
-    public const CPDF_PATH = __DIR__ . "/../tools/cpdf";
 
     public function __construct(SubmissionModel $submission, string $logo, string $locale, translator $translator)
     {
@@ -36,7 +35,7 @@ class TitlePage
 
     public function removeTitlePage($pdf): void
     {
-        $separateCommand = self::CPDF_PATH . " {$pdf} 2-end -o {$pdf}";
+        $separateCommand = "cpdf {$pdf} 2-end -o {$pdf}";
         exec($separateCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
@@ -146,7 +145,7 @@ class TitlePage
     {
         $linkDOI = "https://doi.org/".$this->submission->getDOI();
         $headerText = $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]);
-        $addHeaderCommand = self::CPDF_PATH . " -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf} -o {$pdf}";
+        $addHeaderCommand = "cpdf -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf} -o {$pdf}";
         exec($addHeaderCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
@@ -157,7 +156,7 @@ class TitlePage
 
     private function concatenateTitlePage($pdf, $titlePage): void
     {
-        $uniteCommand = self::CPDF_PATH . " -merge {$titlePage} {$pdf} -o {$pdf}";
+        $uniteCommand = "cpdf -merge {$titlePage} {$pdf} -o {$pdf}";
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {
@@ -168,7 +167,7 @@ class TitlePage
 
     public function concatenateChecklistPage($pdf, $checklistPage): void
     {
-        $uniteCommand = self::CPDF_PATH . " -merge {$pdf} {$checklistPage} -o {$pdf}";
+        $uniteCommand = "cpdf -merge {$pdf} {$checklistPage} -o {$pdf}";
         exec($uniteCommand, $output, $resultCode);
 
         if (!$this->commandSuccessful($resultCode)) {

@@ -39,7 +39,10 @@ msgid "plugins.generic.titlePageForPreprint.dateFormat"
 msgstr "(AAAA-MM-DD)"
 
 msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing"
-msgstr "Página de título para preprint - Este módulo necesita que el binario CPDF en el sus directorio tools/ sea ejecutable en su servidor. El módulo no ejecutará su funcionalidad hasta que este binario se marque como ejecutable. Comuníquese con su equipo de soporte."
+msgstr "Página de título para preprint - Este módulo necesita que el binario CPDF esté presente en el directorio /usr/local/bin de su servidor. El módulo no ejecutará su funcionalidad hasta que este binario esté presente. Comuníquese con su equipo de soporte."
+
+msgid "plugins.generic.titlePageForPreprint.requirements.pdfManipulatorNotExecutable"
+msgstr "Página de título para preprint - Este módulo necesita que el binario CPDF presente en el directorio /usr/local/bin de su servidor para ser ejecutable. El módulo no ejecutará su funcionalidad hasta que este binario se marque como ejecutable. Comuníquese con su equipo de soporte."
 
 msgid "plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing"
 msgstr "No se Pudo Quitar la Portada"
