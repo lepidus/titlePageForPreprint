@@ -82,7 +82,8 @@ class TitlePage
                 $errorMessage = 'plugins.generic.titlePageForPreprint.requirements.logoMissing';
             }
 
-            $titlePage->Image($this->logo, '', '', '', '20', $logoType, $this->submission->getViewUrl(), 'C', false, 400, 'C', false, false, 0, false, false, false);
+            $doiLink = "https://doi.org/" . $this->submission->getDOI();
+            $titlePage->Image($this->logo, '', '', '', '20', $logoType, $doiLink, 'C', false, 400, 'C', false, false, 0, false, false, false);
             $titlePage->Ln(25);
             $this->writePublicationStatusOnTitlePage($titlePage);
             
@@ -94,7 +95,7 @@ class TitlePage
             $titlePage->Write(0, $this->submission->getAuthors(), '', 0, 'C', true, 0, false, false, 0);
             $titlePage->SetFont($this->fontName, '', 11, '', false);
             $titlePage->Ln(5);
-            $titlePage->Write(0, "https://doi.org/" . $this->submission->getDOI(), "https://doi.org/" . $this->submission->getDOI(), 0, 'C', true, 0, false, false, 0);
+            $titlePage->Write(0, $doiLink, $doiLink, 0, 'C', true, 0, false, false, 0);
             $titlePage->Ln(10);
 
             $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale, ['subDate' => $this->submission->getSubmissionDate()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
