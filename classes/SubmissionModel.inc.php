@@ -9,10 +9,9 @@ class SubmissionModel
     private $authors;
     private $submissionDate;
     private $publicationDate;
-    private $viewUrl;
     private $version;
 
-    public function __construct(string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, string $viewUrl, string $version, array $galleys = null)
+    public function __construct(string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, string $version, array $galleys = null)
     {
         $this->status = $status;
         $this->doi = ((empty($doi)) ? ("Not informed") : ($doi));
@@ -21,7 +20,6 @@ class SubmissionModel
         $this->galleys = $galleys;
         $this->submissionDate = $submissionDate;
         $this->publicationDate = $publicationDate;
-        $this->viewUrl = $viewUrl;
         $this->version = $version;
     }
 
@@ -58,11 +56,6 @@ class SubmissionModel
     public function getPublicationDate(): string
     {
         return $this->publicationDate;
-    }
-
-    public function getViewUrl(): string
-    {
-        return $this->viewUrl;
     }
 
     public function getVersion(): string

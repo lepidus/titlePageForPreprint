@@ -7,7 +7,7 @@ import('plugins.generic.titlePageForPreprint.classes.GalleyAdapterFactory');
 
 class SubmissionPressFactory
 {
-    public function createSubmissionPress($submission, $publication, $context, $preprintViewUrl): SubmissionPress
+    public function createSubmissionPress($submission, $publication, $context): SubmissionPress
     {
         $logoPath = $this->getLogoPath($context);
         $dataPress = $this->getDataForPress($submission, $publication);
@@ -21,7 +21,7 @@ class SubmissionPressFactory
 
         return new SubmissionPress(
             $logoPath,
-            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $preprintViewUrl, $dataPress['version'], $submissionGalleys),
+            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['version'], $submissionGalleys),
             new Translator($context, $submission, $publication)
         );
     }

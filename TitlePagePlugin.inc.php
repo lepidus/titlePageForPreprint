@@ -100,10 +100,7 @@ class TitlePagePlugin extends GenericPlugin
         $this->addLocaleData("es_ES");
         $submissionPressFactory = new SubmissionPressFactory();
         $submissionFileUpdater = new SubmissionFileUpdater();
-
-        $request = Application::get()->getRequest();
-        $preprintViewUrl = $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'preprint', 'view', $submission->getBestId());
-        $press = $submissionPressFactory->createSubmissionPress($submission, $publication, $context, $preprintViewUrl);
+        $press = $submissionPressFactory->createSubmissionPress($submission, $publication, $context);
         $press->insertTitlePage($submissionFileUpdater);
     }
 }
