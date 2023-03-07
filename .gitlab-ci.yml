@@ -14,3 +14,5 @@ unit_tests:
     - composer install
     - sed -i 's/stealth="true"\/>/stealth="true"\/> -->/' /etc/ImageMagick-6/policy.xml
     - xmlstarlet edit --inplace -u "policymap/policy[@pattern='PDF']/@rights" -v 'read|write' /etc/ImageMagick-6/policy.xml
+    - wget https://github.com/coherentgraphics/cpdf-binaries/blob/master/Linux-Intel-64bit/cpdf?raw=true -O /usr/local/bin/cpdf
+    - chmod +x /usr/local/bin/cpdf
