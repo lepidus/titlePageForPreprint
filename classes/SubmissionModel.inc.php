@@ -10,6 +10,8 @@ class SubmissionModel
     private $submissionDate;
     private $publicationDate;
     private $version;
+    private $endorserName;
+    private $endorserOrcid;
 
     public function __construct(string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, string $version, array $galleys = null)
     {
@@ -61,5 +63,21 @@ class SubmissionModel
     public function getVersion(): string
     {
         return $this->version;
+    }
+
+    public function getEndorserName(): string
+    {
+        return $this->endorserName;
+    }
+
+    public function getEndorserOrcid(): string
+    {
+        return $this->endorserOrcid;
+    }
+
+    public function setEndorser(string $endorserName, string $endorserOrcid)
+    {
+        $this->endorserName = $endorserName;
+        $this->endorserOrcid = $endorserOrcid;
     }
 }

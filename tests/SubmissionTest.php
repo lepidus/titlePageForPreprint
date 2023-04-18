@@ -12,11 +12,15 @@ class SubmissionTest extends PKPTestCase
     private $submissionDate = "10/06/2020";
     private $publicationDate = "12/06/2020";
     private $version = "1";
+    private $endorserName = 'Carl Sagan';
+    private $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
     private $galleys = array();
 
     private function getSubmissionForTests()
     {
-        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
+        $submission->setEndorser($this->endorserName, $this->endorserOrcid);
+        return $submission;
     }
 
     public function testHasSubmissionStatus(): void
@@ -76,6 +80,18 @@ class SubmissionTest extends PKPTestCase
     public function testHasVersionNumber(): void
     {
         $submission = $this->getSubmissionForTests();
-        $this->assertEquals($this->version, $submission->getversion());
+        $this->assertEquals($this->version, $submission->getVersion());
+    }
+
+    public function testHasEndorserName(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->endorserName, $submission->getEndorserName());
+    }
+
+    public function testHasEndorserOrcid(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->endorserOrcid, $submission->getEndorserOrcid());
     }
 }
