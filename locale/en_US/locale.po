@@ -32,6 +32,9 @@ msgstr "Posted on: {$postDate} (version {$version})"
 msgid "plugins.generic.titlePageForPreprint.submissionDate"
 msgstr "Submitted on: {$subDate}"
 
+msgid "plugins.generic.titlePageForPreprint.endorsement"
+msgstr "The moderation of this preprint received the endorsement of: {$endorserName} (ORCID: {$endorserOrcid})"
+
 msgid "plugins.generic.titlePageForPreprint.headerText"
 msgstr "SciELO Preprints - This document is a preprint and its current status is available at: {$doiPreprint}"
 
