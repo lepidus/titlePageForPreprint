@@ -65,12 +65,12 @@ class SubmissionModel
         return $this->version;
     }
 
-    public function getEndorserName(): string
+    public function getEndorserName(): ?string
     {
         return $this->endorserName;
     }
 
-    public function getEndorserOrcid(): string
+    public function getEndorserOrcid(): ?string
     {
         return $this->endorserOrcid;
     }
