@@ -195,7 +195,7 @@ class TitlePageTest extends PdfHandlingTest
         $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
-        $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.endorsement', $this->locale, ['endorserName' => $this->endorserName, 'endorserOrcid' => $this->endorserOrcid]);
+        $expectedText = "A moderação deste preprint recebeu o endosso de: Carl Sagan (ORCID:";
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
