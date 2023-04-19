@@ -13,7 +13,7 @@ class SubmissionModel
     private $endorserName;
     private $endorserOrcid;
 
-    public function __construct(string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, string $version, array $galleys = null)
+    public function __construct(string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, array $galleys = null)
     {
         $this->status = $status;
         $this->doi = ((empty($doi)) ? ("Not informed") : ($doi));
@@ -22,6 +22,8 @@ class SubmissionModel
         $this->galleys = $galleys;
         $this->submissionDate = $submissionDate;
         $this->publicationDate = $publicationDate;
+        $this->endorserName = $endorserName;
+        $this->endorserOrcid = $endorserOrcid;
         $this->version = $version;
     }
 
@@ -73,11 +75,5 @@ class SubmissionModel
     public function getEndorserOrcid(): ?string
     {
         return $this->endorserOrcid;
-    }
-
-    public function setEndorser(string $endorserName, string $endorserOrcid)
-    {
-        $this->endorserName = $endorserName;
-        $this->endorserOrcid = $endorserOrcid;
     }
 }

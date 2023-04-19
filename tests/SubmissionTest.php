@@ -18,9 +18,7 @@ class SubmissionTest extends PKPTestCase
 
     private function getSubmissionForTests()
     {
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
-        $submission->setEndorser($this->endorserName, $this->endorserOrcid);
-        return $submission;
+        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->galleys);
     }
 
     public function testHasSubmissionStatus(): void
@@ -37,7 +35,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
+        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->galleys);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -49,7 +47,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiJournalNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->version, $this->galleys);
+        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->galleys);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 

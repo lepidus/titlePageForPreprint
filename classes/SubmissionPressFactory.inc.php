@@ -21,7 +21,7 @@ class SubmissionPressFactory
 
         return new SubmissionPress(
             $logoPath,
-            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['version'], $submissionGalleys),
+            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['endorserName'], $dataPress['endorserOrcid'], $dataPress['version'], $submissionGalleys),
             new Translator($context, $submission, $publication)
         );
     }
@@ -61,6 +61,9 @@ class SubmissionPressFactory
         $data['submissionDate'] = date('Y-m-d', $dateSubmitted);
         $datePublished = strtotime($publication->getData('datePublished'));
         $data['publicationDate'] = date('Y-m-d', $datePublished);
+
+        $data['endorserName'] = $publication->getData('endorserName');
+        $data['endorserOrcid'] = $publication->getData('endorserOrcid');
 
         $status = $publication->getData('relationStatus');
         $relation = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
