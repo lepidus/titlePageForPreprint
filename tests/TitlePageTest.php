@@ -8,7 +8,10 @@ class TitlePageTest extends PdfHandlingTest
 {
     private function getTitlePageForTests(): TitlePage
     {
-        return new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version), $this->logo, $this->locale, $this->translator);
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->version);
+        $submission->setEndorser($this->endorserName, $this->endorserOrcid);
+        
+        return new TitlePage($submission, $this->logo, $this->locale, $this->translator);
     }
 
     private function convertPdfToImage(string $pdfPath, $imagePath): imagick
@@ -180,6 +183,19 @@ class TitlePageTest extends PdfHandlingTest
 
         $this->convertPdfToText($pdf);
         $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale, ['postDate' => $this->publicationDate, 'version' => $this->version]);
+        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $this->assertEquals($expectedText, $searchResult);
+    }
+
+    public function testInsertingInExistingPdfStampsEndorsement(): void
+    {
+        $titlePage = $this->getTitlePageForTests();
+        $pdf = new Pdf($this->pathOfTestPdf);
+
+        $titlePage->insertTitlePageFirstTime($pdf);
+
+        $this->convertPdfToText($pdf);
+        $expectedText = $this->translator->translate('plugins.generic.titlePageForPreprint.endorsement', $this->locale, ['endorserName' => $this->endorserName, 'endorserOrcid' => $this->endorserOrcid]);
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }

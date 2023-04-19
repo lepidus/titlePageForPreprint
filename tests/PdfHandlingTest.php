@@ -19,6 +19,8 @@ class PdfHandlingTest extends PKPTestCase
     protected $authors = "Cleide Silva; João Carlos";
     protected $submissionDate = "31/06/2020";
     protected $publicationDate = "02/07/2020";
+    protected $endorserName = 'Carl Sagan';
+    protected $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
     protected $version = "1";
     protected $translator;
 
@@ -116,6 +118,7 @@ class PdfHandlingTest extends PKPTestCase
             "plugins.generic.titlePageForPreprint.publicationDate" => "Posted on: {!postDate} (version {!version}",
             "plugins.generic.titlePageForPreprint.dateFormat" => "(YYYY-MM-DD)",
             "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - this preprint has not been peer reviewed",
+            "plugins.generic.titlePageForPreprint.endorsement" => "The moderation of this preprint received the endorsement of: {!endorserName} (ORCID: {!endorserOrcid})",
             "item1CheckList" => "The submission has not been previously published.",
             "item2CheckList" => "Where available, URLs for the references have been provided.",
             "title" => "So spoke Zaratustra"
@@ -133,6 +136,7 @@ class PdfHandlingTest extends PKPTestCase
             "plugins.generic.titlePageForPreprint.publicationDate" => "Postado em: {!postDate} (versão {!version})",
             "plugins.generic.titlePageForPreprint.dateFormat" => "(AAAA-MM-DD)",
             "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - este preprint não foi revisado por pares",
+            "plugins.generic.titlePageForPreprint.endorsement" => "A moderação deste preprint recebeu o endosso de: {!endorserName} (ORCID: {!endorserOrcid})",
             "item1CheckList" => "A submissão não foi publicado anteriormente.",
             "item2CheckList" => "As URLs das referências foram fornecidas.",
             "title" => "Assim Falou Zaratustra-àáâã"
