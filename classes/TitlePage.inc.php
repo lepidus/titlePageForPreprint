@@ -106,7 +106,7 @@ class TitlePage
             $endorserOrcid = $this->submission->getEndorserOrcid();
             if(!empty($endorserOrcid) && !empty($endorserName)) {
                 $titlePage->Ln(5);
-                $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.endorsement', $this->locale, ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+                $titlePage->writeHTML($this->translator->translate('plugins.generic.titlePageForPreprint.endorsement', $this->locale, ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid]));
             }
 
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
