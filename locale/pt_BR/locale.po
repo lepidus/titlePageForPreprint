@@ -35,7 +35,7 @@ msgstr "Submetido em: {$subDate}"
 msgid "plugins.generic.titlePageForPreprint.endorsement"
 msgstr ""
 "A moderação deste preprint recebeu o endosso de:<br>"
-"{$endorserName} (ORCID: <a href=\"{$endorserOrcid}\">{$endorserOrcid})</a>"
+"{$endorserName} (ORCID: <a href=\"{$endorserOrcid}\">{$endorserOrcid}</a>)"
 
 msgid "plugins.generic.titlePageForPreprint.headerText"
 msgstr "SciELO Preprints - Este documento é um preprint e sua situação atual está disponível em: {$doiPreprint}"
