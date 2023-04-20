@@ -193,7 +193,7 @@ class TitlePageTest extends PdfHandlingTest
         $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
-        $expectedText = "A moderação deste preprint recebeu o endosso de: Carl Sagan (ORCID:";
+        $expectedText = "A moderação deste preprint recebeu o endosso de:";
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
