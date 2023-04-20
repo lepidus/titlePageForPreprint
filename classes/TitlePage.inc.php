@@ -102,6 +102,13 @@ class TitlePage
             $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale, ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
             $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.dateFormat', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
 
+            $endorserName = $this->submission->getEndorserName();
+            $endorserOrcid = $this->submission->getEndorserOrcid();
+            if(!empty($endorserOrcid) && !empty($endorserName)) {
+                $titlePage->Ln(5);
+                $titlePage->writeHTML($this->translator->translate('plugins.generic.titlePageForPreprint.endorsement', $this->locale, ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid]));
+            }
+
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
             $titlePage->Output($TitlePageFile, 'F');
         } catch(Exception $e) {
