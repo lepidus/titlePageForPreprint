@@ -86,11 +86,11 @@ class TitlePage
             $titlePage->Image($this->logo, '', '', '', '20', $logoType, $doiLink, 'C', false, 400, 'C', false, false, 0, false, false, false);
             $titlePage->Ln(25);
             $this->writePublicationStatusOnTitlePage($titlePage);
-            
+
             $titlePage->SetFont($this->fontName, '', 18, '', false);
             $normalizedTitle = Normalizer::normalize($this->translator->getTranslatedTitle($this->locale));
             $titlePage->Write(0, $normalizedTitle, '', 0, 'C', true, 0, false, false, 0);
-            
+
             $titlePage->SetFont($this->fontName, '', 12, '', false);
             $titlePage->Write(0, $this->submission->getAuthors(), '', 0, 'C', true, 0, false, false, 0);
             $titlePage->SetFont($this->fontName, '', 11, '', false);
@@ -104,9 +104,16 @@ class TitlePage
 
             $endorserName = $this->submission->getEndorserName();
             $endorserOrcid = $this->submission->getEndorserOrcid();
-            if(!empty($endorserOrcid) && !empty($endorserName)) {
+            if(!is_null($endorserOrcid) && !is_null($endorserName)) {
                 $titlePage->Ln(5);
                 $titlePage->writeHTML($this->translator->translate('plugins.generic.titlePageForPreprint.endorsement', $this->locale, ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid]));
+            }
+
+            $versionJustification = $this->submission->getVersionJustification();
+            if($this->submission->getVersion() > 1 && !is_null($versionJustification)) {
+                $versionJustification = $this->translator->translate('plugins.generic.titlePageForPreprint.versionJustification', $this->locale) . ": " . $versionJustification;
+                $titlePage->Ln(5);
+                $titlePage->Write(0, $versionJustification, '', 0, 'JUSTIFY', true, 0, false, false, 0);
             }
 
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';

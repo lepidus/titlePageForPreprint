@@ -8,7 +8,7 @@ class TitlePageTest extends PdfHandlingTest
 {
     private function getTitlePageForTests(): TitlePage
     {
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version);
+        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification);
         return new TitlePage($submission, $this->logo, $this->locale, $this->translator);
     }
 
@@ -109,7 +109,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testInsertingInExistingPdfStampsNotInformedRelation(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, $this->locale, $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
@@ -185,6 +185,33 @@ class TitlePageTest extends PdfHandlingTest
         $this->assertEquals($expectedText, $searchResult);
     }
 
+    public function testDontStampVersionJustificationOnFirstVersion(): void
+    {
+        $titlePage = $this->getTitlePageForTests();
+        $pdf = new Pdf($this->pathOfTestPdf);
+
+        $titlePage->insertTitlePageFirstTime($pdf);
+
+        $this->convertPdfToText($pdf);
+        $expectedText = "Justificativa da versão: " . $this->versionJustification;
+        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $this->assertEquals("", $searchResult);
+    }
+
+    public function testStampsVersionJustificationFromSecondVersion(): void
+    {
+        $this->version = "2";
+        $titlePage = $this->getTitlePageForTests();
+        $pdf = new Pdf($this->pathOfTestPdf);
+
+        $titlePage->insertTitlePageFirstTime($pdf);
+
+        $this->convertPdfToText($pdf);
+        $expectedText = "Justificativa da versão: " . $this->versionJustification;
+        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
+        $this->assertEquals($expectedText, $searchResult);
+    }
+
     public function testInsertingInExistingPdfStampsEndorsement(): void
     {
         $titlePage = $this->getTitlePageForTests();
@@ -233,7 +260,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithRelationTranslatedToGalleyLanguage(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
@@ -246,7 +273,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testInsertingInExistingPdfStampsNotInformedRelationTranslated(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, "en_US", $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel("", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, "en_US", $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
@@ -259,7 +286,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithChecklistLabelTranslatedToGalleyLanguage(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, $this->locale, $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $originalFile = $pdf->getPath();
@@ -278,7 +305,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithChecklistTranslatedToGalleyLanguage(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, $this->locale, $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $originalFile = $pdf->getPath();
@@ -300,7 +327,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithSubmissionDateTranslatedToGalleyLanguage(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, $this->locale, $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
@@ -313,7 +340,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithPublicationDateTranslatedToGalleyLanguage(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, $this->locale, $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
@@ -339,7 +366,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithDateFormatTranslatedToGalleyLanguage(): void
     {
-        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version), $this->logo, $this->locale, $this->translator);
+        $titlePage = new TitlePage(new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification), $this->logo, $this->locale, $this->translator);
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);

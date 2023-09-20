@@ -14,11 +14,12 @@ class SubmissionTest extends PKPTestCase
     private $version = "1";
     private $endorserName = 'Carl Sagan';
     private $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
+    private $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
     private $galleys = array();
 
     private function getSubmissionForTests()
     {
-        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->galleys);
+        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
     }
 
     public function testHasSubmissionStatus(): void
@@ -35,7 +36,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->galleys);
+        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -47,7 +48,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiJournalNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->galleys);
+        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 
@@ -91,5 +92,11 @@ class SubmissionTest extends PKPTestCase
     {
         $submission = $this->getSubmissionForTests();
         $this->assertEquals($this->endorserOrcid, $submission->getEndorserOrcid());
+    }
+
+    public function testHasVersionJustification(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->versionJustification, $submission->getVersionJustification());
     }
 }
