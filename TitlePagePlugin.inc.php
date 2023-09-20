@@ -51,7 +51,7 @@ class TitlePagePlugin extends GenericPlugin
 
     public function modifySubmissionFileSchema($hookName, $params)
     {
-        $schema =& $params[0];
+        $schema = & $params[0];
 
         $schema->properties->{'folhaDeRosto'} = (object) [
             'type' => 'string',

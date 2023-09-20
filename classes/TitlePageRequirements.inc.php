@@ -15,7 +15,7 @@ class TitlePageRequirements
             $this->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing');
             return false;
         }
-        
+
         if (!is_executable(self::CPDF_PATH)) {
             $this->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.pdfManipulatorNotExecutable');
             return false;
