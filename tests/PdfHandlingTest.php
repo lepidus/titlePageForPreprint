@@ -119,7 +119,7 @@ class PdfHandlingTest extends PKPTestCase
             "plugins.generic.titlePageForPreprint.publicationDate" => "Posted on: {!postDate} (version {!version}",
             "plugins.generic.titlePageForPreprint.dateFormat" => "(YYYY-MM-DD)",
             "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - this preprint has not been peer reviewed",
-            "plugins.generic.endorsement" => "The moderation of this preprint received the endorsement of:<br>{!endorserName} (ORCID: <a href=\"{!endorserOrcid}\">{!endorserOrcid}</a>)",
+            "plugins.generic.titlePageForPreprint.endorsement" => "The moderation of this preprint received the endorsement of:<br>{!endorserName} (ORCID: <a href=\"{!endorserOrcid}\">{!endorserOrcid}</a>)",
             "plugins.generic.titlePageForPreprint.versionJustification" => "Version justification",
             "item1CheckList" => "The submission has not been previously published.",
             "item2CheckList" => "Where available, URLs for the references have been provided.",

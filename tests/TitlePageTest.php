@@ -193,6 +193,7 @@ class TitlePageTest extends PdfHandlingTest
         $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
+        $expectedText = "Justificativa da versão: " . $this->versionJustification;
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals("", $searchResult);
     }
@@ -206,7 +207,7 @@ class TitlePageTest extends PdfHandlingTest
         $titlePage->insertTitlePageFirstTime($pdf);
 
         $this->convertPdfToText($pdf);
-        $expectedText = "Justificativa da versão:";
+        $expectedText = "Justificativa da versão: " . $this->versionJustification;
         $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
         $this->assertEquals($expectedText, $searchResult);
     }
