@@ -21,7 +21,7 @@ class SubmissionPressFactory
 
         return new SubmissionPress(
             $logoPath,
-            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['endorserName'], $dataPress['endorserOrcid'], $dataPress['version'], $data['versionJustification'], $submissionGalleys),
+            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['endorserName'], $dataPress['endorserOrcid'], $dataPress['version'], $dataPress['versionJustification'], $submissionGalleys),
             new Translator($context, $submission, $publication)
         );
     }
