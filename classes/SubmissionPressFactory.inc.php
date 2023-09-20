@@ -21,7 +21,7 @@ class SubmissionPressFactory
 
         return new SubmissionPress(
             $logoPath,
-            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['endorserName'], $dataPress['endorserOrcid'], $dataPress['version'], $submissionGalleys),
+            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['endorserName'], $dataPress['endorserOrcid'], $dataPress['version'], $data['versionJustification'], $submissionGalleys),
             new Translator($context, $submission, $publication)
         );
     }
@@ -56,6 +56,7 @@ class SubmissionPressFactory
         $data['doiJournal'] = $publication->getData('vorDoi');
         $data['authors'] = $this->getAuthors($publication);
         $data['version'] = $publication->getData('version');
+        $data['versionJustification'] = $publication->getData('versionJustification');
 
         $dateSubmitted = strtotime($submission->getData('dateSubmitted'));
         $data['submissionDate'] = date('Y-m-d', $dateSubmitted);

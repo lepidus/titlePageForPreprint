@@ -120,7 +120,7 @@ class PdfHandlingTest extends PKPTestCase
             "plugins.generic.titlePageForPreprint.dateFormat" => "(YYYY-MM-DD)",
             "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - this preprint has not been peer reviewed",
             "plugins.generic.endorsement" => "The moderation of this preprint received the endorsement of:<br>{!endorserName} (ORCID: <a href=\"{!endorserOrcid}\">{!endorserOrcid}</a>)",
-            "plugins.generic.titlePageForPreprint.versionJustification" => "Version justification: {!versionJustification}",
+            "plugins.generic.titlePageForPreprint.versionJustification" => "Version justification",
             "item1CheckList" => "The submission has not been previously published.",
             "item2CheckList" => "Where available, URLs for the references have been provided.",
             "title" => "So spoke Zaratustra"
@@ -139,7 +139,7 @@ class PdfHandlingTest extends PKPTestCase
             "plugins.generic.titlePageForPreprint.dateFormat" => "(AAAA-MM-DD)",
             "plugins.generic.titlePageForPreprint.headerText" => "SciELO Preprints - este preprint não foi revisado por pares",
             "plugins.generic.titlePageForPreprint.endorsement" => "A moderação deste preprint recebeu o endosso de:<br>{!endorserName} (ORCID: <a href=\"{!endorserOrcid}\">{!endorserOrcid}</a>)",
-            "plugins.generic.titlePageForPreprint.versionJustification" => "Justificativa da versão: {!versionJustification}",
+            "plugins.generic.titlePageForPreprint.versionJustification" => "Justificativa da versão",
             "item1CheckList" => "A submissão não foi publicado anteriormente.",
             "item2CheckList" => "As URLs das referências foram fornecidas.",
             "title" => "Assim Falou Zaratustra-àáâã"
