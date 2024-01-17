@@ -1,9 +1,9 @@
 <?php
 
-import('plugins.generic.titlePageForPreprint.classes.GalleyAdapter');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionPress');
-import('plugins.generic.titlePageForPreprint.classes.Pdf');
+use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapter;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
+use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
 
 class SubmissionPressTest extends PdfHandlingTest
 {

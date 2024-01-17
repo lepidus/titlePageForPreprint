@@ -1,7 +1,9 @@
 <?php
 
-import('lib.pkp.tests.PKPTestCase');
-import('plugins.generic.titlePageForPreprint.classes.Translator');
+namespace APP\plugins\generic\titlePageForPreprint\tests;
+
+use PKP\tests\PKPTestCase;
+use APP\plugins\generic\titlePageForPreprint\classes\Translator;
 
 define('TESTS_DIRECTORY', (dirname(__FILE__)).DIRECTORY_SEPARATOR);
 define('ASSETS_DIRECTORY', 'assets'.DIRECTORY_SEPARATOR);

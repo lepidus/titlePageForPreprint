@@ -1,7 +1,7 @@
 <?php
 
-import('lib.pkp.tests.PKPTestCase');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+use PKP\tests\PKPTestCase;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 
 class SubmissionTest extends PKPTestCase
 {

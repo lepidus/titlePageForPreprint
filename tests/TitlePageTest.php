@@ -1,8 +1,8 @@
 <?php
 
-import('plugins.generic.titlePageForPreprint.classes.TitlePage');
-import('plugins.generic.titlePageForPreprint.classes.Pdf');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+use APP\plugins\generic\titlePageForPreprint\classes\TitlePage;
+use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 
 class TitlePageTest extends PdfHandlingTest
 {

@@ -1,12 +1,11 @@
 <?php
 
-import('lib.pkp.tests.DatabaseTestCase');
-import('classes.submission.Submission');
-import('lib.pkp.classes.file.PKPFile');
-import('lib.pkp.classes.submission.SubmissionFile');
-import('plugins.generic.titlePageForPreprint.tests.TitlePageTestsDAO');
-import('plugins.generic.titlePageForPreprint.classes.GalleyAdapterFactory');
-import('lib.pkp.classes.services.PKPSchemaService');
+use PKP\tests\DatabaseTestCase;
+use APP\submission\Submission;
+use PKP\submissionFile\SubmissionFile;
+use APP\plugins\generic\titlePageForPreprint\tests\TitlePageTestsDAO;
+use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapterFactory;
+use PKP\services\PKPSchemaService;
 
 class TitlePageOnDatabaseTest extends DatabaseTestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
-import('lib.pkp.tests.PKPTestCase');
-import('plugins.generic.titlePageForPreprint.classes.Pdf');
+use PKP\tests\PKPTestCase;
+use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
 
 final class PdfTest extends PKPTestCase
 {
