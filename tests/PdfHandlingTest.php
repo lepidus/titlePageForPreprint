@@ -7,16 +7,16 @@ use PKP\db\DAORegistry;
 use PKP\submissionFile\SubmissionFile;
 use APP\plugins\generic\titlePageForPreprint\classes\Translator;
 
-define('TESTS_DIRECTORY', (dirname(__FILE__)).DIRECTORY_SEPARATOR);
-define('ASSETS_DIRECTORY', 'assets'.DIRECTORY_SEPARATOR);
-define('OUTPUT_DIRECTORY', DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR);
-
 class PdfHandlingTest extends PKPTestCase
 {
+    public const TESTS_DIRECTORY =  __DIR__ . DIRECTORY_SEPARATOR;
+    public const ASSETS_DIRECTORY =  'assets' . DIRECTORY_SEPARATOR;
+    public const OUTPUT_DIRECTORY =  DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+
     protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";
     protected $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
-    protected $logo = TESTS_DIRECTORY.ASSETS_DIRECTORY."logo_noAlphaChannel.png";
+    protected $logo = TESTS_DIRECTORY . ASSETS_DIRECTORY . "logo_noAlphaChannel.png";
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     protected $locale = "pt_BR";
     protected $title = "Assim Falou Zaratustra-àáâã";
@@ -34,13 +34,13 @@ class PdfHandlingTest extends PKPTestCase
         parent::setUp();
 
         $this->translator = $this->buildMockTranslator();
-        $this->pathOfTestPdf = TESTS_DIRECTORY.ASSETS_DIRECTORY."testOnePage.pdf";
-        $this->copyOfTestPdfToRestore = TESTS_DIRECTORY.ASSETS_DIRECTORY."testOnePage_copy.pdf";
+        $this->pathOfTestPdf = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testOnePage.pdf";
+        $this->copyOfTestPdfToRestore = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testOnePage_copy.pdf";
         copy($this->pathOfTestPdf, $this->copyOfTestPdfToRestore);
-        $this->pdfAsText = TESTS_DIRECTORY.ASSETS_DIRECTORY."testOnePage.txt";
+        $this->pdfAsText = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testOnePage.txt";
 
-        $this->pathOfTestPdf2 = TESTS_DIRECTORY.ASSETS_DIRECTORY."testTwoPages.pdf";
-        $this->copyOfTestPdfToRestore2 = TESTS_DIRECTORY.ASSETS_DIRECTORY."testTwoPages_copy.pdf";
+        $this->pathOfTestPdf2 = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testTwoPages.pdf";
+        $this->copyOfTestPdfToRestore2 = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testTwoPages_copy.pdf";
         copy($this->pathOfTestPdf2, $this->copyOfTestPdfToRestore2);
     }
 

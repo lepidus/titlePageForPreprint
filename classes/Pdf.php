@@ -1,5 +1,9 @@
 <?php
 
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+use InvalidArgumentException;
+
 class Pdf
 {
     private $path;
