@@ -3,6 +3,8 @@
 namespace APP\plugins\generic\titlePageForPreprint\tests;
 
 use PKP\tests\PKPTestCase;
+use PKP\db\DAORegistry;
+use PKP\submissionFile\SubmissionFile;
 use APP\plugins\generic\titlePageForPreprint\classes\Translator;
 
 define('TESTS_DIRECTORY', (dirname(__FILE__)).DIRECTORY_SEPARATOR);
@@ -31,8 +33,6 @@ class PdfHandlingTest extends PKPTestCase
     {
         parent::setUp();
 
-        $this->registerMockSubmissionFileDAO();
-
         $this->translator = $this->buildMockTranslator();
         $this->pathOfTestPdf = TESTS_DIRECTORY.ASSETS_DIRECTORY."testOnePage.pdf";
         $this->copyOfTestPdfToRestore = TESTS_DIRECTORY.ASSETS_DIRECTORY."testOnePage_copy.pdf";
@@ -42,27 +42,6 @@ class PdfHandlingTest extends PKPTestCase
         $this->pathOfTestPdf2 = TESTS_DIRECTORY.ASSETS_DIRECTORY."testTwoPages.pdf";
         $this->copyOfTestPdfToRestore2 = TESTS_DIRECTORY.ASSETS_DIRECTORY."testTwoPages_copy.pdf";
         copy($this->pathOfTestPdf2, $this->copyOfTestPdfToRestore2);
-    }
-
-    protected function getMockedDAOs()
-    {
-        return array('SubmissionFileDAO');
-    }
-
-    private function registerMockSubmissionFileDAO(): void
-    {
-        $submissionFileDAO = $this->getMockBuilder(SubmissionFileDAO::class)
-            ->setMethods(array('getById'))
-            ->getMock();
-
-        $submissionFile = new SubmissionFile();
-        $submissionFile->setData('folhaDeRosto', 'nao');
-
-        $submissionFileDAO->expects($this->any())
-                          ->method('getById')
-                          ->will($this->returnValue($submissionFile));
-
-        DAORegistry::registerDAO('SubmissionFileDAO', $submissionFileDAO);
     }
 
     private function buildMockTranslator(): Translator

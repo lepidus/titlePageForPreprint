@@ -1,5 +1,6 @@
 <?php
 
+use APP\plugins\generic\titlePageForPreprint\tests\PdfHandlingTest;
 use APP\plugins\generic\titlePageForPreprint\classes\TitlePage;
 use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
@@ -34,7 +35,7 @@ class TitlePageTest extends PdfHandlingTest
         return $extractedImage;
     }
 
-    private function convertPdfToText(pdf $pdf, int $startPage = 1): void
+    private function convertPdfToText(Pdf $pdf, int $startPage = 1): void
     {
         shell_exec("pdftotext -f " . $startPage . " ". $pdf->getPath() . " " . $this->pdfAsText);
     }

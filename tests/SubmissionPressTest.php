@@ -1,5 +1,6 @@
 <?php
 
+use APP\plugins\generic\titlePageForPreprint\tests\PdfHandlingTest;
 use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapter;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
@@ -48,7 +49,7 @@ class SubmissionPressTest extends PdfHandlingTest
         $fistGalleyPath = $this->pathOfTestPdf;
         $secondGalleyPath = $this->pathOfTestPdf2;
         $firstGalley = $this->buildMockGalleyAdapter(array($fistGalleyPath, $this->locale, 2, 2));
-        $secondGalley = $this->buildMockGalleyAdapter(array($secondGalleyPath, "en_US", 3, 2));
+        $secondGalley = $this->buildMockGalleyAdapter(array($secondGalleyPath, "en", 3, 2));
         $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($firstGalley, $secondGalley));
 
         $press = new SubmissionPress($this->logo, $submission, $this->translator);
