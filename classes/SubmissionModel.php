@@ -1,5 +1,7 @@
 <?php
 
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
 class SubmissionModel
 {
     private $status;
