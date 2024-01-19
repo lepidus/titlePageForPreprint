@@ -1,6 +1,5 @@
 {
     "require" : {
-        "tecnickcom/tcpdf": "6.3.5",
         "propa/tcpdi": "^1.3"
     }
 }

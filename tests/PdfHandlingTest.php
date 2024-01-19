@@ -16,7 +16,7 @@ class PdfHandlingTest extends PKPTestCase
     protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";
     protected $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
-    protected $logo = TESTS_DIRECTORY . ASSETS_DIRECTORY . "logo_noAlphaChannel.png";
+    protected $logo = self::TESTS_DIRECTORY . self::ASSETS_DIRECTORY . "logo_noAlphaChannel.png";
     protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
     protected $locale = "pt_BR";
     protected $title = "Assim Falou Zaratustra-àáâã";
@@ -27,24 +27,22 @@ class PdfHandlingTest extends PKPTestCase
     protected $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
     protected $version = "1";
     protected $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
-    protected $translator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->translator = $this->buildMockTranslator();
-        $this->pathOfTestPdf = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testOnePage.pdf";
-        $this->copyOfTestPdfToRestore = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testOnePage_copy.pdf";
+        $this->pathOfTestPdf = self::TESTS_DIRECTORY . self::ASSETS_DIRECTORY . "testOnePage.pdf";
+        $this->copyOfTestPdfToRestore = self::TESTS_DIRECTORY . self::ASSETS_DIRECTORY . "testOnePage_copy.pdf";
         copy($this->pathOfTestPdf, $this->copyOfTestPdfToRestore);
-        $this->pdfAsText = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testOnePage.txt";
+        $this->pdfAsText = self::TESTS_DIRECTORY . self::ASSETS_DIRECTORY . "testOnePage.txt";
 
-        $this->pathOfTestPdf2 = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testTwoPages.pdf";
-        $this->copyOfTestPdfToRestore2 = TESTS_DIRECTORY . ASSETS_DIRECTORY . "testTwoPages_copy.pdf";
+        $this->pathOfTestPdf2 = self::TESTS_DIRECTORY . self::ASSETS_DIRECTORY . "testTwoPages.pdf";
+        $this->copyOfTestPdfToRestore2 = self::TESTS_DIRECTORY . self::ASSETS_DIRECTORY . "testTwoPages_copy.pdf";
         copy($this->pathOfTestPdf2, $this->copyOfTestPdfToRestore2);
     }
 
-    private function buildMockTranslator(): Translator
+    /*private function buildMockTranslator(): Translator
     {
         $mockContext = $this->getMockBuilder(Context::class)
             ->setMethods(array('getData'))
@@ -127,7 +125,7 @@ class PdfHandlingTest extends PKPTestCase
         ];
 
         return $languageMap[$locale];
-    }
+    }*/
 
     protected function tearDown(): void
     {

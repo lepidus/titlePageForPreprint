@@ -1,36 +1,33 @@
 <?php
 
-require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
-require_once dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'tecnickcom'.DIRECTORY_SEPARATOR.'tcpdf'.DIRECTORY_SEPARATOR.'tcpdf.php';
-import('plugins.generic.titlePageForPreprint.classes.Pdf');
-import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
+use APP\plugins\generic\titlePageForPreprint\classes\TitlePageRequirements;
 
 class TitlePage
 {
     private $submission;
     private $logo;
     private $locale;
-    private $translator;
     private $fontName;
     private $titlePageRequirements;
     public const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
 
-    public function __construct(SubmissionModel $submission, string $logo, string $locale, translator $translator)
+    public function __construct(SubmissionModel $submission, string $logo, string $locale)
     {
         $this->submission = $submission;
         $this->logo = $logo;
         $this->locale = $locale;
-        $this->translator = $translator;
-        $this->fontName = TCPDF_FONTS::addTTFfont(__DIR__.'/../resources/opensans.ttf', 'TrueTypeUnicode', '', 32);
+        $this->fontName = TCPDF_FONTS::addTTFfont(__DIR__ . '/../resources/opensans.ttf', 'TrueTypeUnicode', '', 32);
         $this->titlePageRequirements = new TitlePageRequirements();
     }
 
     private function commandSuccessful(int $resultCode): bool
     {
-        if ($resultCode != 0) {
-            return false;
-        }
-        return true;
+        return $resultCode === 0;
     }
 
     public function removeTitlePage($pdf): void
@@ -38,7 +35,7 @@ class TitlePage
         $separateCommand = "cpdf {$pdf} 2-end -o {$pdf}";
         exec($separateCommand, $output, $resultCode);
 
-        if (!$this->commandSuccessful($resultCode)) {
+        if (commandSuccessful($resultCode)) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing');
             throw new Exception('Title Page Remove Failure');
         }
@@ -55,14 +52,14 @@ class TitlePage
         $titlePage->SetFont($this->fontName, '', 10, '', false);
 
         if (!empty($this->submission->getStatus())) {
-            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate($this->submission->getStatus(), $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.publicationStatus', [], $this->locale) . ": " . __($this->submission->getStatus(), [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
 
             if ($this->submission->getStatus() == 'publication.relation.published') {
-                $titlePage->Write(0, $this->translator->translate('publication.relation.vorDoi', $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
+                $titlePage->Write(0, __('publication.relation.vorDoi', [], $this->locale) . ": ", '', 0, 'JUSTIFY', false, 0, false, false, 0);
                 $titlePage->write(0, $this->submission->getJournalDOI(), $this->submission->getJournalDOI(), 0, 'JUSTIFY', true, 0, false, false, 0);
             }
         } else {
-            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationStatus', $this->locale) . ": " . $this->translator->translate('plugins.generic.titlePageForPreprint.emptyPublicationStatus', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.publicationStatus', [], $this->locale) . ": " . __('plugins.generic.titlePageForPreprint.emptyPublicationStatus', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
         }
 
         $titlePage->Ln(5);
@@ -88,7 +85,7 @@ class TitlePage
             $this->writePublicationStatusOnTitlePage($titlePage);
 
             $titlePage->SetFont($this->fontName, '', 18, '', false);
-            $normalizedTitle = Normalizer::normalize($this->translator->getTranslatedTitle($this->locale));
+            $normalizedTitle = Normalizer::normalize($this->submission->getTitle());
             $titlePage->Write(0, $normalizedTitle, '', 0, 'C', true, 0, false, false, 0);
 
             $titlePage->SetFont($this->fontName, '', 12, '', false);
@@ -98,27 +95,27 @@ class TitlePage
             $titlePage->Write(0, $doiLink, $doiLink, 0, 'C', true, 0, false, false, 0);
             $titlePage->Ln(10);
 
-            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.submissionDate', $this->locale, ['subDate' => $this->submission->getSubmissionDate()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.publicationDate', $this->locale, ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-            $titlePage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.dateFormat', $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.submissionDate', [], $this->locale, ['subDate' => $this->submission->getSubmissionDate()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.publicationDate', [], $this->locale, ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dateFormat', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
 
             $endorserName = $this->submission->getEndorserName();
             $endorserOrcid = $this->submission->getEndorserOrcid();
             if(!is_null($endorserOrcid) && !is_null($endorserName)) {
                 $titlePage->Ln(5);
-                $titlePage->writeHTML($this->translator->translate('plugins.generic.titlePageForPreprint.endorsement', $this->locale, ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid]));
+                $titlePage->writeHTML(__('plugins.generic.titlePageForPreprint.endorsement', ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid], $this->locale));
             }
 
             $versionJustification = $this->submission->getVersionJustification();
             if($this->submission->getVersion() > 1 && !is_null($versionJustification)) {
-                $versionJustification = $this->translator->translate('plugins.generic.titlePageForPreprint.versionJustification', $this->locale) . ": " . $versionJustification;
+                $versionJustification = __('plugins.generic.titlePageForPreprint.versionJustification', [], $this->locale) . ": " . $versionJustification;
                 $titlePage->Ln(5);
                 $titlePage->Write(0, $versionJustification, '', 0, 'JUSTIFY', true, 0, false, false, 0);
             }
 
             $TitlePageFile = self::OUTPUT_DIRECTORY . 'titlePage.pdf';
             $titlePage->Output($TitlePageFile, 'F');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->titlePageRequirements->showMissingRequirementNotification($errorMessage);
             throw new Exception('Title Page Generation Failure');
         }
@@ -134,13 +131,13 @@ class TitlePage
             $checklistPage->setPrintFooter(false);
             $checklistPage->AddPage();
 
-            $checklistPage->Write(0, $this->translator->translate('plugins.generic.titlePageForPreprint.checklistLabel', $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $checklistPage->Write(0, __('plugins.generic.titlePageForPreprint.checklistLabel', [], $this->locale) . ": ", '', 0, 'JUSTIFY', true, 0, false, false, 0);
             $checklistPage->SetFont($this->fontName, '', 10, '', false);
             $checklistPage->Ln(5);
 
             $checklistText = '';
             foreach ($this->translator->getTranslatedChecklist($this->locale) as $item) {
-                $checklistText = $checklistText. "<ul style=\"text-align:justify;\"><li>". $item . "</li></ul>";
+                $checklistText = $checklistText . "<ul style=\"text-align:justify;\"><li>" . $item . "</li></ul>";
             }
             $checklistPage->writeHTMLCell(0, 0, '', '', $checklistText, 1, 1, false, true, 'JUSTIFY', false);
             $checklistPage->SetFont($this->fontName, '', 11, '', false);
@@ -148,7 +145,7 @@ class TitlePage
 
             $checklistPageFile = self::OUTPUT_DIRECTORY . 'checklistPage.pdf';
             $checklistPage->Output($checklistPageFile, 'F');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.generateChecklistPageMissing');
             throw new Exception('Checklist Page Generation Failure');
         }
@@ -158,8 +155,8 @@ class TitlePage
 
     public function addDocumentHeader($pdf): void
     {
-        $linkDOI = "https://doi.org/".$this->submission->getDOI();
-        $headerText = $this->translator->translate('plugins.generic.titlePageForPreprint.headerText', $this->locale, ['doiPreprint' => $linkDOI]);
+        $linkDOI = "https://doi.org/" .$this->submission->getDOI();
+        $headerText = __('plugins.generic.titlePageForPreprint.headerText', ['doiPreprint' => $linkDOI], $this->locale);
         $addHeaderCommand = "cpdf -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf} -o {$pdf}";
         exec($addHeaderCommand, $output, $resultCode);
 

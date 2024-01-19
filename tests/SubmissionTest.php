@@ -5,6 +5,7 @@ use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 
 class SubmissionTest extends PKPTestCase
 {
+    private $title = 'Uma aventura em mundo imaginario';
     private $status = "publication.relation.none";
     private $doi = "10.1000/182";
     private $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
@@ -19,7 +20,13 @@ class SubmissionTest extends PKPTestCase
 
     private function getSubmissionForTests()
     {
-        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        return new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+    }
+
+    public function testHasSubmissionTitle(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->title, $submission->getTitle());
     }
 
     public function testHasSubmissionStatus(): void
@@ -36,7 +43,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        $submission = new SubmissionModel($this->title, $this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -48,7 +55,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiJournalNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        $submission = new SubmissionModel($this->title, $this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 
