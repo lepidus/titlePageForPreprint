@@ -4,30 +4,30 @@ namespace APP\plugins\generic\titlePageForPreprint\classes;
 
 require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
+use TCPDF_FONTS;
+use TCPDF;
+use Normalizer;
 use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
 use APP\plugins\generic\titlePageForPreprint\classes\TitlePageRequirements;
 
 class TitlePage
 {
     private $submission;
+    private $checklist;
     private $logo;
     private $locale;
     private $fontName;
     private $titlePageRequirements;
     public const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
 
-    public function __construct(SubmissionModel $submission, string $logo, string $locale)
+    public function __construct(SubmissionModel $submission, array $checklist, string $logo, string $locale)
     {
         $this->submission = $submission;
+        $this->checklist = $checklist;
         $this->logo = $logo;
         $this->locale = $locale;
         $this->fontName = TCPDF_FONTS::addTTFfont(__DIR__ . '/../resources/opensans.ttf', 'TrueTypeUnicode', '', 32);
         $this->titlePageRequirements = new TitlePageRequirements();
-    }
-
-    private function commandSuccessful(int $resultCode): bool
-    {
-        return $resultCode === 0;
     }
 
     public function removeTitlePage($pdf): void
@@ -35,7 +35,7 @@ class TitlePage
         $separateCommand = "cpdf {$pdf} 2-end -o {$pdf}";
         exec($separateCommand, $output, $resultCode);
 
-        if (commandSuccessful($resultCode)) {
+        if ($resultCode === 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing');
             throw new Exception('Title Page Remove Failure');
         }
@@ -136,7 +136,7 @@ class TitlePage
             $checklistPage->Ln(5);
 
             $checklistText = '';
-            foreach ($this->translator->getTranslatedChecklist($this->locale) as $item) {
+            foreach ($this->checklist as $item) {
                 $checklistText = $checklistText . "<ul style=\"text-align:justify;\"><li>" . $item . "</li></ul>";
             }
             $checklistPage->writeHTMLCell(0, 0, '', '', $checklistText, 1, 1, false, true, 'JUSTIFY', false);
@@ -155,12 +155,12 @@ class TitlePage
 
     public function addDocumentHeader($pdf): void
     {
-        $linkDOI = "https://doi.org/" .$this->submission->getDOI();
+        $linkDOI = "https://doi.org/" . $this->submission->getDOI();
         $headerText = __('plugins.generic.titlePageForPreprint.headerText', ['doiPreprint' => $linkDOI], $this->locale);
         $addHeaderCommand = "cpdf -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf} -o {$pdf}";
         exec($addHeaderCommand, $output, $resultCode);
 
-        if (!$this->commandSuccessful($resultCode)) {
+        if ($resultCode != 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.addDocumentHeaderMissing');
             throw new Exception('Headers Stamping Failure');
         }
@@ -171,7 +171,7 @@ class TitlePage
         $uniteCommand = "cpdf -merge {$titlePage} {$pdf} -o {$pdf}";
         exec($uniteCommand, $output, $resultCode);
 
-        if (!$this->commandSuccessful($resultCode)) {
+        if ($resultCode != 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.concatenateTitlePageMissing');
             throw new Exception('Title Page Concatenation Failure');
         }
@@ -182,7 +182,7 @@ class TitlePage
         $uniteCommand = "cpdf -merge {$pdf} {$checklistPage} -o {$pdf}";
         exec($uniteCommand, $output, $resultCode);
 
-        if (!$this->commandSuccessful($resultCode)) {
+        if ($resultCode != 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing');
             throw new Exception('Checklist Page Concatenation Failure');
         }

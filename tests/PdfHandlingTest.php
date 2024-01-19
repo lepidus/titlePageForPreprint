@@ -17,7 +17,10 @@ class PdfHandlingTest extends PKPTestCase
     protected $doi = "10.1000/182";
     protected $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
     protected $logo = self::TESTS_DIRECTORY . self::ASSETS_DIRECTORY . "logo_noAlphaChannel.png";
-    protected $checklist = array("A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas.");
+    protected $checklist = [
+        "en" => ["The submission has not been previously published.", "Where available, URLs for the references have been provided."],
+        "pt_BR" => ["A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas."]
+    ];
     protected $locale = "pt_BR";
     protected $title = "Assim Falou Zaratustra-àáâã";
     protected $authors = "Cleide Silva; João Carlos";
