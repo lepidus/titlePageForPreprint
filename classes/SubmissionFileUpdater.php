@@ -1,5 +1,9 @@
 <?php
 
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+use APP\core\Application;
+
 class SubmissionFileUpdater
 {
     public function updateRevisions($submissionFileId, $newRevisionId, $hasTitlePage)
