@@ -13,7 +13,7 @@ class TitlePageTest extends PdfHandlingTest
         return new TitlePage($submission, $this->checklist[$this->locale], $this->logo, $this->locale);
     }
 
-    private function convertPdfToImage(string $pdfPath, $imagePath): imagick
+    private function convertPdfToImage(string $pdfPath, $imagePath): Imagick
     {
         $image = new Imagick($pdfPath);
         $image->setImageFormat('jpeg');
@@ -35,15 +35,14 @@ class TitlePageTest extends PdfHandlingTest
         return $extractedImage;
     }
 
-    private function convertPdfToText(Pdf $pdf, int $startPage = 1): void
+    private function searchForTextInPdf(Pdf $pdf, string $targetText, int $startPage = 1): bool
     {
         shell_exec("pdftotext -f " . $startPage . " ". $pdf->getPath() . " " . $this->pdfAsText);
-    }
 
-    private function searchInTextFiles($targetString, $filePath): string
-    {
-        $searchResult = shell_exec("grep '$targetString' ". $filePath);
-        return trim($searchResult);
+        $pdfText = file_get_contents($this->pdfAsText, FILE_TEXT);
+        $pdfText = str_replace(["\r", "\n"], ' ', $pdfText);
+
+        return str_contains($pdfText, $targetText);
     }
 
     public function testInsertInExistingPdfFileCreatesNewPages(): void
@@ -69,18 +68,15 @@ class TitlePageTest extends PdfHandlingTest
         rename($originalFileCopy, $originalFile);
 
         $numberOfPages = $pdf->getNumberOfPages();
-        $this->convertPdfToText($pdf, $numberOfPages);
 
-        $expectedLabel = "Este preprint foi submetido sob as seguintes condições:";
-        $labelSearchResults = $this->searchInTextFiles($expectedLabel, $this->pdfAsText);
-        $this->assertEquals($expectedLabel, $labelSearchResults);
+        $expectedLabel = __('plugins.generic.titlePageForPreprint.checklistLabel', [], $this->locale) . ':';
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedLabel, $numberOfPages));
 
-        $firstItem = $this->checklist[0];
-        $resultOfSearchForFirstItemOfChecklist = $this->searchInTextFiles($firstItem, $this->pdfAsText);
-        $this->assertEquals($firstItem, $resultOfSearchForFirstItemOfChecklist);
-        $secondItem = $this->checklist[1];
-        $resultOfSearchForSecondItemOfChecklist = $this->searchInTextFiles($secondItem, $this->pdfAsText);
-        $this->assertEquals($secondItem, $resultOfSearchForSecondItemOfChecklist);
+        $firstItem = $this->checklist[$this->locale][0];
+        $this->assertTrue($this->searchForTextInPdf($pdf, $firstItem, $numberOfPages));
+
+        $secondItem = $this->checklist[$this->locale][1];
+        $this->assertTrue($this->searchForTextInPdf($pdf, $secondItem, $numberOfPages));
     }
 
     public function testInsertingInExistingPdfStampsLogo(): void
@@ -91,7 +87,7 @@ class TitlePageTest extends PdfHandlingTest
         $titlePage->insertTitlePageFirstTime($pdf);
 
         $extractedImage = $this->extractImageFromPdf($pdf);
-        $this->imagesAreEqual(new imagick($this->logo), new imagick($extractedImage));
+        $this->imagesAreEqual(new Imagick($this->logo), new Imagick($extractedImage));
         unlink($extractedImage);
     }
 
@@ -102,10 +98,10 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "Estado da publicação: O preprint não foi submetido para publicação";
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.publicationStatus', [], $this->locale)
+            . ': ' . __('publication.relation.none', [], $this->locale);
+
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfStampsNotInformedRelation(): void
@@ -116,10 +112,10 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "Estado da publicação: Não informado pelo autor submissor";
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.publicationStatus', [], $this->locale)
+            . ': ' . __('plugins.generic.titlePageForPreprint.emptyPublicationStatus', [], $this->locale);
+
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfStampsTitle(): void
@@ -129,10 +125,7 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = $this->title;
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $this->title));
     }
 
     public function testInsertingInExistingPdfStampsAuthors(): void
@@ -142,10 +135,7 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = $this->authors;
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $this->authors));
     }
 
     public function testInsertingInExistingPdfStampsDOI(): void
@@ -155,10 +145,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
         $expectedText = "https://doi.org/" . $this->doi;
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfStampsSubmissionDate(): void
@@ -168,10 +156,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
         $expectedText = __('plugins.generic.titlePageForPreprint.submissionDate', ['subDate' => $this->submissionDate], $this->locale);
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfStampsPublicationDate(): void
@@ -181,10 +167,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
         $expectedText = __('plugins.generic.titlePageForPreprint.publicationDate', ['postDate' => $this->publicationDate, 'version' => $this->version], $this->locale);
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testDontStampVersionJustificationOnFirstVersion(): void
@@ -194,10 +178,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "Justificativa da versão: " . $this->versionJustification;
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals("", $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.versionJustification', [], $this->locale) . ': ' . $this->versionJustification;
+        $this->assertFalse($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testStampsVersionJustificationFromSecondVersion(): void
@@ -208,10 +190,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "Justificativa da versão: " . $this->versionJustification;
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.versionJustification', [], $this->locale) . ': ' . $this->versionJustification;
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfStampsEndorsement(): void
@@ -221,10 +201,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "A moderação deste preprint recebeu o endosso de:";
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.endorsement', [], $this->locale);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfStampsHeader(): void
@@ -234,10 +212,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->addDocumentHeader($this->pathOfTestPdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "SciELO Preprints - este preprint não foi revisado por pares";
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.headerText', ['doiPreprint' => $this->doi], $this->locale);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfDontChangeOriginal(): void
@@ -252,8 +228,8 @@ class TitlePageTest extends PdfHandlingTest
 
         $fileImageOriginalWithHeaders = 'imagem_pdf_original.jpg';
         $fileImagePdfWithTitlePage = 'imagem_pdf_folhaderosto.jpg';
-        $imageOfOriginalPdf = $this->convertPdfToImage($pdfOriginalWithHeaders.'[0]', $fileImageOriginalWithHeaders);
-        $imageOfPdfWithTitlePage = $this->convertPdfToImage($pdfWithTitlePage->getPath().'[1]', $fileImagePdfWithTitlePage);
+        $imageOfOriginalPdf = $this->convertPdfToImage($pdfOriginalWithHeaders . '[0]', $fileImageOriginalWithHeaders);
+        $imageOfPdfWithTitlePage = $this->convertPdfToImage($pdfWithTitlePage->getPath() . '[1]', $fileImagePdfWithTitlePage);
         $this->imagesAreEqual($imageOfOriginalPdf, $imageOfPdfWithTitlePage);
         unlink($pdfOriginalWithHeaders);
         unlink($fileImageOriginalWithHeaders);
@@ -268,10 +244,9 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "Publication status: Preprint has not been submitted for publication";
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.publicationStatus', [], 'en')
+            . ': ' . __('publication.relation.none', [], 'en');
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testInsertingInExistingPdfStampsNotInformedRelationTranslated(): void
@@ -282,16 +257,15 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "Publication status: Not informed by the submitting author";
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.publicationStatus', [], 'en')
+            . ": " . __('plugins.generic.titlePageForPreprint.emptyPublicationStatus', [], 'en');
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
-    public function testStampsTitlePageWithChecklistLabelTranslatedToGalleyLanguage(): void
+    public function testStampsChecklistTranslatedToGalleyLanguage(): void
     {
         $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification);
-        $titlePage = new TitlePage($submission, $this->checklist[$this->locale], $this->logo, $this->locale);
+        $titlePage = new TitlePage($submission, $this->checklist['en'], $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $originalFile = $pdf->getPath();
@@ -302,63 +276,40 @@ class TitlePageTest extends PdfHandlingTest
         $titlePage->concatenateChecklistPage($originalFileCopy, $checklistPage);
         rename($originalFileCopy, $originalFile);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = __("plugins.generic.titlePageForPreprint.checklistLabel", [], $this->locale) . ':';
-        $searchResult = substr($this->searchInTextFiles($expectedText, $this->pdfAsText), 1);
-        $this->assertEquals($expectedText, $searchResult);
-    }
+        $numberOfPages = $pdf->getNumberOfPages();
 
-    public function testStampsTitlePageWithChecklistTranslatedToGalleyLanguage(): void
-    {
-        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification);
-        $titlePage = new TitlePage($submission, $this->checklist[$this->locale], $this->logo, $this->locale);
-        $pdf = new Pdf($this->pathOfTestPdf);
+        $expectedText = __("plugins.generic.titlePageForPreprint.checklistLabel", [], 'en') . ': ';
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText, $numberOfPages));
 
-        $originalFile = $pdf->getPath();
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
-        copy($originalFile, $originalFileCopy);
+        $firstItem = $this->checklist['en'][0];
+        $this->assertTrue($this->searchForTextInPdf($pdf, $firstItem, $numberOfPages));
 
-        $checklistPage = $titlePage->generateChecklistPage();
-        $titlePage->concatenateChecklistPage($originalFileCopy, $checklistPage);
-        rename($originalFileCopy, $originalFile);
-
-        $this->convertPdfToText($pdf);
-
-        $firstItem = $this->checklist[$this->locale][0];
-        $resultOfSearchForFirstItemOfChecklist = $this->searchInTextFiles($firstItem, $this->pdfAsText);
-        $this->assertEquals($firstItem, $resultOfSearchForFirstItemOfChecklist);
-
-        $secondItem = $this->checklist[$this->locale][1];
-        $resultOfSearchForSecondItemOfChecklist = $this->searchInTextFiles($secondItem, $this->pdfAsText);
-        $this->assertEquals($secondItem, $resultOfSearchForSecondItemOfChecklist);
+        $secondItem = $this->checklist['en'][1];
+        $this->assertTrue($this->searchForTextInPdf($pdf, $secondItem, $numberOfPages));
     }
 
     public function testStampsTitlePageWithSubmissionDateTranslatedToGalleyLanguage(): void
     {
         $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification);
-        $titlePage = new TitlePage($submission, $this->checklist[$this->locale], $this->logo, $this->locale);
+        $titlePage = new TitlePage($submission, $this->checklist['en'], $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = __('plugins.generic.titlePageForPreprint.submissionDate', ['subDate' => $this->submissionDate], $this->locale);
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.submissionDate', ['subDate' => $this->submissionDate], 'en');
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testStampsTitlePageWithPublicationDateTranslatedToGalleyLanguage(): void
     {
         $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification);
-        $titlePage = new TitlePage($submission, $this->checklist[$this->locale], $this->logo, $this->locale);
+        $titlePage = new TitlePage($submission, $this->checklist['en'], $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = __('plugins.generic.titlePageForPreprint.publicationDate', ['postDate' => $this->publicationDate, 'version' => $this->version], $this->locale);
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.publicationDate', ['postDate' => $this->publicationDate, 'version' => $this->version], 'en');
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testStampsTitlePageWithDateFormat(): void
@@ -368,23 +319,19 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText = "(AAAA-MM-DD)";
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.dateFormat', [], $this->locale);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
     public function testStampsTitlePageWithDateFormatTranslatedToGalleyLanguage(): void
     {
         $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification);
-        $titlePage = new TitlePage($submission, $this->checklist[$this->locale], $this->logo, $this->locale);
+        $titlePage = new TitlePage($submission, $this->checklist['en'], $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->convertPdfToText($pdf);
-        $expectedText =  __('plugins.generic.titlePageForPreprint.dateFormat', [], $this->locale);
-        $searchResult = $this->searchInTextFiles($expectedText, $this->pdfAsText);
-        $this->assertEquals($expectedText, $searchResult);
+        $expectedText = __('plugins.generic.titlePageForPreprint.dateFormat', [], 'en');
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 }

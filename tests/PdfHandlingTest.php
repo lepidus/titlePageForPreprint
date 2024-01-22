@@ -9,9 +9,9 @@ use APP\plugins\generic\titlePageForPreprint\classes\Translator;
 
 class PdfHandlingTest extends PKPTestCase
 {
-    public const TESTS_DIRECTORY =  __DIR__ . DIRECTORY_SEPARATOR;
-    public const ASSETS_DIRECTORY =  'assets' . DIRECTORY_SEPARATOR;
-    public const OUTPUT_DIRECTORY =  DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+    public const TESTS_DIRECTORY = __DIR__ . DIRECTORY_SEPARATOR;
+    public const ASSETS_DIRECTORY = 'assets' . DIRECTORY_SEPARATOR;
+    public const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
 
     protected $status = "publication.relation.none";
     protected $doi = "10.1000/182";
