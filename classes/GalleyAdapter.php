@@ -1,5 +1,9 @@
 <?php
 
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+use PKP\config\Config;
+
 class GalleyAdapter
 {
     public $file;
