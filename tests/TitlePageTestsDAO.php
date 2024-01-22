@@ -1,5 +1,7 @@
 <?php
 
+namespace APP\plugins\generic\titlePageForPreprint\tests;
+
 use PKP\db\DAO;
 use Illuminate\Support\Facades\DB;
 

@@ -1,15 +1,17 @@
 <?php
 
-import('plugins.generic.titlePageForPreprint.classes.GalleyAdapter');
-import('plugins.generic.titlePageForPreprint.classes.TitlePageDAO');
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapter;
+use APP\plugins\generic\titlePageForPreprint\classes\TitlePageDAO;
 
 class GalleyAdapterFactory
 {
-    private $submissionFileDao;
+    private $submissionFileRepo;
 
-    public function __construct($submissionFileDao)
+    public function __construct($submissionFileRepo)
     {
-        $this->submissionFileDao = $submissionFileDao;
+        $this->submissionFileRepo = $submissionFileRepo;
     }
 
     public function createGalleyAdapter($submission, $galley): GalleyAdapter
@@ -28,7 +30,7 @@ class GalleyAdapterFactory
 
     public function getLatestRevision($submissionFileId)
     {
-        $revisions = $this->submissionFileDao->getRevisions($submissionFileId)->toArray();
+        $revisions = $this->submissionFileRepo->getRevisions($submissionFileId)->toArray();
         $lastRevision = get_object_vars($revisions[0]);
 
         foreach ($revisions as $revision) {

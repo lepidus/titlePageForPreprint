@@ -18,9 +18,9 @@ class TitlePageDAO extends DAO
 {
     public function getNumberOfRevisions(int $submissionFileId): int
     {
-        $numberOfRevisions = Capsule::table('submission_file_revisions')
-        ->where('submission_file_id', $submissionFileId)
-        ->count();
+        $numberOfRevisions = DB::table('submission_file_revisions')
+            ->where('submission_file_id', $submissionFileId)
+            ->count();
 
         return $numberOfRevisions;
     }
