@@ -1,12 +1,3 @@
-//criar uma submissão
-    //tem que ter galley
-//postar a submissão
-//verificar que adicionou folha de rosto e página da checklist
-
-//retirar o preprint
-//alterar alguma info
-//repostar
-//verificar que alterou a folha, mas que ainda tem só uma
 function beginSubmission(submissionData) {
     cy.get('input[name="locale"][value="en"]').click();
     cy.setTinyMceContent('startSubmission-title-control', submissionData.title);
@@ -97,5 +88,13 @@ describe('Title Page for Preprint Plugin - Title page stamping on preprint posti
         cy.get('#publication-button').click();
 		cy.get('.pkpHeader .pkpHeader__actions button:contains("Post")').click();
         cy.get('.pkp_modal_panel button:contains("Post")').click();
+        cy.contains('span', 'Posted');
+        
+        //verificar que adicionou folha de rosto e página da checklist
     });
 });
+
+//retirar o preprint
+//alterar alguma info nos metadados da submissão
+//repostar
+//verificar que alterou a folha, mas que ainda tem só uma

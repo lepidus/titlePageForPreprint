@@ -36,6 +36,7 @@ class TitlePageForPreprintPlugin extends GenericPlugin
             Hook::add('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
             Hook::add('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
         }
+
         return $success;
     }
 
