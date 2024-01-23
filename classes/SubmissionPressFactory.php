@@ -1,9 +1,10 @@
 <?php
 
-import('plugins.generic.titlePageForPreprint.classes.SubmissionPress');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
-import('plugins.generic.titlePageForPreprint.classes.Translator');
-import('plugins.generic.titlePageForPreprint.classes.GalleyAdapterFactory');
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
+use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapterFactory;
 
 class SubmissionPressFactory
 {
