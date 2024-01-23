@@ -125,7 +125,7 @@ class TitlePageTest extends PdfHandlingTest
 
         $titlePage->insertTitlePageFirstTime($pdf);
 
-        $this->assertTrue($this->searchForTextInPdf($pdf, $this->title));
+        $this->assertTrue($this->searchForTextInPdf($pdf, $this->title[$this->locale]));
     }
 
     public function testInsertingInExistingPdfStampsAuthors(): void

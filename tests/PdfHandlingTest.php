@@ -22,7 +22,10 @@ class PdfHandlingTest extends PKPTestCase
         "pt_BR" => ["A submissão não foi publicado anteriormente.", "As URLs das referências foram fornecidas."]
     ];
     protected $locale = "pt_BR";
-    protected $title = "Assim Falou Zaratustra-àáâã";
+    protected $title = [
+        'pt_BR' => "Assim Falou Zaratustra-àáâã",
+        'en' => 'Thus spoke Zarathustra'
+    ];
     protected $authors = "Cleide Silva; João Carlos";
     protected $submissionDate = "31/06/2020";
     protected $publicationDate = "02/07/2020";

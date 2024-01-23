@@ -16,7 +16,7 @@ class SubmissionModel
     private $endorserName;
     private $endorserOrcid;
 
-    public function __construct(string $title, string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, $versionJustification, array $galleys = null)
+    public function __construct(array $title, string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, $versionJustification, array $galleys = null)
     {
         $this->title = $title;
         $this->status = $status;
@@ -32,9 +32,13 @@ class SubmissionModel
         $this->versionJustification = $versionJustification;
     }
 
-    public function getTitle(): string
+    public function getTitle(string $locale): string
     {
-        return $this->title;
+        if (isset($this->title[$locale])) {
+            return $this->title[$locale];
+        }
+
+        return '';
     }
 
     public function getStatus(): string

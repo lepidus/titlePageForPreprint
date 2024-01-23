@@ -85,7 +85,7 @@ class TitlePage
             $this->writePublicationStatusOnTitlePage($titlePage);
 
             $titlePage->SetFont($this->fontName, '', 18, '', false);
-            $normalizedTitle = Normalizer::normalize($this->submission->getTitle());
+            $normalizedTitle = Normalizer::normalize($this->submission->getTitle($this->locale));
             $titlePage->Write(0, $normalizedTitle, '', 0, 'C', true, 0, false, false, 0);
 
             $titlePage->SetFont($this->fontName, '', 12, '', false);
