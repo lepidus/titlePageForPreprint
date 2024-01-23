@@ -2,6 +2,8 @@
 
 namespace APP\plugins\generic\titlePageForPreprint\classes;
 
+use APP\facades\Repo;
+use PKP\file\PKPPublicFileManager;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapterFactory;
@@ -10,28 +12,43 @@ class SubmissionPressFactory
 {
     public function createSubmissionPress($submission, $publication, $context): SubmissionPress
     {
+        $checklist = $this->getContextChecklist($context);
         $logoPath = $this->getLogoPath($context);
         $dataPress = $this->getDataForPress($submission, $publication);
         $galleys = $publication->getData('galleys');
 
         foreach ($galleys as $galley) {
-            $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-            $galleyAdapterFactory = new GalleyAdapterFactory($submissionFileDao);
+            $submissionFileRepo = Repo::submissionFile();
+            $galleyAdapterFactory = new GalleyAdapterFactory($submissionFileRepo);
             $submissionGalleys[] = $galleyAdapterFactory->createGalleyAdapter($submission, $galley);
         }
 
         return new SubmissionPress(
             $logoPath,
-            new SubmissionModel($dataPress['status'], $dataPress['doi'], $dataPress['doiJournal'], $dataPress['authors'], $dataPress['submissionDate'], $dataPress['publicationDate'], $dataPress['endorserName'], $dataPress['endorserOrcid'], $dataPress['version'], $dataPress['versionJustification'], $submissionGalleys),
-            new Translator($context, $submission, $publication)
+            new SubmissionModel(
+                $dataPress['title'],
+                $dataPress['status'],
+                $dataPress['doi'],
+                $dataPress['doiJournal'],
+                $dataPress['authors'],
+                $dataPress['submissionDate'],
+                $dataPress['publicationDate'],
+                $dataPress['endorserName'],
+                $dataPress['endorserOrcid'],
+                $dataPress['version'],
+                $dataPress['versionJustification'],
+                $submissionGalleys
+            ),
+            $checklist,
+            $logoPath
         );
     }
 
-    public function getLogoPath($context)
+    private function getLogoPath($context)
     {
         $publicFileManager = new PublicFileManager();
         $filesPath = $publicFileManager->getContextFilesPath($context->getId());
-        $logoFilePath = $context->getLocalizedPageHeaderLogo()['uploadName'];
+        $logoFilePath = $context->getLocalizedData('pageHeaderLogoImage')['uploadName'];
 
         return $filesPath . DIRECTORY_SEPARATOR . $logoFilePath;
     }
@@ -42,8 +59,7 @@ class SubmissionPressFactory
             return $author->getData('userGroupId');
         }, $publication->getData('authors'));
         $userGroups = array_map(function ($userGroupId) {
-            $userGroupDao = DAORegistry::getDAO('UserGroupDAO');
-            return $userGroupDao->getbyId($userGroupId);
+            return Repo::userGroup()->get($userGroupId);
         }, array_unique($userGroupIds));
 
         return $publication->getAuthorString($userGroups);
@@ -53,6 +69,7 @@ class SubmissionPressFactory
     {
         $data = array();
 
+        $data['title'] = $publication->getTitles();
         $data['doi'] = $publication->getStoredPubId('doi');
         $data['doiJournal'] = $publication->getData('vorDoi');
         $data['authors'] = $this->getAuthors($publication);

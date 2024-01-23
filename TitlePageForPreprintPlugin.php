@@ -17,6 +17,7 @@ namespace APP\plugins\generic\titlePageForPreprint;
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
 use APP\core\Application;
+use APP\facades\Repo;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPressFactory;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionFileUpdater;
 use APP\plugins\generic\titlePageForPreprint\classes\TitlePageRequirements;
@@ -32,7 +33,7 @@ class TitlePageForPreprintPlugin extends GenericPlugin
         }
 
         if ($success && $this->getEnabled($mainContextId)) {
-            Hook::add('Publication::publish::before', [$this, 'insertTitlePageWhenPublishing']);
+            Hook::add('Publication::publish::before', [$this, 'insertTitlePageOnPosting']);
             Hook::add('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
             Hook::add('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
         }
@@ -77,12 +78,12 @@ class TitlePageForPreprintPlugin extends GenericPlugin
         return false;
     }
 
-    public function insertTitlePageWhenPublishing($hookName, $arguments)
+    public function insertTitlePageOnPosting($hookName, $params)
     {
         $titlePageRequirements = new TitlePageRequirements();
 
         if ($titlePageRequirements->checkRequirements()) {
-            $publication = $arguments[0];
+            $publication = $params[0];
             $this->insertTitlePageInPreprint($publication);
         }
     }
@@ -103,11 +104,11 @@ class TitlePageForPreprintPlugin extends GenericPlugin
 
     public function insertTitlePageInPreprint($publication)
     {
-        $submission = Services::get('submission')->get($publication->getData('submissionId'));
+        $submission = Repo::submission()->get($publication->getData('submissionId'));
         $context = Application::getContextDAO()->getById($submission->getContextId());
         $this->addLocaleData("pt_BR");
-        $this->addLocaleData("en_US");
-        $this->addLocaleData("es_ES");
+        $this->addLocaleData("en");
+        $this->addLocaleData("es");
         $submissionPressFactory = new SubmissionPressFactory();
         $submissionFileUpdater = new SubmissionFileUpdater();
         $press = $submissionPressFactory->createSubmissionPress($submission, $publication, $context);
