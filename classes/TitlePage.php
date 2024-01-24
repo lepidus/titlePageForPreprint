@@ -37,7 +37,7 @@ class TitlePage
 
         if ($resultCode === 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing');
-            throw new Exception('Title Page Remove Failure');
+            throw new \Exception('Title Page Remove Failure');
         }
     }
 
@@ -136,7 +136,7 @@ class TitlePage
             $checklistPage->Ln(5);
 
             $checklistText = '';
-            foreach ($this->checklist as $item) {
+            foreach ($this->checklist[$this->locale] as $item) {
                 $checklistText = $checklistText . "<ul style=\"text-align:justify;\"><li>" . $item . "</li></ul>";
             }
             $checklistPage->writeHTMLCell(0, 0, '', '', $checklistText, 1, 1, false, true, 'JUSTIFY', false);

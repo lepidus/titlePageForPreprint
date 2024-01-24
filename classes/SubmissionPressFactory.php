@@ -3,7 +3,8 @@
 namespace APP\plugins\generic\titlePageForPreprint\classes;
 
 use APP\facades\Repo;
-use PKP\file\PKPPublicFileManager;
+use APP\file\PublicFileManager;
+use APP\publication\Publication;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapterFactory;
@@ -24,7 +25,6 @@ class SubmissionPressFactory
         }
 
         return new SubmissionPress(
-            $logoPath,
             new SubmissionModel(
                 $dataPress['title'],
                 $dataPress['status'],
@@ -44,7 +44,21 @@ class SubmissionPressFactory
         );
     }
 
-    private function getLogoPath($context)
+    private function getContextChecklist($context): array
+    {
+        $checklist = $context->getData('submissionChecklist');
+
+        foreach ($checklist as $locale => $checklistText) {
+            preg_match_all('/<li>(.*?)<\/li>/', $checklistText, $matches);
+
+            $checklist[$locale] = $matches[1];
+        }
+
+        return $checklist;
+    }
+
+
+    private function getLogoPath($context): string
     {
         $publicFileManager = new PublicFileManager();
         $filesPath = $publicFileManager->getContextFilesPath($context->getId());
@@ -55,14 +69,18 @@ class SubmissionPressFactory
 
     private function getAuthors($publication)
     {
-        $userGroupIds = array_map(function ($author) {
-            return $author->getData('userGroupId');
-        }, $publication->getData('authors'));
-        $userGroups = array_map(function ($userGroupId) {
-            return Repo::userGroup()->get($userGroupId);
-        }, array_unique($userGroupIds));
+        $userGroups = [];
+        foreach ($publication->getData('authors') as $author) {
+            $userGroupId = $author->getData('userGroupId');
 
-        return $publication->getAuthorString($userGroups);
+            if (!isset($userGroups[$userGroupId])) {
+                $userGroups[$userGroupId] = Repo::userGroup()->get($userGroupId);
+            }
+        }
+
+        $traversableArray = new \ArrayObject($userGroups);
+
+        return $publication->getAuthorString($traversableArray);
     }
 
     private function getDataForPress($submission, $publication)
@@ -85,7 +103,7 @@ class SubmissionPressFactory
         $data['endorserOrcid'] = $publication->getData('endorserOrcid');
 
         $status = $publication->getData('relationStatus');
-        $relation = array(PUBLICATION_RELATION_NONE => 'publication.relation.none', PUBLICATION_RELATION_SUBMITTED => 'publication.relation.submitted', PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
+        $relation = array(Publication::PUBLICATION_RELATION_NONE => 'publication.relation.none', Publication::PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
         $data['status'] = ($status) ? ($relation[$status]) : ("");
 
         return $data;
