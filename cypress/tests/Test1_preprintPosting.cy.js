@@ -61,7 +61,7 @@ function checkTitlePage(txtFile, submissionData) {
     cy.exec("grep 'This document is a preprint and its current status is available at:' " + txtFile).its('code').should('eq', 0);
 }
 
-function checkChecklistPage() {
+function checkChecklistPage(txtFile) {
     cy.exec("grep 'This preprint was submitted under the following conditions:' " + txtFile).its('code').should('eq', 0);
     
     cy.exec("grep 'This submission meets the requirements outlined in the Author Guidelines.' " + txtFile).its('code').should('eq', 0);
