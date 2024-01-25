@@ -35,7 +35,7 @@ class TitlePage
         $separateCommand = "cpdf {$pdf} 2-end -o {$pdf}";
         exec($separateCommand, $output, $resultCode);
 
-        if ($resultCode === 0) {
+        if ($resultCode != 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.removeTitlePageMissing');
             throw new \Exception('Title Page Remove Failure');
         }
@@ -95,8 +95,8 @@ class TitlePage
             $titlePage->Write(0, $doiLink, $doiLink, 0, 'C', true, 0, false, false, 0);
             $titlePage->Ln(10);
 
-            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.submissionDate', [], $this->locale, ['subDate' => $this->submission->getSubmissionDate()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.publicationDate', [], $this->locale, ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()]), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.submissionDate', ['subDate' => $this->submission->getSubmissionDate()], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.publicationDate', ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
             $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dateFormat', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
 
             $endorserName = $this->submission->getEndorserName();
