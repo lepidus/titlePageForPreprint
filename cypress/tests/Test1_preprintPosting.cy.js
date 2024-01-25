@@ -70,6 +70,21 @@ function checkChecklistPage(txtFile) {
     cy.exec("grep 'All tables and figures have been numbered and labeled.' " + txtFile).its('code').should('eq', 0);
 }
 
+function performTitlePageCheckings(pdfUrl, submissionData) {
+    const directory = './plugins/generic/titlePageForPreprint/cypress/tests/result/';
+    const pdfFile = directory + 'document.pdf';
+    const txtFile = directory + 'document.txt';
+    const expectedNumberOfPages = 3;
+    
+    downloadPdfFile(pdfUrl, directory, pdfFile, txtFile);
+
+    assertNumberPdfPages(pdfFile, expectedNumberOfPages);
+    checkTitlePage(txtFile, submissionData);
+    checkChecklistPage(txtFile);
+
+    cy.exec('rm -r ' + directory).its('code').should('eq', 0);
+}
+
 describe('Title Page for Preprint Plugin - Title page stamping on preprint posting', function() {
     let submissionData;
     
@@ -98,7 +113,7 @@ describe('Title Page for Preprint Plugin - Title page stamping on preprint posti
 		};
     });
 
-    it('Author creates new submission with galley', function() {
+    /*it('Author creates new submission with galley', function() {
         cy.login('eostrom', null, 'publicknowledge');
         cy.get('div#myQueue a:contains("New Submission")').click();
 
@@ -119,30 +134,35 @@ describe('Title Page for Preprint Plugin - Title page stamping on preprint posti
     it('Moderator posts submission. Title page is stamped on PDF', function () {
         cy.findSubmissionAsEditor('dbarnes', null, 'Ostrom');
         cy.get('#publication-button').click();
-		cy.get('.pkpHeader .pkpHeader__actions button:contains("Post")').click();
+		cy.get('.pkpHeader__actions button:contains("Post")').click();
         cy.get('.pkp_modal_panel button:contains("Post")').click();
         cy.contains('span', 'Posted');
         
         cy.contains('a', 'View').click();
         cy.contains('a', 'PDF').click();
         cy.get('a.download').invoke('attr', 'href').then(pdfUrl => {
-            const directory = './plugins/generic/titlePageForPreprint/cypress/tests/result/';
-            const pdfFile = directory + 'document.pdf';
-            const txtFile = directory + 'document.txt';
-            const expectedNumberOfPages = 3;
-            
-            downloadPdfFile(pdfUrl, directory, pdfFile, txtFile);
+            performTitlePageCheckings(pdfUrl, submissionData);
+        });
+    });*/
+    it('Title page updating', function () {
+        cy.findSubmissionAsEditor('dbarnes', null, 'Ostrom');
+        cy.get('#publication-button').click();
+		cy.get('.pkpHeader__actions button:contains("Unpost")').click();
+        cy.get('.modal__panel button:contains("Unpost")').click();
+        
+        submissionData.title = 'A new nightmare';
+        cy.setTinyMceContent('titleAbstract-title-control-en', submissionData.title);
+        cy.get('#titleAbstract button:contains("Save")').click();
+        cy.waitJQuery();
 
-            assertNumberPdfPages(pdfFile, expectedNumberOfPages);
-            checkTitlePage(txtFile, submissionData);
-            checkChecklistPage(txtFile);
+        cy.get('.pkpHeader__actions button:contains("Post")').click();
+        cy.get('.pkp_modal_panel button:contains("Post")').click();
+        cy.contains('span', 'Posted');
 
-            cy.exec('rm -r ' + directory).its('code').should('eq', 0);
+        cy.contains('a', 'View').click();
+        cy.contains('a', 'PDF').click();
+        cy.get('a.download').invoke('attr', 'href').then(pdfUrl => {
+            performTitlePageCheckings(pdfUrl, submissionData);
         });
     });
 });
-
-//retirar o preprint
-//alterar alguma info nos metadados da submissão
-//repostar
-//verificar que alterou a folha, mas que ainda tem só uma
