@@ -37,7 +37,7 @@ class SubmissionPressTest extends PdfHandlingTest
         $galleyPath = $this->pathOfTestPdf;
         $galley = $this->buildMockGalleyAdapter(array($galleyPath, $this->locale, 1, 2));
         $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($galley));
-        $press = new SubmissionPress($submission, $this->checklist[$this->locale], $this->logo);
+        $press = new SubmissionPress($submission, $this->checklist, $this->logo);
 
         $press->insertTitlePage($this->buildMockSubmissionFileUpdater());
 
@@ -53,7 +53,7 @@ class SubmissionPressTest extends PdfHandlingTest
         $secondGalley = $this->buildMockGalleyAdapter(array($secondGalleyPath, "en", 3, 2));
         $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($firstGalley, $secondGalley));
 
-        $press = new SubmissionPress($submission, $this->checklist[$this->locale], $this->logo);
+        $press = new SubmissionPress($submission, $this->checklist, $this->logo);
         $press->insertTitlePage($this->buildMockSubmissionFileUpdater());
 
         $pdfOfFirstGalley = new Pdf($fistGalleyPath);
@@ -72,7 +72,7 @@ class SubmissionPressTest extends PdfHandlingTest
         $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($firstGalley, $secondGalley));
 
         $hashOfNotPdfGalley = md5_file($secondGalleyPath);
-        $press = new SubmissionPress($submission, $this->checklist[$this->locale], $this->logo);
+        $press = new SubmissionPress($submission, $this->checklist, $this->logo);
         $press->insertTitlePage($this->buildMockSubmissionFileUpdater());
 
         $pdfOfFirstGalley = new Pdf($fistGalleyPath);
