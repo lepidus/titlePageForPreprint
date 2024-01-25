@@ -7,6 +7,7 @@ include:
     file:
       - 'templates/groups/pkp_plugin.yml'
       - 'templates/groups/ops_3_4_plugins_unit_tests_model.yml'
+      - 'templates/groups/ops_3_4_plugins_cypress_tests_model.yml'
 
 .unit_test_template:
   before_script:
@@ -14,5 +15,12 @@ include:
     - composer install
     - sed -i 's/stealth="true"\/>/stealth="true"\/> -->/' /etc/ImageMagick-6/policy.xml
     - xmlstarlet edit --inplace -u "policymap/policy[@pattern='PDF']/@rights" -v 'read|write' /etc/ImageMagick-6/policy.xml
+    - wget https://github.com/coherentgraphics/cpdf-binaries/blob/master/Linux-Intel-64bit/cpdf?raw=true -O /usr/local/bin/cpdf
+    - chmod +x /usr/local/bin/cpdf
+
+.integration_tests_template:
+  before_script:
+    - apt update && apt install poppler-utils -yqq
+    - composer install
     - wget https://github.com/coherentgraphics/cpdf-binaries/blob/master/Linux-Intel-64bit/cpdf?raw=true -O /usr/local/bin/cpdf
     - chmod +x /usr/local/bin/cpdf
