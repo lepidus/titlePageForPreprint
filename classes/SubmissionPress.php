@@ -1,27 +1,28 @@
 <?php
 
-import('plugins.generic.titlePageForPreprint.classes.Pdf');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
-import('plugins.generic.titlePageForPreprint.classes.Translator');
-import('plugins.generic.titlePageForPreprint.classes.TitlePage');
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+use APP\facades\Repo;
+use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
+use APP\plugins\generic\titlePageForPreprint\classes\TitlePage;
 
 class SubmissionPress
 {
-    private $logoForTitlePage;
     private $submission;
-    private $translator;
+    private $checklist;
+    private $logoForTitlePage;
 
-    public function __construct(string $logoForTitlePage, SubmissionModel $submission, Translator $translator)
+    public function __construct(SubmissionModel $submission, array $checklist, string $logoForTitlePage)
     {
-        $this->logoForTitlePage = $logoForTitlePage;
         $this->submission = $submission;
-        $this->translator = $translator;
+        $this->checklist = $checklist;
+        $this->logoForTitlePage = $logoForTitlePage;
     }
 
     private function galleyHasTitlePage($galley)
     {
-        $submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-        $submissionFile = $submissionFileDao->getById($galley->submissionFileId);
+        $submissionFile = Repo::submissionFile()->get($galley->submissionFileId);
 
         $hasTitlePage = $submissionFile->getData('folhaDeRosto');
         return $hasTitlePage == 'sim';
@@ -30,7 +31,7 @@ class SubmissionPress
     public function insertTitlePage($submissionFileUpdater): void
     {
         foreach ($this->submission->getGalleys() as $galley) {
-            $titlePage = new TitlePage($this->submission, $this->logoForTitlePage, $galley->locale, $this->translator);
+            $titlePage = new TitlePage($this->submission, $this->checklist, $this->logoForTitlePage, $galley->locale);
             $pdfPath = $galley->getFullFilePath();
 
             if (Pdf::isPdf($pdfPath)) {
@@ -42,7 +43,7 @@ class SubmissionPress
                 try {
                     $hasTitlePage ? $titlePage->updateTitlePage($pdf) : $titlePage->insertTitlePageFirstTime($pdf);
                     $submissionFileUpdater->updateRevisions($submissionFileId, $galley->revisionId, $hasTitlePage);
-                } catch(Exception $e) {
+                } catch (\Exception $e) {
                     error_log('Caught exception: ' .  $e->getMessage());
                 }
             }

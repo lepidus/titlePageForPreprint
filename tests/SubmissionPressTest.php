@@ -1,9 +1,11 @@
 <?php
 
-import('plugins.generic.titlePageForPreprint.classes.GalleyAdapter');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionPress');
-import('plugins.generic.titlePageForPreprint.classes.Pdf');
+use APP\plugins\generic\titlePageForPreprint\tests\PdfHandlingTest;
+use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapter;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionFileUpdater;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
+use APP\plugins\generic\titlePageForPreprint\classes\Pdf;
 
 class SubmissionPressTest extends PdfHandlingTest
 {
@@ -11,7 +13,7 @@ class SubmissionPressTest extends PdfHandlingTest
     {
         $mockGalley = $this->getMockBuilder(GalleyAdapter::class)
             ->setConstructorArgs($args)
-            ->setMethods(array('getFullFilePath'))
+            ->onlyMethods(['getFullFilePath'])
             ->getMock();
 
         $mockGalley->expects($this->any())
@@ -24,7 +26,7 @@ class SubmissionPressTest extends PdfHandlingTest
     private function buildMockSubmissionFileUpdater(): SubmissionFileUpdater
     {
         $mockUpdater = $this->getMockBuilder(SubmissionFileUpdater::class)
-            ->setMethods(array('updateRevisions'))
+            ->onlyMethods(['updateRevisions'])
             ->getMock();
 
         return $mockUpdater;
@@ -34,8 +36,8 @@ class SubmissionPressTest extends PdfHandlingTest
     {
         $galleyPath = $this->pathOfTestPdf;
         $galley = $this->buildMockGalleyAdapter(array($galleyPath, $this->locale, 1, 2));
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($galley));
-        $press = new SubmissionPress($this->logo, $submission, $this->translator);
+        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($galley));
+        $press = new SubmissionPress($submission, $this->checklist, $this->logo);
 
         $press->insertTitlePage($this->buildMockSubmissionFileUpdater());
 
@@ -48,10 +50,10 @@ class SubmissionPressTest extends PdfHandlingTest
         $fistGalleyPath = $this->pathOfTestPdf;
         $secondGalleyPath = $this->pathOfTestPdf2;
         $firstGalley = $this->buildMockGalleyAdapter(array($fistGalleyPath, $this->locale, 2, 2));
-        $secondGalley = $this->buildMockGalleyAdapter(array($secondGalleyPath, "en_US", 3, 2));
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($firstGalley, $secondGalley));
+        $secondGalley = $this->buildMockGalleyAdapter(array($secondGalleyPath, "en", 3, 2));
+        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($firstGalley, $secondGalley));
 
-        $press = new SubmissionPress($this->logo, $submission, $this->translator);
+        $press = new SubmissionPress($submission, $this->checklist, $this->logo);
         $press->insertTitlePage($this->buildMockSubmissionFileUpdater());
 
         $pdfOfFirstGalley = new Pdf($fistGalleyPath);
@@ -64,13 +66,13 @@ class SubmissionPressTest extends PdfHandlingTest
     public function testMustIgnoreNotPdfFiles(): void
     {
         $fistGalleyPath = $this->pathOfTestPdf;
-        $secondGalleyPath = TESTS_DIRECTORY . ASSETS_DIRECTORY . "fileNotPdf.odt";
+        $secondGalleyPath = PdfHandlingTest::TESTS_DIRECTORY . PdfHandlingTest::ASSETS_DIRECTORY . "fileNotPdf.odt";
         $firstGalley = $this->buildMockGalleyAdapter(array($fistGalleyPath, $this->locale, 4, 2));
         $secondGalley = $this->buildMockGalleyAdapter(array($secondGalleyPath, $this->locale, 5, 2));
-        $submission = new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($firstGalley, $secondGalley));
+        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, array($firstGalley, $secondGalley));
 
         $hashOfNotPdfGalley = md5_file($secondGalleyPath);
-        $press = new SubmissionPress($this->logo, $submission, $this->translator);
+        $press = new SubmissionPress($submission, $this->checklist, $this->logo);
         $press->insertTitlePage($this->buildMockSubmissionFileUpdater());
 
         $pdfOfFirstGalley = new Pdf($fistGalleyPath);

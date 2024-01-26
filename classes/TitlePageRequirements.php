@@ -1,5 +1,10 @@
 <?php
 
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
+use APP\core\Application;
+use APP\notification\NotificationManager;
+
 class TitlePageRequirements
 {
     public const CPDF_PATH = "/usr/local/bin/cpdf";

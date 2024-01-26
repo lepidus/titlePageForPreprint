@@ -1,10 +1,12 @@
 <?php
 
-import('lib.pkp.tests.PKPTestCase');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionModel');
+use PKP\tests\PKPTestCase;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 
 class SubmissionTest extends PKPTestCase
 {
+    private $titlePt = 'Uma aventura em mundo imaginario';
+    private $titleEn = 'An adventure in an imaginary world';
     private $status = "publication.relation.none";
     private $doi = "10.1000/182";
     private $doiJournal = "https://doi.org/10.1590/1413-81232020256.1.10792020";
@@ -19,7 +21,18 @@ class SubmissionTest extends PKPTestCase
 
     private function getSubmissionForTests()
     {
-        return new SubmissionModel($this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        $title = [
+            'pt_BR' => $this->titlePt,
+            'en' => $this->titleEn
+        ];
+        return new SubmissionModel($title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+    }
+
+    public function testHasSubmissionTitle(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->titlePt, $submission->getTitle('pt_BR'));
+        $this->assertEquals($this->titleEn, $submission->getTitle('en'));
     }
 
     public function testHasSubmissionStatus(): void
@@ -36,7 +49,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        $submission = new SubmissionModel(['pt_BR' => $this->titlePt], $this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -48,7 +61,7 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiJournalNotInformed(): void
     {
-        $submission = new SubmissionModel($this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        $submission = new SubmissionModel(['pt_BR' => $this->titlePt], $this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 

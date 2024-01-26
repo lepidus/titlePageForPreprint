@@ -1,23 +1,26 @@
 # Title Page Plugin
 
-This plugin creates a title page on PDF files submitted to preprint servers. The title page is a page added to the beginning of the PDF file, containing a series of information about the preprint when it is posted. After the preprint is posted, the title page is also updated if the preprint relations are changed.
+This plugin creates a title page on PDF files submitted to preprint servers. The title page is a page added to the beginning of the PDF file, containing a series of information about the preprint when it is posted.
 
-The common information obtained for PDF title page are:
+After the preprint is posted, the title page is updated if the preprint relations are changed. The updating also takes place when the preprint is unposted and posted back again.
+
+The common information obtained for the PDF title page are:
 
 - Relation status
-- Publication DOI (if it was published in a journal)
+- Publication DOI (if the preprint has been published elsewhere)
 - Preprint title
 - Preprint authors
 - Preprint DOI in current server
-- Submission preparation checklist
 - Submitted date 
 - Posted date
+
+The plugin also adds a new page at the end of the PDF file, containing the server's submission checklist at the moment the preprint is posted first time.
 
 ## Compatibility
 
 The latest release of this plugin is compatible with the following PKP applications:
 
-* OPS 3.3.0
+* OPS 3.4.0
 
 ## Plugin Download
 
@@ -26,7 +29,7 @@ To download the plugin, go to the [Releases page](https://github.com/lepidus/tit
 ## Installation dependencies 
 * [poppler-utils](https://poppler.freedesktop.org/)
 
-This plugin requires the installation of the CPDF binary in your system. You can download it at the [GitHub repository](https://github.com/coherentgraphics/cpdf-binaries). After that, you should make it executable from the command line. In linux systems it can be done by placing the binary in the `/usr/local/bin` directory and running `chmod +x /usr/local/bin/cpdf`.
+This plugin requires the installation of the CPDF binary in your system. You can download it at the [GitHub repository](https://github.com/coherentgraphics/cpdf-binaries). After that, you should make it executable from the command line. In Linux systems it can be done by placing the binary in the `/usr/local/bin` directory and running `chmod +x /usr/local/bin/cpdf`.
 
 This plugin also requires a logo on your OPS, defined on `Website Settings` > `Appearance` > `Logo`, so you need to upload an image. Images with any kind of transparency (alpha channel) are not supported and **should not** be used.
 
@@ -57,6 +60,6 @@ Since this plugin uses the CPDF library, make sure to check [its license](https:
 
 __This plugin is licensed under the GNU General Public License v3.0__
 
-__Copyright (c) 2020-2021 Lepidus Tecnologia__
+__Copyright (c) 2020-2024 Lepidus Tecnologia__
 
-__Copyright (c) 2020-2021 SciELO__
+__Copyright (c) 2020-2024 SciELO__

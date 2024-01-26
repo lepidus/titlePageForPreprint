@@ -1,5 +1,7 @@
 <?php
 
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
 class SubmissionModel
 {
     private $status;
@@ -14,8 +16,9 @@ class SubmissionModel
     private $endorserName;
     private $endorserOrcid;
 
-    public function __construct(string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, $versionJustification, array $galleys = null)
+    public function __construct(array $title, string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, $versionJustification, array $galleys = null)
     {
+        $this->title = $title;
         $this->status = $status;
         $this->doi = ((empty($doi)) ? ("Not informed") : ($doi));
         $this->doiJournal = ((empty($doiJournal)) ? ("Not informed") : ($doiJournal));
@@ -27,6 +30,15 @@ class SubmissionModel
         $this->endorserOrcid = $endorserOrcid;
         $this->version = $version;
         $this->versionJustification = $versionJustification;
+    }
+
+    public function getTitle(string $locale): string
+    {
+        if (isset($this->title[$locale])) {
+            return $this->title[$locale];
+        }
+
+        return '';
     }
 
     public function getStatus(): string

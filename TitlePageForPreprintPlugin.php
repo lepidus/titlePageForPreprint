@@ -1,33 +1,44 @@
 <?php
 /**
- * @file plugins/generic/TitlePageForPreprint/TitlePagePlugin.inc.php
+ * @file plugins/generic/TitlePageForPreprint/TitlePageForPreprintPlugin.inc.php
  *
- * Copyright (c) 2020-2021 Lepidus Tecnologia
- * Copyright (c) 2020-2021 SciELO
+ * Copyright (c) 2020-2024 Lepidus Tecnologia
+ * Copyright (c) 2020-2024 SciELO
  * Distributed under the GNU GPL v3. For full terms see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
  *
- * @class TitlePagePlugin
+ * @class TitlePageForPreprintPlugin
  * @ingroup plugins_generic_TitlePageForPreprint
  *
  * @brief Plugin class for the TitlePageForPreprint plugin.
  */
-import('lib.pkp.classes.plugins.GenericPlugin');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionPressFactory');
-import('plugins.generic.titlePageForPreprint.classes.SubmissionFileUpdater');
-import('plugins.generic.titlePageForPreprint.classes.TitlePageRequirements');
 
-class TitlePagePlugin extends GenericPlugin
+namespace APP\plugins\generic\titlePageForPreprint;
+
+use PKP\plugins\GenericPlugin;
+use PKP\plugins\Hook;
+use APP\core\Application;
+use APP\facades\Repo;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPressFactory;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionFileUpdater;
+use APP\plugins\generic\titlePageForPreprint\classes\TitlePageRequirements;
+
+class TitlePageForPreprintPlugin extends GenericPlugin
 {
     public function register($category, $path, $mainContextId = null)
     {
-        $registeredPlugin = parent::register($category, $path);
+        $success = parent::register($category, $path, $mainContextId);
 
-        if ($registeredPlugin && $this->getEnabled()) {
-            HookRegistry::register('Publication::publish::before', [$this, 'insertTitlePageWhenPublishing']);
-            HookRegistry::register('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
-            HookRegistry::register('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
+        if (Application::isUnderMaintenance()) {
+            return $success;
         }
-        return $registeredPlugin;
+
+        if ($success && $this->getEnabled($mainContextId)) {
+            Hook::add('Publication::publish::before', [$this, 'insertTitlePageOnPosting']);
+            Hook::add('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
+            Hook::add('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
+        }
+
+        return $success;
     }
 
     public function setEnabled($enabled)
@@ -67,12 +78,12 @@ class TitlePagePlugin extends GenericPlugin
         return false;
     }
 
-    public function insertTitlePageWhenPublishing($hookName, $arguments)
+    public function insertTitlePageOnPosting($hookName, $params)
     {
         $titlePageRequirements = new TitlePageRequirements();
 
         if ($titlePageRequirements->checkRequirements()) {
-            $publication = $arguments[0];
+            $publication = $params[0];
             $this->insertTitlePageInPreprint($publication);
         }
     }
@@ -93,11 +104,11 @@ class TitlePagePlugin extends GenericPlugin
 
     public function insertTitlePageInPreprint($publication)
     {
-        $submission = Services::get('submission')->get($publication->getData('submissionId'));
+        $submission = Repo::submission()->get($publication->getData('submissionId'));
         $context = Application::getContextDAO()->getById($submission->getContextId());
         $this->addLocaleData("pt_BR");
-        $this->addLocaleData("en_US");
-        $this->addLocaleData("es_ES");
+        $this->addLocaleData("en");
+        $this->addLocaleData("es");
         $submissionPressFactory = new SubmissionPressFactory();
         $submissionFileUpdater = new SubmissionFileUpdater();
         $press = $submissionPressFactory->createSubmissionPress($submission, $publication, $context);
