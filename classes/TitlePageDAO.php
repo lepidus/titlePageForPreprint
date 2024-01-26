@@ -9,10 +9,8 @@
  * Operations for retrieving data for the title page
  */
 
-import('lib.pkp.classes.db.DAO');
-
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Support\Collection;
+use PKP\db\DAO;
+use Illuminate\Support\Facades\DB;
 
 class TitlePageDAO extends DAO
 {
