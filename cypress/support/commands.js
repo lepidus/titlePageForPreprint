@@ -15,6 +15,10 @@ function checkTitlePage(txtFile, submissionData) {
         cy.exec("grep 'Publication status: This preprint has not been published elsewhere.' " + txtFile).its('code').should('eq', 0);
     } else if (submissionData.relations == 3) {
         cy.exec("grep 'Publication status: This preprint has been published elsewhere.' " + txtFile).its('code').should('eq', 0);
+
+        if('vorDoi' in submissionData) {
+            cy.exec("grep 'DOI of the published preprint: " + submissionData.vorDoi + "' " + txtFile).its('code').should('eq', 0);
+        }
     }
     
     let authorFullName = submissionData.contributors[0]['given'] + ' '  + submissionData.contributors[0]['family'];
