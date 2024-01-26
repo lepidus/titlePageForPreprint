@@ -9,6 +9,8 @@
  * Operations for retrieving data for the title page
  */
 
+namespace APP\plugins\generic\titlePageForPreprint\classes;
+
 use PKP\db\DAO;
 use Illuminate\Support\Facades\DB;
 

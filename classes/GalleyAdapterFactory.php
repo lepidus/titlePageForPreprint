@@ -2,6 +2,7 @@
 
 namespace APP\plugins\generic\titlePageForPreprint\classes;
 
+use APP\facades\Repo;
 use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapter;
 use APP\plugins\generic\titlePageForPreprint\classes\TitlePageDAO;
 
@@ -20,9 +21,9 @@ class GalleyAdapterFactory
         list($lastRevisionId, $lastRevisionPath) = $this->getLatestRevision($submissionFile->getId());
 
         if ($this->submissionFileHasNewRevisionWithoutTitlePage($submissionFile, $lastRevisionId)) {
-            Services::get('submissionFile')->edit($submissionFile, [
+            Repo::submissionFile()->edit($submissionFile, [
                 'folhaDeRosto' => 'nao',
-            ], Application::get()->getRequest());
+            ]);
         }
 
         return new GalleyAdapter($lastRevisionPath, $galley->getLocale(), $submissionFile->getId(), $lastRevisionId);
