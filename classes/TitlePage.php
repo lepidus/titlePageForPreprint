@@ -101,13 +101,13 @@ class TitlePage
 
             $endorserName = $this->submission->getEndorserName();
             $endorserOrcid = $this->submission->getEndorserOrcid();
-            if(!is_null($endorserOrcid) && !is_null($endorserName)) {
+            if (!is_null($endorserOrcid) && !is_null($endorserName)) {
                 $titlePage->Ln(5);
                 $titlePage->writeHTML(__('plugins.generic.titlePageForPreprint.endorsement', ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid], $this->locale));
             }
 
             $versionJustification = $this->submission->getVersionJustification();
-            if($this->submission->getVersion() > 1 && !is_null($versionJustification)) {
+            if ($this->submission->getVersion() > 1 && !is_null($versionJustification)) {
                 $versionJustification = __('plugins.generic.titlePageForPreprint.versionJustification', [], $this->locale) . ": " . $versionJustification;
                 $titlePage->Ln(5);
                 $titlePage->Write(0, $versionJustification, '', 0, 'JUSTIFY', true, 0, false, false, 0);
