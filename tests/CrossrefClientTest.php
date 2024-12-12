@@ -8,7 +8,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use APP\submission\Submission;
 use APP\publication\Publication;
-use APP\plugins\reports\titlePageForPreprint\classes\clients\CrossrefClient;
+use APP\plugins\generic\titlePageForPreprint\classes\clients\CrossrefClient;
 
 class CrossrefClientTest extends PKPTestCase
 {

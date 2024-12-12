@@ -1,6 +1,6 @@
 <?php
 
-namespace APP\plugins\reports\titlePageForPreprint\classes\clients;
+namespace APP\plugins\generic\titlePageForPreprint\classes\clients;
 
 use APP\core\Application;
 use GuzzleHttp\Psr7\Request;
