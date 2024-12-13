@@ -17,6 +17,8 @@ class SubmissionTest extends PKPTestCase
     private $endorserName = 'Carl Sagan';
     private $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
     private $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
+    private $isTranslation = false;
+    private $citation = 'Lispector, C. & Iamarino, A. (2024). An adventure in an imaginary world. Public Knowledge Preprint Server';
     private $galleys = array();
 
     private function getSubmissionForTests()
@@ -25,7 +27,22 @@ class SubmissionTest extends PKPTestCase
             'pt_BR' => $this->titlePt,
             'en' => $this->titleEn
         ];
-        return new SubmissionModel($title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        return new SubmissionModel(
+            $title,
+            $this->status,
+            $this->doi,
+            $this->doiJournal,
+            $this->authors,
+            $this->submissionDate,
+            $this->publicationDate,
+            $this->endorserName,
+            $this->endorserOrcid,
+            $this->version,
+            $this->versionJustification,
+            $this->isTranslation,
+            $this->citation,
+            $this->galleys
+        );
     }
 
     public function testHasSubmissionTitle(): void
@@ -49,7 +66,22 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiNotInformed(): void
     {
-        $submission = new SubmissionModel(['pt_BR' => $this->titlePt], $this->status, null, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        $submission = new SubmissionModel(
+            ['pt_BR' => $this->titlePt],
+            $this->status,
+            null,
+            $this->doiJournal,
+            $this->authors,
+            $this->submissionDate,
+            $this->publicationDate,
+            $this->endorserName,
+            $this->endorserOrcid,
+            $this->version,
+            $this->versionJustification,
+            $this->isTranslation,
+            $this->citation,
+            $this->galleys
+        );
         $this->assertEquals("Not informed", $submission->getDOI());
     }
 
@@ -61,7 +93,22 @@ class SubmissionTest extends PKPTestCase
 
     public function testDoiJournalNotInformed(): void
     {
-        $submission = new SubmissionModel(['pt_BR' => $this->titlePt], $this->status, $this->doi, null, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->galleys);
+        $submission = new SubmissionModel(
+            ['pt_BR' => $this->titlePt],
+            $this->status,
+            $this->doi,
+            null,
+            $this->authors,
+            $this->submissionDate,
+            $this->publicationDate,
+            $this->endorserName,
+            $this->endorserOrcid,
+            $this->version,
+            $this->versionJustification,
+            $this->isTranslation,
+            $this->citation,
+            $this->galleys
+        );
         $this->assertEquals("Not informed", $submission->getJournalDOI());
     }
 
@@ -111,5 +158,20 @@ class SubmissionTest extends PKPTestCase
     {
         $submission = $this->getSubmissionForTests();
         $this->assertEquals($this->versionJustification, $submission->getVersionJustification());
+    }
+
+    public function testIsTranslation(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertFalse($submission->getIsTranslation());
+
+        $submission->setIsTranslation(true);
+        $this->assertTrue($submission->getIsTranslation());
+    }
+
+    public function testHasCitation(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $this->assertEquals($this->citation, $submission->getCitation());
     }
 }

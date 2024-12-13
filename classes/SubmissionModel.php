@@ -15,8 +15,10 @@ class SubmissionModel
     private $versionJustification;
     private $endorserName;
     private $endorserOrcid;
+    private $isTranslation;
+    private $citation;
 
-    public function __construct(array $title, string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, $versionJustification, array $galleys = null)
+    public function __construct(array $title, string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, $versionJustification, bool $isTranslation, string $citation, array $galleys = null)
     {
         $this->title = $title;
         $this->status = $status;
@@ -30,6 +32,8 @@ class SubmissionModel
         $this->endorserOrcid = $endorserOrcid;
         $this->version = $version;
         $this->versionJustification = $versionJustification;
+        $this->isTranslation = $isTranslation;
+        $this->citation = $citation;
     }
 
     public function getTitle(string $locale): string
@@ -94,5 +98,20 @@ class SubmissionModel
     public function getVersionJustification(): ?string
     {
         return $this->versionJustification;
+    }
+
+    public function setIsTranslation(bool $isTranslation)
+    {
+        $this->isTranslation = $isTranslation;
+    }
+
+    public function getIsTranslation(): bool
+    {
+        return $this->isTranslation;
+    }
+
+    public function getCitation(): ?string
+    {
+        return $this->citation;
     }
 }
