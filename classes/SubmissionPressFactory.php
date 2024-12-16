@@ -37,6 +37,8 @@ class SubmissionPressFactory
                 $dataPress['endorserOrcid'],
                 $dataPress['version'],
                 $dataPress['versionJustification'],
+                $dataPress['isTranslation'],
+                $dataPress['citation'],
                 $submissionGalleys
             ),
             $checklist,

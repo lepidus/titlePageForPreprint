@@ -33,6 +33,8 @@ class PdfHandlingTest extends PKPTestCase
     protected $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
     protected $version = "1";
     protected $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
+    protected $isTranslation = false;
+    protected $citation = 'Silva, C. & Carlos, J. (2024). Thus spoke Zarathustra. Public Knowledge Preprint Server';
 
     protected function setUp(): void
     {
