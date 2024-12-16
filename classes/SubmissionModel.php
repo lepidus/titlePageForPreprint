@@ -2,44 +2,16 @@
 
 namespace APP\plugins\generic\titlePageForPreprint\classes;
 
-class SubmissionModel
+use PKP\core\DataObject;
+
+class SubmissionModel extends DataObject
 {
-    private $status;
-    private $doi;
-    private $doiJournal;
-    private $galleys;
-    private $authors;
-    private $submissionDate;
-    private $publicationDate;
-    private $version;
-    private $versionJustification;
-    private $endorserName;
-    private $endorserOrcid;
-    private $isTranslation;
-    private $citation;
-
-    public function __construct(array $title, string $status, $doi, $doiJournal, string $authors, string $submissionDate, string $publicationDate, $endorserName, $endorserOrcid, string $version, $versionJustification, bool $isTranslation, string $citation, array $galleys = null)
-    {
-        $this->title = $title;
-        $this->status = $status;
-        $this->doi = ((empty($doi)) ? ("Not informed") : ($doi));
-        $this->doiJournal = ((empty($doiJournal)) ? ("Not informed") : ($doiJournal));
-        $this->authors = $authors;
-        $this->galleys = $galleys;
-        $this->submissionDate = $submissionDate;
-        $this->publicationDate = $publicationDate;
-        $this->endorserName = $endorserName;
-        $this->endorserOrcid = $endorserOrcid;
-        $this->version = $version;
-        $this->versionJustification = $versionJustification;
-        $this->isTranslation = $isTranslation;
-        $this->citation = $citation;
-    }
-
     public function getTitle(string $locale): string
     {
-        if (isset($this->title[$locale])) {
-            return $this->title[$locale];
+        $localizedTitle = $this->getData('title', $locale);
+
+        if (!is_null($localizedTitle)) {
+            return $localizedTitle;
         }
 
         return '';
@@ -47,71 +19,74 @@ class SubmissionModel
 
     public function getStatus(): string
     {
-        return $this->status;
+        return $this->getData('status');
     }
 
     public function getDOI(): string
     {
-        return $this->doi;
+        $doi = $this->getData('doi');
+        return empty($doi) ? ("Not informed") : $doi;
     }
 
     public function getJournalDOI(): string
     {
-        return $this->doiJournal;
+        $doiJournal = $this->getData('doiJournal');
+        return empty($doiJournal) ? ("Not informed") : $doiJournal;
     }
 
     public function getAuthors(): string
     {
-        return $this->authors;
+        return $this->getData('authors');
     }
 
     public function getGalleys(): array
     {
-        return $this->galleys;
+        $galleys = $this->getData('galleys');
+        return is_null($galleys) ? [] : $galleys;
     }
 
     public function getSubmissionDate(): string
     {
-        return $this->submissionDate;
+        return $this->getData('submissionDate');
     }
 
     public function getPublicationDate(): string
     {
-        return $this->publicationDate;
+        return $this->getData('publicationDate');
     }
 
     public function getVersion(): string
     {
-        return $this->version;
+        return $this->getData('version');
     }
 
     public function getEndorserName(): ?string
     {
-        return $this->endorserName;
+        return $this->getData('endorserName');
     }
 
     public function getEndorserOrcid(): ?string
     {
-        return $this->endorserOrcid;
+        return $this->getData('endorserOrcid');
     }
 
     public function getVersionJustification(): ?string
     {
-        return $this->versionJustification;
+        return $this->getData('versionJustification');
     }
 
     public function setIsTranslation(bool $isTranslation)
     {
-        $this->isTranslation = $isTranslation;
+        $this->setData('isTranslation', $isTranslation);
     }
 
     public function getIsTranslation(): bool
     {
-        return $this->isTranslation;
+        return $this->getData('isTranslation');
     }
 
     public function getCitation(): ?string
     {
-        return $this->citation;
+        return $this->getData('citation');
     }
 }
