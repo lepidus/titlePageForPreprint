@@ -5,6 +5,7 @@ namespace APP\plugins\generic\titlePageForPreprint\tests;
 use PKP\tests\PKPTestCase;
 use PKP\db\DAORegistry;
 use PKP\submissionFile\SubmissionFile;
+use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 use APP\plugins\generic\titlePageForPreprint\classes\Translator;
 
 class PdfHandlingTest extends PKPTestCase
@@ -63,6 +64,28 @@ class PdfHandlingTest extends PKPTestCase
         if (file_exists($this->pdfAsText)) {
             unlink($this->pdfAsText);
         }
+    }
+
+    protected function getSubmissionForTests(): SubmissionModel
+    {
+        $submission = new SubmissionModel();
+        $submission->setAllData([
+            'title' => $this->title,
+            'status' => $this->status,
+            'doi' => $this->doi,
+            'doiJournal' => $this->doiJournal,
+            'authors' => $this->authors,
+            'submissionDate' => $this->submissionDate,
+            'publicationDate' => $this->publicationDate,
+            'endorserName' => $this->endorserName,
+            'endorserOrcid' => $this->endorserOrcid,
+            'version' => $this->version,
+            'versionJustification' => $this->versionJustification,
+            'isTranslation' => $this->isTranslation,
+            'citation' => $this->citation,
+        ]);
+
+        return $submission;
     }
 
     public function testDummy(): void

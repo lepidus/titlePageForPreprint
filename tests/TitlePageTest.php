@@ -9,7 +9,7 @@ class TitlePageTest extends PdfHandlingTest
 {
     private function getTitlePageForTests(): TitlePage
     {
-        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
         return new TitlePage($submission, $this->checklist, $this->logo, $this->locale);
     }
 
@@ -106,7 +106,8 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testInsertingInExistingPdfStampsNotInformedRelation(): void
     {
-        $submission = new SubmissionModel($this->title, "", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
+        $submission->setData('status', '');
         $titlePage = new TitlePage($submission, $this->checklist, $this->logo, $this->locale);
         $pdf = new Pdf($this->pathOfTestPdf);
 
@@ -238,7 +239,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithRelationTranslatedToGalleyLanguage(): void
     {
-        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
         $titlePage = new TitlePage($submission, $this->checklist, $this->logo, "en");
         $pdf = new Pdf($this->pathOfTestPdf);
 
@@ -251,7 +252,8 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testInsertingInExistingPdfStampsNotInformedRelationTranslated(): void
     {
-        $submission = new SubmissionModel($this->title, "", $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
+        $submission->setData('status', '');
         $titlePage = new TitlePage($submission, $this->checklist, $this->logo, "en");
         $pdf = new Pdf($this->pathOfTestPdf);
 
@@ -264,7 +266,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsChecklistTranslatedToGalleyLanguage(): void
     {
-        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
         $titlePage = new TitlePage($submission, $this->checklist, $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 
@@ -290,7 +292,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithSubmissionDateTranslatedToGalleyLanguage(): void
     {
-        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
         $titlePage = new TitlePage($submission, $this->checklist, $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 
@@ -302,7 +304,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithPublicationDateTranslatedToGalleyLanguage(): void
     {
-        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
         $titlePage = new TitlePage($submission, $this->checklist, $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 
@@ -325,7 +327,7 @@ class TitlePageTest extends PdfHandlingTest
 
     public function testStampsTitlePageWithDateFormatTranslatedToGalleyLanguage(): void
     {
-        $submission = new SubmissionModel($this->title, $this->status, $this->doi, $this->doiJournal, $this->authors, $this->submissionDate, $this->publicationDate, $this->endorserName, $this->endorserOrcid, $this->version, $this->versionJustification, $this->isTranslation, $this->citation);
+        $submission = $this->getSubmissionForTests();
         $titlePage = new TitlePage($submission, $this->checklist, $this->logo, 'en');
         $pdf = new Pdf($this->pathOfTestPdf);
 

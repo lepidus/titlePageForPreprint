@@ -24,26 +24,25 @@ class SubmissionPressFactory
             $submissionGalleys[] = $galleyAdapterFactory->createGalleyAdapter($submission, $galley);
         }
 
-        return new SubmissionPress(
-            new SubmissionModel(
-                $dataPress['title'],
-                $dataPress['status'],
-                $dataPress['doi'],
-                $dataPress['doiJournal'],
-                $dataPress['authors'],
-                $dataPress['submissionDate'],
-                $dataPress['publicationDate'],
-                $dataPress['endorserName'],
-                $dataPress['endorserOrcid'],
-                $dataPress['version'],
-                $dataPress['versionJustification'],
-                $dataPress['isTranslation'],
-                $dataPress['citation'],
-                $submissionGalleys
-            ),
-            $checklist,
-            $logoPath
-        );
+        $submissionModel = new SubmissionModel();
+        $submissionModel->setAllData([
+            'title' => $dataPress['title'],
+            'status' => $dataPress['status'],
+            'doi' => $dataPress['doi'],
+            'doiJournal' => $dataPress['doiJournal'],
+            'authors' => $dataPress['authors'],
+            'submissionDate' => $dataPress['submissionDate'],
+            'publicationDate' => $dataPress['publicationDate'],
+            'endorserName' => $dataPress['endorserName'],
+            'endorserOrcid' => $dataPress['endorserOrcid'],
+            'version' => $dataPress['version'],
+            'versionJustification' => $dataPress['versionJustification'],
+            'isTranslation' => $dataPress['isTranslation'],
+            'citation' => $dataPress['citation'],
+            'galleys' => $submissionGalleys
+        ]);
+
+        return new SubmissionPress($submissionModel, $checklist, $logoPath);
     }
 
     private function getContextChecklist($context): array
