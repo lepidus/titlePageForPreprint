@@ -99,6 +99,11 @@ class TitlePage
             $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.publicationDate', ['postDate' => $this->submission->getPublicationDate(), 'version' => $this->submission->getVersion()], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
             $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dateFormat', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
 
+            if ($this->submission->getIsTranslation()) {
+                $titlePage->Ln(5);
+                $titlePage->writeHTML(__('plugins.generic.titlePageForPreprint.citation', ['citation' => $this->submission->getCitation()], $this->locale));
+            }
+
             $endorserName = $this->submission->getEndorserName();
             $endorserOrcid = $this->submission->getEndorserOrcid();
             if (!is_null($endorserOrcid) && !is_null($endorserName)) {

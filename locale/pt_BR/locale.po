@@ -37,6 +37,11 @@ msgstr ""
 "A moderação deste preprint recebeu o endosso de:<br>"
 "{$endorserName} (ORCID: <a href=\"{$endorserOrcid}\">{$endorserOrcid}</a>)"
 
+msgid "plugins.generic.titlePageForPreprint.citation"
+msgstr ""
+"Como citar esta tradução:<br>"
+"{$citation}"
+
 msgid "plugins.generic.titlePageForPreprint.versionJustification"
 msgstr "Justificativa da versão"
 

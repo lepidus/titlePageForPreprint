@@ -139,7 +139,7 @@ class TitlePageTest extends PdfHandlingTest
         $this->assertTrue($this->searchForTextInPdf($pdf, $this->authors));
     }
 
-    public function testInsertingInExistingPdfStampsDOI(): void
+    public function testInsertingInExistingPdfStampsDoi(): void
     {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
@@ -203,6 +203,19 @@ class TitlePageTest extends PdfHandlingTest
         $titlePage->insertTitlePageFirstTime($pdf);
 
         $expectedText = __('plugins.generic.titlePageForPreprint.endorsement', [], $this->locale);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
+    }
+
+    public function testInsertingInExistingPdfStampsCitation(): void
+    {
+        $submission = $this->getSubmissionForTests();
+        $submission->setData('isTranslation', true);
+        $titlePage = new TitlePage($submission, $this->checklist, $this->logo, $this->locale);
+        $pdf = new Pdf($this->pathOfTestPdf);
+
+        $titlePage->insertTitlePageFirstTime($pdf);
+
+        $expectedText = __('plugins.generic.titlePageForPreprint.citation', [], $this->locale);
         $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
