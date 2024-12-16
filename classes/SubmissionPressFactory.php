@@ -100,6 +100,9 @@ class SubmissionPressFactory
         $datePublished = strtotime($publication->getData('datePublished'));
         $data['publicationDate'] = date('Y-m-d', $datePublished);
 
+        $data['isTranslation'] = !is_null($publication->getData('originalDocumentDoi'));
+        $data['citation'] = '';
+
         $data['endorserName'] = $publication->getData('endorserName');
         $data['endorserOrcid'] = $publication->getData('endorserOrcid');
 

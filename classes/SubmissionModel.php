@@ -82,7 +82,7 @@ class SubmissionModel extends DataObject
 
     public function getIsTranslation(): bool
     {
-        return $this->getData('isTranslation');
+        return $this->getData('isTranslation') ?? false;
     }
 
     public function getCitation(): ?string
