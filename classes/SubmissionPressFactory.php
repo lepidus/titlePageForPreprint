@@ -5,6 +5,8 @@ namespace APP\plugins\generic\titlePageForPreprint\classes;
 use APP\facades\Repo;
 use APP\file\PublicFileManager;
 use APP\publication\Publication;
+use APP\core\Application;
+use APP\plugins\generic\citationStyleLanguage\CitationStyleLanguagePlugin;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapterFactory;
@@ -101,7 +103,7 @@ class SubmissionPressFactory
         $data['publicationDate'] = date('Y-m-d', $datePublished);
 
         $data['isTranslation'] = !is_null($publication->getData('originalDocumentDoi'));
-        $data['citation'] = '';
+        $data['citation'] = ($data['isTranslation'] ? $this->getSubmissionCitation($submission) : '');
 
         $data['endorserName'] = $publication->getData('endorserName');
         $data['endorserOrcid'] = $publication->getData('endorserOrcid');
@@ -111,5 +113,15 @@ class SubmissionPressFactory
         $data['status'] = ($status) ? ($relation[$status]) : ("");
 
         return $data;
+    }
+
+    private function getSubmissionCitation($submission)
+    {
+        $request = Application::get()->getRequest();
+        $cslPlugin = new CitationStyleLanguagePlugin();
+
+        $citation = $cslPlugin->getCitation($request, $submission, 'apa');
+
+        return $citation;
     }
 }
