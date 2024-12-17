@@ -39,7 +39,7 @@ msgstr ""
 
 msgid "plugins.generic.titlePageForPreprint.citation"
 msgstr ""
-"How to cite this translation:<br>"
+"How to cite this translation:"
 "{$citation}"
 
 msgid "plugins.generic.titlePageForPreprint.versionJustification"

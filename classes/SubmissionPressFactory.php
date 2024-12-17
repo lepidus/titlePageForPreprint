@@ -6,7 +6,7 @@ use APP\facades\Repo;
 use APP\file\PublicFileManager;
 use APP\publication\Publication;
 use APP\core\Application;
-use APP\plugins\generic\citationStyleLanguage\CitationStyleLanguagePlugin;
+use PKP\plugins\PluginRegistry;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapterFactory;
@@ -118,7 +118,7 @@ class SubmissionPressFactory
     private function getSubmissionCitation($submission)
     {
         $request = Application::get()->getRequest();
-        $cslPlugin = new CitationStyleLanguagePlugin();
+        $cslPlugin = PluginRegistry::getPlugin('generic', 'citationstylelanguageplugin');
 
         $citation = $cslPlugin->getCitation($request, $submission, 'apa');
 
