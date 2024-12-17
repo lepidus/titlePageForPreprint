@@ -5,6 +5,8 @@ namespace APP\plugins\generic\titlePageForPreprint\classes;
 use APP\facades\Repo;
 use APP\file\PublicFileManager;
 use APP\publication\Publication;
+use APP\core\Application;
+use PKP\plugins\PluginRegistry;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPress;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
 use APP\plugins\generic\titlePageForPreprint\classes\GalleyAdapterFactory;
@@ -24,24 +26,25 @@ class SubmissionPressFactory
             $submissionGalleys[] = $galleyAdapterFactory->createGalleyAdapter($submission, $galley);
         }
 
-        return new SubmissionPress(
-            new SubmissionModel(
-                $dataPress['title'],
-                $dataPress['status'],
-                $dataPress['doi'],
-                $dataPress['doiJournal'],
-                $dataPress['authors'],
-                $dataPress['submissionDate'],
-                $dataPress['publicationDate'],
-                $dataPress['endorserName'],
-                $dataPress['endorserOrcid'],
-                $dataPress['version'],
-                $dataPress['versionJustification'],
-                $submissionGalleys
-            ),
-            $checklist,
-            $logoPath
-        );
+        $submissionModel = new SubmissionModel();
+        $submissionModel->setAllData([
+            'title' => $dataPress['title'],
+            'status' => $dataPress['status'],
+            'doi' => $dataPress['doi'],
+            'doiJournal' => $dataPress['doiJournal'],
+            'authors' => $dataPress['authors'],
+            'submissionDate' => $dataPress['submissionDate'],
+            'publicationDate' => $dataPress['publicationDate'],
+            'endorserName' => $dataPress['endorserName'],
+            'endorserOrcid' => $dataPress['endorserOrcid'],
+            'version' => $dataPress['version'],
+            'versionJustification' => $dataPress['versionJustification'],
+            'isTranslation' => $dataPress['isTranslation'],
+            'citation' => $dataPress['citation'],
+            'galleys' => $submissionGalleys
+        ]);
+
+        return new SubmissionPress($submissionModel, $checklist, $logoPath);
     }
 
     private function getContextChecklist($context): array
@@ -99,6 +102,9 @@ class SubmissionPressFactory
         $datePublished = strtotime($publication->getData('datePublished'));
         $data['publicationDate'] = date('Y-m-d', $datePublished);
 
+        $data['isTranslation'] = !is_null($publication->getData('originalDocumentDoi'));
+        $data['citation'] = ($data['isTranslation'] ? $this->getSubmissionCitation($submission) : '');
+
         $data['endorserName'] = $publication->getData('endorserName');
         $data['endorserOrcid'] = $publication->getData('endorserOrcid');
 
@@ -107,5 +113,15 @@ class SubmissionPressFactory
         $data['status'] = ($status) ? ($relation[$status]) : ("");
 
         return $data;
+    }
+
+    private function getSubmissionCitation($submission)
+    {
+        $request = Application::get()->getRequest();
+        $cslPlugin = PluginRegistry::getPlugin('generic', 'citationstylelanguageplugin');
+
+        $citation = $cslPlugin->getCitation($request, $submission, 'apa');
+
+        return $citation;
     }
 }

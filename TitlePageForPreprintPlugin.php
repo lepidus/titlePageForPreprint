@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file plugins/generic/TitlePageForPreprint/TitlePageForPreprintPlugin.inc.php
  *

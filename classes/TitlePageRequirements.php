@@ -16,7 +16,7 @@ class TitlePageRequirements
 
     private function checkPdfManipulator()
     {
-        if(!file_exists(self::CPDF_PATH)) {
+        if (!file_exists(self::CPDF_PATH)) {
             $this->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.pdfManipulatorMissing');
             return false;
         }
