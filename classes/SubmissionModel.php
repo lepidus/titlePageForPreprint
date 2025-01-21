@@ -89,4 +89,9 @@ class SubmissionModel extends DataObject
     {
         return $this->getData('citation');
     }
+
+    public function getDataStatement(): ?array
+    {
+        return $this->getData('dataStatement');
+    }
 }
