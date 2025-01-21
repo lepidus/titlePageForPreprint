@@ -43,7 +43,7 @@ msgstr ""
 "{$citation}"
 
 msgid "plugins.generic.titlePageForPreprint.dataStatement"
-msgstr "Declaração de dados"
+msgstr "Declaração de dados:"
 
 msgid "plugins.generic.titlePageForPreprint.versionJustification"
 msgstr "Justificativa da versão"

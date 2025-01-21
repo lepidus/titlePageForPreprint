@@ -41,6 +41,7 @@ class SubmissionPressFactory
             'versionJustification' => $dataPress['versionJustification'],
             'isTranslation' => $dataPress['isTranslation'],
             'citation' => $dataPress['citation'],
+            'dataStatement' => $dataPress['dataStatement'],
             'galleys' => $submissionGalleys
         ]);
 
@@ -105,6 +106,10 @@ class SubmissionPressFactory
         $data['isTranslation'] = !is_null($publication->getData('originalDocumentDoi'));
         $data['citation'] = ($data['isTranslation'] ? $this->getSubmissionCitation($submission) : '');
 
+        if ($publication->getData('dataStatementTypes')) {
+            $data['dataStatement'] = $this->getDataStatement($publication);
+        }
+
         $data['endorserName'] = $publication->getData('endorserName');
         $data['endorserOrcid'] = $publication->getData('endorserOrcid');
 
@@ -123,5 +128,21 @@ class SubmissionPressFactory
         $citation = $cslPlugin->getCitation($request, $submission, 'apa');
 
         return $citation;
+    }
+
+    private function getDataStatement($publication)
+    {
+        $dataStatementService = new \APP\plugins\generic\dataverse\classes\services\DataStatementService();
+        $dataStatementTypes = $dataStatementService->getDataStatementTypes(false);
+        $processedDataStatement = [];
+
+        // Problema aqui: os textos precisam estar no idioma da submissão
+        foreach ($publication->getData('dataStatementTypes') as $selectedStatement) {
+            if (isset($dataStatementTypes[$selectedStatement])) {
+                $processedDataStatement[] = $dataStatementTypes[$selectedStatement];
+            }
+        }
+
+        return $processedDataStatement;
     }
 }

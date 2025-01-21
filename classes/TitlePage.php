@@ -115,10 +115,12 @@ class TitlePage
                 $titlePage->Ln(5);
                 $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dataStatement', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
 
+                $statementList = '<ul>';
                 foreach ($this->submission->getDataStatement() as $statement) {
-                    $titlePage->Ln(5);
-                    $titlePage->Write(0, $statement, '', 0, 'JUSTIFY', true, 0, false, false, 0);
+                    $statementList .= "<li>$statement</li>";
                 }
+
+                $titlePage->writeHTML($statementList.'</ul>');
             }
 
             $versionJustification = $this->submission->getVersionJustification();
