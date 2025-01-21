@@ -42,6 +42,9 @@ msgstr ""
 "Cómo citar esta traducción:"
 "{$citation}"
 
+msgid "plugins.generic.titlePageForPreprint.dataStatement"
+msgstr "Declaración de datos"
+
 msgid "plugins.generic.titlePageForPreprint.versionJustification"
 msgstr "Justificación de la versión"
 

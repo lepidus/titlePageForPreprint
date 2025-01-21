@@ -111,6 +111,16 @@ class TitlePage
                 $titlePage->writeHTML(__('plugins.generic.titlePageForPreprint.endorsement', ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid], $this->locale));
             }
 
+            if (!empty($this->submission->getDataStatement())) {
+                $titlePage->Ln(5);
+                $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dataStatement', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+
+                foreach ($this->submission->getDataStatement() as $statement) {
+                    $titlePage->Ln(5);
+                    $titlePage->Write(0, $statement, '', 0, 'JUSTIFY', true, 0, false, false, 0);
+                }
+            }
+
             $versionJustification = $this->submission->getVersionJustification();
             if ($this->submission->getVersion() > 1 && !is_null($versionJustification)) {
                 $versionJustification = __('plugins.generic.titlePageForPreprint.versionJustification', [], $this->locale) . ": " . $versionJustification;
