@@ -94,4 +94,9 @@ class SubmissionModel extends DataObject
     {
         return $this->getData('dataStatement');
     }
+
+    public function getResearchData(): ?string
+    {
+        return $this->getData('researchData');
+    }
 }
