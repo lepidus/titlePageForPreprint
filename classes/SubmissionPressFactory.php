@@ -133,10 +133,14 @@ class SubmissionPressFactory
     private function getDataStatement($publication)
     {
         $dataStatementService = new \APP\plugins\generic\dataverse\classes\services\DataStatementService();
-        $dataStatementTypes = $dataStatementService->getDataStatementTypes(false);
+        $dataStatementTypes = [
+            $dataStatementService::DATA_STATEMENT_TYPE_IN_MANUSCRIPT => 'plugins.generic.dataverse.dataStatement.inManuscript',
+            $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE => 'plugins.generic.dataverse.dataStatement.repoAvailable',
+            $dataStatementService::DATA_STATEMENT_TYPE_ON_DEMAND => 'plugins.generic.dataverse.dataStatement.onDemand',
+            $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE => 'plugins.generic.dataverse.dataStatement.publiclyUnavailable'
+        ];
         $processedDataStatement = [];
 
-        // Problema aqui: os textos precisam estar no idioma da submissão
         foreach ($publication->getData('dataStatementTypes') as $selectedStatement) {
             if (isset($dataStatementTypes[$selectedStatement])) {
                 $processedDataStatement[] = $dataStatementTypes[$selectedStatement];

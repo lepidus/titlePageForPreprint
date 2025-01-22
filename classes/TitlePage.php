@@ -117,7 +117,7 @@ class TitlePage
 
                 $statementList = '<ul>';
                 foreach ($this->submission->getDataStatement() as $statement) {
-                    $statementList .= "<li>$statement</li>";
+                    $statementList .= '<li>' . __($statement, [], $this->locale) . '</li>';
                 }
 
                 $titlePage->writeHTML($statementList.'</ul>');
