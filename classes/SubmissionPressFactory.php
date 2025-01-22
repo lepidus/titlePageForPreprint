@@ -147,6 +147,10 @@ class SubmissionPressFactory
             if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE) {
                 $dataStatement['dataStatementUrls'] = $publication->getData('dataStatementUrls');
             }
+
+            if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE) {
+                $dataStatement['dataStatementReason'] = $publication->getLocalizedData('dataStatementReason');
+            }
         }
 
         return $dataStatement;

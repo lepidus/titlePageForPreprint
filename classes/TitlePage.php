@@ -80,6 +80,8 @@ class TitlePage
                     $statementBody .= "<li><a href=\"$url\">$url</a></li>";
                 }
                 $statementBody .= '</ul>';
+            } elseif ($statementType == $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE) {
+                $statementBody .= '<ul><li>' . $dataStatement['dataStatementReason'] . '</li></ul>';
             }
         }
 
