@@ -65,6 +65,29 @@ class TitlePage
         $titlePage->Ln(5);
     }
 
+    private function writeDataStatementOnTitlePage($titlePage)
+    {
+        $dataStatementService = new \APP\plugins\generic\dataverse\classes\services\DataStatementService();
+        $dataStatement = $this->submission->getDataStatement();
+        $statementBody = '<ul>';
+
+        foreach ($dataStatement['selectedStatements'] as $statementType => $statementMsg) {
+            $statementBody .= '<li>' . __($statementMsg, [], $this->locale) . '</li>';
+
+            if ($statementType == $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE) {
+                $statementBody .= '<ul>';
+                foreach ($dataStatement['dataStatementUrls'] as $url) {
+                    $statementBody .= "<li><a href=\"$url\">$url</a></li>";
+                }
+                $statementBody .= '</ul>';
+            }
+        }
+
+        $titlePage->Ln(5);
+        $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dataStatement', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+        $titlePage->writeHTML($statementBody.'</ul>');
+    }
+
     private function generateTitlePage(): string
     {
         $errorMessage = 'plugins.generic.titlePageForPreprint.requirements.generateTitlePageMissing';
@@ -112,15 +135,7 @@ class TitlePage
             }
 
             if (!empty($this->submission->getDataStatement())) {
-                $titlePage->Ln(5);
-                $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dataStatement', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-
-                $statementList = '<ul>';
-                foreach ($this->submission->getDataStatement() as $statement) {
-                    $statementList .= '<li>' . __($statement, [], $this->locale) . '</li>';
-                }
-
-                $titlePage->writeHTML($statementList.'</ul>');
+                $this->writeDataStatementOnTitlePage($titlePage);
             }
 
             $versionJustification = $this->submission->getVersionJustification();

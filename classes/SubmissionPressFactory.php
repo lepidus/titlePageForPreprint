@@ -139,14 +139,16 @@ class SubmissionPressFactory
             $dataStatementService::DATA_STATEMENT_TYPE_ON_DEMAND => 'plugins.generic.dataverse.dataStatement.onDemand',
             $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE => 'plugins.generic.dataverse.dataStatement.publiclyUnavailable'
         ];
-        $processedDataStatement = [];
+        $dataStatement = ['selectedStatements' => []];
 
         foreach ($publication->getData('dataStatementTypes') as $selectedStatement) {
-            if (isset($dataStatementTypes[$selectedStatement])) {
-                $processedDataStatement[] = $dataStatementTypes[$selectedStatement];
+            $dataStatement['selectedStatements'][$selectedStatement] = $dataStatementTypes[$selectedStatement];
+
+            if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE) {
+                $dataStatement['dataStatementUrls'] = $publication->getData('dataStatementUrls');
             }
         }
 
-        return $processedDataStatement;
+        return $dataStatement;
     }
 }
