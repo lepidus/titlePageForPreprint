@@ -43,7 +43,7 @@ class PdfHandlingTest extends PKPTestCase
             'dataStatementReason' => 'Research data has sensitive data'
         ]
     ];
-
+    protected $researchData = 'Linspector, Clarice; Iamarino, Atila, 2025, "Replication data for: An adventure in an imaginary world", https://doi.org/10.70122/FK2/9ET, Demo Dataverse, V1';
 
     protected function setUp(): void
     {
@@ -91,7 +91,8 @@ class PdfHandlingTest extends PKPTestCase
             'versionJustification' => $this->versionJustification,
             'isTranslation' => $this->isTranslation,
             'citation' => $this->citation,
-            'dataStatement' => $this->dataStatement
+            'dataStatement' => $this->dataStatement,
+            'researchData' => $this->researchData
         ]);
 
         return $submission;

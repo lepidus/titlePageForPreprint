@@ -238,6 +238,17 @@ class TitlePageTest extends PdfHandlingTest
         $this->assertTrue($this->searchForTextInPdf($pdf, $secondStatementReason));
     }
 
+    public function testInsertingInExistingPdfStampsResearchData(): void
+    {
+        $titlePage = $this->getTitlePageForTests();
+        $pdf = new Pdf($this->pathOfTestPdf);
+
+        $titlePage->insertTitlePageFirstTime($pdf);
+
+        $expectedText = __('plugins.generic.titlePageForPreprint.researchData', ['researchDataCitation' => $this->researchData], $this->locale);
+        $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
+    }
+
     public function testInsertingInExistingPdfStampsHeader(): void
     {
         $titlePage = $this->getTitlePageForTests();
