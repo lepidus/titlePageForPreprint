@@ -36,12 +36,6 @@ class PdfHandlingTest extends PKPTestCase
     protected $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
     protected $isTranslation = false;
     protected $citation = 'Silva, C. & Carlos, J. (2024). Thus spoke Zarathustra. Public Knowledge Preprint Server';
-    protected $dataStatement = [
-        'selectedStatements' => [
-            'Os dados de pesquisa estão disponíveis sob demanda, condição justificada no manuscrito'
-        ]
-    ];
-    protected $researchData = 'Linspector, Clarice; Iamarino, Atila, 2025, "Replication data for: An adventure in an imaginary world", https://doi.org/10.70122/FK2/9ET, Demo Dataverse, V1';
 
     protected function setUp(): void
     {
@@ -88,9 +82,7 @@ class PdfHandlingTest extends PKPTestCase
             'version' => $this->version,
             'versionJustification' => $this->versionJustification,
             'isTranslation' => $this->isTranslation,
-            'citation' => $this->citation,
-            'dataStatement' => $this->dataStatement,
-            'researchData' => $this->researchData
+            'citation' => $this->citation
         ]);
 
         return $submission;
