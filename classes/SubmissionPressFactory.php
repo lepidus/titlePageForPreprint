@@ -17,8 +17,9 @@ class SubmissionPressFactory
     {
         $checklist = $this->getContextChecklist($context);
         $logoPath = $this->getLogoPath($context);
-        $dataPress = $this->getDataForPress($submission, $publication);
+        $dataForPress = $this->getDataForPress($submission, $publication);
         $galleys = $publication->getData('galleys');
+        $submissionGalleys = [];
 
         foreach ($galleys as $galley) {
             $submissionFileRepo = Repo::submissionFile();
@@ -26,24 +27,9 @@ class SubmissionPressFactory
             $submissionGalleys[] = $galleyAdapterFactory->createGalleyAdapter($submission, $galley);
         }
 
+        $dataForPress['galleys'] = $submissionGalleys;
         $submissionModel = new SubmissionModel();
-        $submissionModel->setAllData([
-            'title' => $dataPress['title'],
-            'status' => $dataPress['status'],
-            'doi' => $dataPress['doi'],
-            'doiJournal' => $dataPress['doiJournal'],
-            'authors' => $dataPress['authors'],
-            'submissionDate' => $dataPress['submissionDate'],
-            'publicationDate' => $dataPress['publicationDate'],
-            'endorserName' => $dataPress['endorserName'],
-            'endorserOrcid' => $dataPress['endorserOrcid'],
-            'version' => $dataPress['version'],
-            'versionJustification' => $dataPress['versionJustification'],
-            'isTranslation' => $dataPress['isTranslation'],
-            'citation' => $dataPress['citation'],
-            'dataStatement' => $dataPress['dataStatement'],
-            'galleys' => $submissionGalleys
-        ]);
+        $submissionModel->setAllData($dataForPress);
 
         return new SubmissionPress($submissionModel, $checklist, $logoPath);
     }
@@ -108,6 +94,13 @@ class SubmissionPressFactory
 
         if ($publication->getData('dataStatementTypes')) {
             $data['dataStatement'] = $this->getDataStatement($publication);
+
+            if ($data['dataStatement']['hasResearchData']) {
+                $researchDataCitation = $this->getResearchDataCitation($submission);
+                if ($researchDataCitation) {
+                    $data['researchData'] = $researchDataCitation;
+                }
+            }
         }
 
         $data['endorserName'] = $publication->getData('endorserName');
@@ -139,9 +132,14 @@ class SubmissionPressFactory
             $dataStatementService::DATA_STATEMENT_TYPE_ON_DEMAND => 'plugins.generic.dataverse.dataStatement.onDemand',
             $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE => 'plugins.generic.dataverse.dataStatement.publiclyUnavailable'
         ];
-        $dataStatement = ['selectedStatements' => []];
+        $dataStatement = ['selectedStatements' => [], 'hasResearchData' => false];
 
         foreach ($publication->getData('dataStatementTypes') as $selectedStatement) {
+            if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_DATAVERSE_SUBMITTED) {
+                $dataStatement['hasResearchData'] = true;
+                continue;
+            }
+
             $dataStatement['selectedStatements'][$selectedStatement] = $dataStatementTypes[$selectedStatement];
 
             if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE) {
@@ -154,5 +152,24 @@ class SubmissionPressFactory
         }
 
         return $dataStatement;
+    }
+
+    private function getResearchDataCitation($submission)
+    {
+        $dataverseRepo = new \APP\plugins\generic\dataverse\classes\facades\Repo();
+        $dataverseStudy = $dataverseRepo::dataverseStudy()->getBySubmissionId($submission->getId());
+
+        if ($dataverseStudy) {
+            $dataverseClient = new \APP\plugins\generic\dataverse\dataverseAPI\DataverseClient();
+
+            try {
+                $citation = $dataverseClient->getDatasetActions()->getCitation($dataverseStudy->getPersistentId(), null);
+                return $citation;
+            } catch (\Exception $e) {
+                error_log('Error getting research data citation for title page: ' . $e->getMessage());
+            }
+        }
+
+        return null;
     }
 }
