@@ -67,21 +67,24 @@ class TitlePage
 
     private function writeDataStatementOnTitlePage($titlePage)
     {
-        $dataStatementService = new \APP\plugins\generic\dataverse\classes\services\DataStatementService();
         $dataStatement = $this->submission->getDataStatement();
         $statementBody = '<ul>';
 
-        foreach ($dataStatement['selectedStatements'] as $statementType => $statementMsg) {
-            $statementBody .= '<li>' . __($statementMsg, [], $this->locale) . '</li>';
+        foreach ($dataStatement as $statement) {
+            if (is_array($statement)) {
+                $statementBody .= '<li>' . __($statement['message'], [], $this->locale) . '</li>';
 
-            if ($statementType == $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE) {
-                $statementBody .= '<ul>';
-                foreach ($dataStatement['dataStatementUrls'] as $url) {
-                    $statementBody .= "<li><a href=\"$url\">$url</a></li>";
+                if (isset($statement['dataStatementUrls'])) {
+                    $statementBody .= '<ul>';
+                    foreach ($statement['dataStatementUrls'] as $url) {
+                        $statementBody .= "<li><a href=\"$url\">$url</a></li>";
+                    }
+                    $statementBody .= '</ul>';
+                } elseif (isset($statement['dataStatementReason'])) {
+                    $statementBody .= '<ul><li>' . $statement['dataStatementReason'] . '</li></ul>';
                 }
-                $statementBody .= '</ul>';
-            } elseif ($statementType == $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE) {
-                $statementBody .= '<ul><li>' . $dataStatement['dataStatementReason'] . '</li></ul>';
+            } else {
+                $statementBody .= '<li>' . __($statement, [], $this->locale) . '</li>';
             }
         }
 
