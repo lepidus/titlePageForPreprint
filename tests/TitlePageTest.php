@@ -228,7 +228,7 @@ class TitlePageTest extends PdfHandlingTest
         $expectedText = __('plugins.generic.titlePageForPreprint.dataStatement', [], $this->locale);
         $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
 
-        $firstStatement = $this->dataStatement[0];
+        $firstStatement = $this->dataStatement['selectedStatements'][0];
         $this->assertTrue($this->searchForTextInPdf($pdf, $firstStatement));
     }
 

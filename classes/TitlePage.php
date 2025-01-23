@@ -140,6 +140,12 @@ class TitlePage
                 $this->writeDataStatementOnTitlePage($titlePage);
             }
 
+            if ($this->submission->getResearchData()) {
+                $titlePage->Ln(5);
+                $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.researchData', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+                $titlePage->Write(0, $this->submission->getResearchData(), '', 0, 'JUSTIFY', true, 0, false, false, 0);
+            }
+
             $versionJustification = $this->submission->getVersionJustification();
             if ($this->submission->getVersion() > 1 && !is_null($versionJustification)) {
                 $versionJustification = __('plugins.generic.titlePageForPreprint.versionJustification', [], $this->locale) . ": " . $versionJustification;

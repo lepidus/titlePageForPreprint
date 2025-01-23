@@ -20,7 +20,9 @@ class SubmissionTest extends PKPTestCase
     private $isTranslation = false;
     private $citation = 'Lispector, C. & Iamarino, A. (2024). An adventure in an imaginary world. Public Knowledge Preprint Server';
     private $dataStatement = [
-        'Os dados de pesquisa estão disponíveis sob demanda, condição justificada no manuscrito'
+        'selectedStatements' => [
+            'Os dados de pesquisa estão disponíveis sob demanda, condição justificada no manuscrito'
+        ]
     ];
     private $researchData = 'Linspector, Clarice; Iamarino, Atila, 2025, "Replication data for: An adventure in an imaginary world", https://doi.org/10.70122/FK2/9ET, Demo Dataverse, V1';
     private $galleys = [];

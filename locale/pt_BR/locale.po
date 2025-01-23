@@ -45,6 +45,9 @@ msgstr ""
 msgid "plugins.generic.titlePageForPreprint.dataStatement"
 msgstr "Declaração de dados:"
 
+msgid "plugins.generic.titlePageForPreprint.researchData"
+msgstr "Dados de pesquisa:"
+
 msgid "plugins.generic.titlePageForPreprint.versionJustification"
 msgstr "Justificativa da versão"
 

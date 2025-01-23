@@ -37,7 +37,9 @@ class PdfHandlingTest extends PKPTestCase
     protected $isTranslation = false;
     protected $citation = 'Silva, C. & Carlos, J. (2024). Thus spoke Zarathustra. Public Knowledge Preprint Server';
     protected $dataStatement = [
-        'Os dados de pesquisa estão disponíveis sob demanda, condição justificada no manuscrito'
+        'selectedStatements' => [
+            'Os dados de pesquisa estão disponíveis sob demanda, condição justificada no manuscrito'
+        ]
     ];
     protected $researchData = 'Linspector, Clarice; Iamarino, Atila, 2025, "Replication data for: An adventure in an imaginary world", https://doi.org/10.70122/FK2/9ET, Demo Dataverse, V1';
 
