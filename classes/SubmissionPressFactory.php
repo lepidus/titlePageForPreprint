@@ -93,9 +93,10 @@ class SubmissionPressFactory
         $data['citation'] = ($data['isTranslation'] ? $this->getSubmissionCitation($submission) : '');
 
         if ($publication->getData('dataStatementTypes')) {
-            $data['dataStatement'] = $this->getDataStatement($publication);
+            [$dataStatement, $hasResearchData] = $this->getDataStatement($publication);
+            $data['dataStatement'] = $dataStatement;
 
-            if ($data['dataStatement']['hasResearchData']) {
+            if ($hasResearchData) {
                 $researchDataCitation = $this->getResearchDataCitation($submission);
                 if ($researchDataCitation) {
                     $data['researchData'] = $researchDataCitation;
@@ -132,26 +133,33 @@ class SubmissionPressFactory
             $dataStatementService::DATA_STATEMENT_TYPE_ON_DEMAND => 'plugins.generic.dataverse.dataStatement.onDemand',
             $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE => 'plugins.generic.dataverse.dataStatement.publiclyUnavailable'
         ];
-        $dataStatement = ['selectedStatements' => [], 'hasResearchData' => false];
+        $hasResearchData = false;
+        $dataStatement = [];
 
         foreach ($publication->getData('dataStatementTypes') as $selectedStatement) {
             if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_DATAVERSE_SUBMITTED) {
-                $dataStatement['hasResearchData'] = true;
+                $hasResearchData = true;
                 continue;
             }
 
-            $dataStatement['selectedStatements'][$selectedStatement] = $dataStatementTypes[$selectedStatement];
+            $dataStatement[$selectedStatement] = $dataStatementTypes[$selectedStatement];
 
             if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE) {
-                $dataStatement['dataStatementUrls'] = $publication->getData('dataStatementUrls');
+                $dataStatement[$selectedStatement] = [
+                    'message' => $dataStatementTypes[$selectedStatement],
+                    'dataStatementUrls' => $publication->getData('dataStatementUrls')
+                ];
             }
 
             if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE) {
-                $dataStatement['dataStatementReason'] = $publication->getLocalizedData('dataStatementReason');
+                $dataStatement[$selectedStatement] = [
+                    'message' => $dataStatementTypes[$selectedStatement],
+                    'dataStatementReason' => $publication->getLocalizedData('dataStatementReason')
+                ];
             }
         }
 
-        return $dataStatement;
+        return [$dataStatement, $hasResearchData];
     }
 
     private function getResearchDataCitation($submission)
