@@ -143,11 +143,6 @@ class TitlePage
                 $this->writeDataStatementOnTitlePage($titlePage);
             }
 
-            if ($this->submission->getResearchData()) {
-                $titlePage->Ln(5);
-                $titlePage->writeHTML(__('plugins.generic.titlePageForPreprint.researchData', ['researchDataCitation' => $this->submission->getResearchData()], $this->locale));
-            }
-
             $versionJustification = $this->submission->getVersionJustification();
             if ($this->submission->getVersion() > 1 && !is_null($versionJustification)) {
                 $versionJustification = __('plugins.generic.titlePageForPreprint.versionJustification', [], $this->locale) . ": " . $versionJustification;

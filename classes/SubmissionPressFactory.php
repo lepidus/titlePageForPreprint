@@ -93,15 +93,7 @@ class SubmissionPressFactory
         $data['citation'] = ($data['isTranslation'] ? $this->getSubmissionCitation($submission) : '');
 
         if ($publication->getData('dataStatementTypes')) {
-            [$dataStatement, $hasResearchData] = $this->getDataStatement($publication);
-            $data['dataStatement'] = $dataStatement;
-
-            if ($hasResearchData) {
-                $researchDataCitation = $this->getResearchDataCitation($submission);
-                if ($researchDataCitation) {
-                    $data['researchData'] = $researchDataCitation;
-                }
-            }
+            $data['dataStatement'] = $this->getDataStatement($publication);
         }
 
         $data['endorserName'] = $publication->getData('endorserName');
@@ -133,12 +125,10 @@ class SubmissionPressFactory
             $dataStatementService::DATA_STATEMENT_TYPE_ON_DEMAND => 'plugins.generic.dataverse.dataStatement.onDemand',
             $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE => 'plugins.generic.dataverse.dataStatement.publiclyUnavailable'
         ];
-        $hasResearchData = false;
         $dataStatement = [];
 
         foreach ($publication->getData('dataStatementTypes') as $selectedStatement) {
             if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_DATAVERSE_SUBMITTED) {
-                $hasResearchData = true;
                 continue;
             }
 
@@ -159,25 +149,6 @@ class SubmissionPressFactory
             }
         }
 
-        return [$dataStatement, $hasResearchData];
-    }
-
-    private function getResearchDataCitation($submission)
-    {
-        $dataverseRepo = new \APP\plugins\generic\dataverse\classes\facades\Repo();
-        $dataverseStudy = $dataverseRepo::dataverseStudy()->getBySubmissionId($submission->getId());
-
-        if ($dataverseStudy) {
-            $dataverseClient = new \APP\plugins\generic\dataverse\dataverseAPI\DataverseClient();
-
-            try {
-                $citation = $dataverseClient->getDatasetActions()->getCitation($dataverseStudy->getPersistentId(), null);
-                return $citation;
-            } catch (\Exception $e) {
-                error_log('Error getting research data citation for title page: ' . $e->getMessage());
-            }
-        }
-
-        return null;
+        return $dataStatement;
     }
 }

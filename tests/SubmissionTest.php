@@ -22,7 +22,6 @@ class SubmissionTest extends PKPTestCase
     private $dataStatement = [
         'Os dados de pesquisa estão disponíveis sob demanda, condição justificada no manuscrito'
     ];
-    private $researchData = 'Linspector, Clarice; Iamarino, Atila, 2025, "Replication data for: An adventure in an imaginary world", https://doi.org/10.70122/FK2/9ET, Demo Dataverse, V1';
     private $galleys = [];
 
     private function getSubmissionForTests()
@@ -46,7 +45,6 @@ class SubmissionTest extends PKPTestCase
             'isTranslation' => $this->isTranslation,
             'citation' => $this->citation,
             'dataStatement' => $this->dataStatement,
-            'researchData' => $this->researchData,
             'galleys' => $this->galleys
         ]);
 
@@ -161,11 +159,5 @@ class SubmissionTest extends PKPTestCase
     {
         $submission = $this->getSubmissionForTests();
         $this->assertEquals($this->dataStatement, $submission->getDataStatement());
-    }
-
-    public function testHasResearchData(): void
-    {
-        $submission = $this->getSubmissionForTests();
-        $this->assertEquals($this->researchData, $submission->getResearchData());
     }
 }
