@@ -17,8 +17,9 @@ class SubmissionPressFactory
     {
         $checklist = $this->getContextChecklist($context);
         $logoPath = $this->getLogoPath($context);
-        $dataPress = $this->getDataForPress($submission, $publication);
+        $dataForPress = $this->getDataForPress($submission, $publication);
         $galleys = $publication->getData('galleys');
+        $submissionGalleys = [];
 
         foreach ($galleys as $galley) {
             $submissionFileRepo = Repo::submissionFile();
@@ -26,23 +27,9 @@ class SubmissionPressFactory
             $submissionGalleys[] = $galleyAdapterFactory->createGalleyAdapter($submission, $galley);
         }
 
+        $dataForPress['galleys'] = $submissionGalleys;
         $submissionModel = new SubmissionModel();
-        $submissionModel->setAllData([
-            'title' => $dataPress['title'],
-            'status' => $dataPress['status'],
-            'doi' => $dataPress['doi'],
-            'doiJournal' => $dataPress['doiJournal'],
-            'authors' => $dataPress['authors'],
-            'submissionDate' => $dataPress['submissionDate'],
-            'publicationDate' => $dataPress['publicationDate'],
-            'endorserName' => $dataPress['endorserName'],
-            'endorserOrcid' => $dataPress['endorserOrcid'],
-            'version' => $dataPress['version'],
-            'versionJustification' => $dataPress['versionJustification'],
-            'isTranslation' => $dataPress['isTranslation'],
-            'citation' => $dataPress['citation'],
-            'galleys' => $submissionGalleys
-        ]);
+        $submissionModel->setAllData($dataForPress);
 
         return new SubmissionPress($submissionModel, $checklist, $logoPath);
     }
@@ -105,6 +92,10 @@ class SubmissionPressFactory
         $data['isTranslation'] = !is_null($publication->getData('originalDocumentDoi'));
         $data['citation'] = ($data['isTranslation'] ? $this->getSubmissionCitation($submission) : '');
 
+        if ($publication->getData('dataStatementTypes')) {
+            $data['dataStatement'] = $this->getDataStatement($publication);
+        }
+
         $data['endorserName'] = $publication->getData('endorserName');
         $data['endorserOrcid'] = $publication->getData('endorserOrcid');
 
@@ -123,5 +114,41 @@ class SubmissionPressFactory
         $citation = $cslPlugin->getCitation($request, $submission, 'apa');
 
         return $citation;
+    }
+
+    private function getDataStatement($publication)
+    {
+        $dataStatementService = new \APP\plugins\generic\dataverse\classes\services\DataStatementService();
+        $dataStatementTypes = [
+            $dataStatementService::DATA_STATEMENT_TYPE_IN_MANUSCRIPT => 'plugins.generic.dataverse.dataStatement.inManuscript',
+            $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE => 'plugins.generic.dataverse.dataStatement.repoAvailable',
+            $dataStatementService::DATA_STATEMENT_TYPE_ON_DEMAND => 'plugins.generic.dataverse.dataStatement.onDemand',
+            $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE => 'plugins.generic.dataverse.dataStatement.publiclyUnavailable'
+        ];
+        $dataStatement = [];
+
+        foreach ($publication->getData('dataStatementTypes') as $selectedStatement) {
+            if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_DATAVERSE_SUBMITTED) {
+                continue;
+            }
+
+            $dataStatement[$selectedStatement] = $dataStatementTypes[$selectedStatement];
+
+            if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_REPO_AVAILABLE) {
+                $dataStatement[$selectedStatement] = [
+                    'message' => $dataStatementTypes[$selectedStatement],
+                    'dataStatementUrls' => $publication->getData('dataStatementUrls')
+                ];
+            }
+
+            if ($selectedStatement == $dataStatementService::DATA_STATEMENT_TYPE_PUBLICLY_UNAVAILABLE) {
+                $dataStatement[$selectedStatement] = [
+                    'message' => $dataStatementTypes[$selectedStatement],
+                    'dataStatementReason' => $publication->getLocalizedData('dataStatementReason')
+                ];
+            }
+        }
+
+        return $dataStatement;
     }
 }
