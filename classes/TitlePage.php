@@ -65,34 +65,6 @@ class TitlePage
         $titlePage->Ln(5);
     }
 
-    private function writeDataStatementOnTitlePage($titlePage)
-    {
-        $dataStatement = $this->submission->getDataStatement();
-        $statementBody = '<ul>';
-
-        foreach ($dataStatement as $statement) {
-            if (is_array($statement)) {
-                $statementBody .= '<li>' . __($statement['message'], [], $this->locale) . '</li>';
-
-                if (isset($statement['dataStatementUrls'])) {
-                    $statementBody .= '<ul>';
-                    foreach ($statement['dataStatementUrls'] as $url) {
-                        $statementBody .= "<li><a href=\"$url\">$url</a></li>";
-                    }
-                    $statementBody .= '</ul>';
-                } elseif (isset($statement['dataStatementReason'])) {
-                    $statementBody .= '<ul><li>' . $statement['dataStatementReason'] . '</li></ul>';
-                }
-            } else {
-                $statementBody .= '<li>' . __($statement, [], $this->locale) . '</li>';
-            }
-        }
-
-        $titlePage->Ln(5);
-        $titlePage->Write(0, __('plugins.generic.titlePageForPreprint.dataStatement', [], $this->locale), '', 0, 'JUSTIFY', true, 0, false, false, 0);
-        $titlePage->writeHTML($statementBody.'</ul>');
-    }
-
     private function generateTitlePage(): string
     {
         $errorMessage = 'plugins.generic.titlePageForPreprint.requirements.generateTitlePageMissing';
@@ -137,10 +109,6 @@ class TitlePage
             if (!is_null($endorserOrcid) && !is_null($endorserName)) {
                 $titlePage->Ln(5);
                 $titlePage->writeHTML(__('plugins.generic.titlePageForPreprint.endorsement', ['endorserName' => $endorserName, 'endorserOrcid' => $endorserOrcid], $this->locale));
-            }
-
-            if (!empty($this->submission->getDataStatement())) {
-                $this->writeDataStatementOnTitlePage($titlePage);
             }
 
             $versionJustification = $this->submission->getVersionJustification();
