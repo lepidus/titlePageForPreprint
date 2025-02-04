@@ -19,9 +19,6 @@ class SubmissionTest extends PKPTestCase
     private $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
     private $isTranslation = false;
     private $citation = 'Lispector, C. & Iamarino, A. (2024). An adventure in an imaginary world. Public Knowledge Preprint Server';
-    private $dataStatement = [
-        'Os dados de pesquisa estão disponíveis sob demanda, condição justificada no manuscrito'
-    ];
     private $galleys = [];
 
     private function getSubmissionForTests()
@@ -44,7 +41,6 @@ class SubmissionTest extends PKPTestCase
             'versionJustification' => $this->versionJustification,
             'isTranslation' => $this->isTranslation,
             'citation' => $this->citation,
-            'dataStatement' => $this->dataStatement,
             'galleys' => $this->galleys
         ]);
 
@@ -153,11 +149,5 @@ class SubmissionTest extends PKPTestCase
     {
         $submission = $this->getSubmissionForTests();
         $this->assertEquals($this->citation, $submission->getCitation());
-    }
-
-    public function testHasDataStatement(): void
-    {
-        $submission = $this->getSubmissionForTests();
-        $this->assertEquals($this->dataStatement, $submission->getDataStatement());
     }
 }
