@@ -38,7 +38,6 @@ class TitlePageForPreprintPlugin extends GenericPlugin
         if ($success && $this->getEnabled($mainContextId)) {
             Event::subscribe(new TitlePageInsertOnPosting());
 
-            Hook::add('Publication::publish::before', [$this, 'insertTitlePageOnPosting']);
             Hook::add('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
             Hook::add('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
         }
@@ -81,17 +80,6 @@ class TitlePageForPreprintPlugin extends GenericPlugin
         ];
 
         return false;
-    }
-
-    public function insertTitlePageOnPosting($hookName, $params)
-    {
-        error_log('Inserting title page on posting');
-        $titlePageRequirements = new TitlePageRequirements();
-
-        if ($titlePageRequirements->checkRequirements()) {
-            $publication = $params[0];
-            $this->insertTitlePageInPreprint($publication);
-        }
     }
 
     public function insertTitlePageWhenChangeRelation($hookName, $arguments)
