@@ -116,8 +116,8 @@ class TitlePage
                         $this->locale
                     );
 
-                    $titlePage->Ln(5);
-                    $titlePage->writeHTML($endorserLine);
+                    $titlePage->Ln(2);
+                    $titlePage->writeHTML('<ul style=\"text-align:justify;\"><li>' . $endorserLine . '</li></ul>');
                 }
             }
 
