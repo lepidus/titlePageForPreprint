@@ -6,7 +6,7 @@ use PKP\tests\PKPTestCase;
 use PKP\db\DAORegistry;
 use PKP\submissionFile\SubmissionFile;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
-use APP\plugins\generic\titlePageForPreprint\classes\Translator;
+use APP\plugins\generic\titlePageForPreprint\classes\Endorser;
 
 class PdfHandlingTest extends PKPTestCase
 {
@@ -30,8 +30,10 @@ class PdfHandlingTest extends PKPTestCase
     protected $authors = "Cleide Silva; João Carlos";
     protected $submissionDate = "31/06/2020";
     protected $publicationDate = "02/07/2020";
-    protected $endorserName = 'Carl Sagan';
-    protected $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
+    protected $endorsers = [
+        ['name' => 'Carl Sagan', 'orcid' => 'https://orcid.org/0123-4567-89AB-CDEF'],
+        ['name' => 'Marie Curie', 'orcid' => 'https://orcid.org/0123-4567-89AB-RDIO']
+    ];
     protected $version = "1";
     protected $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
     protected $isTranslation = false;
@@ -77,8 +79,7 @@ class PdfHandlingTest extends PKPTestCase
             'authors' => $this->authors,
             'submissionDate' => $this->submissionDate,
             'publicationDate' => $this->publicationDate,
-            'endorserName' => $this->endorserName,
-            'endorserOrcid' => $this->endorserOrcid,
+            'endorsers' => $this->createTestEndorsers(),
             'version' => $this->version,
             'versionJustification' => $this->versionJustification,
             'isTranslation' => $this->isTranslation,
@@ -86,6 +87,20 @@ class PdfHandlingTest extends PKPTestCase
         ]);
 
         return $submission;
+    }
+
+    private function createTestEndorsers(): array
+    {
+        $endorsers = [];
+
+        foreach ($this->endorsers as $endorserData) {
+            $endorsers[] = new Endorser(
+                $endorserData['name'],
+                $endorserData['orcid']
+            );
+        }
+
+        return $endorsers;
     }
 
     public function testDummy(): void

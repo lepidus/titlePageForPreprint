@@ -34,8 +34,10 @@ msgstr "Envíado en: {$subDate}"
 
 msgid "plugins.generic.titlePageForPreprint.endorsement"
 msgstr ""
-"La moderación de este preprint recibió lo endoso de:<br>"
-"{$endorserName} (ORCID: <a href=\"{$endorserOrcid}\">{$endorserOrcid}</a>)"
+"La moderación de este preprint recibió lo/s endoso/s de:"
+
+msgid "plugins.generic.titlePageForPreprint.endorserLine"
+msgstr "{$endorserName} (ORCID: <a href=\"{$endorserOrcid}\">{$endorserOrcid}</a>)"
 
 msgid "plugins.generic.titlePageForPreprint.citation"
 msgstr ""

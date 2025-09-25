@@ -2,6 +2,7 @@
 
 use PKP\tests\PKPTestCase;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionModel;
+use APP\plugins\generic\titlePageForPreprint\classes\Endorser;
 
 class SubmissionTest extends PKPTestCase
 {
@@ -14,11 +15,13 @@ class SubmissionTest extends PKPTestCase
     private $submissionDate = "10/06/2020";
     private $publicationDate = "12/06/2020";
     private $version = "1";
-    private $endorserName = 'Carl Sagan';
-    private $endorserOrcid = 'https://orcid.org/0123-4567-89AB-CDEF';
     private $versionJustification = 'Nova versão criada para corrigir erros de ortografia';
     private $isTranslation = false;
     private $citation = 'Lispector, C. & Iamarino, A. (2024). An adventure in an imaginary world. Public Knowledge Preprint Server';
+    private $endorsers = [
+        ['name' => 'Carl Sagan', 'orcid' => 'https://orcid.org/0123-4567-89AB-CDEF'],
+        ['name' => 'Marie Curie', 'orcid' => 'https://orcid.org/0123-4567-89AB-RDIO']
+    ];
     private $galleys = [];
 
     private function getSubmissionForTests()
@@ -35,16 +38,29 @@ class SubmissionTest extends PKPTestCase
             'authors' => $this->authors,
             'submissionDate' => $this->submissionDate,
             'publicationDate' => $this->publicationDate,
-            'endorserName' => $this->endorserName,
-            'endorserOrcid' => $this->endorserOrcid,
             'version' => $this->version,
             'versionJustification' => $this->versionJustification,
             'isTranslation' => $this->isTranslation,
             'citation' => $this->citation,
+            'endorsers' => $this->createTestEndorsers(),
             'galleys' => $this->galleys
         ]);
 
         return $submission;
+    }
+
+    private function createTestEndorsers(): array
+    {
+        $endorsers = [];
+
+        foreach ($this->endorsers as $endorserData) {
+            $endorsers[] = new Endorser(
+                $endorserData['name'],
+                $endorserData['orcid']
+            );
+        }
+
+        return $endorsers;
     }
 
     public function testHasSubmissionTitle(): void
@@ -118,16 +134,11 @@ class SubmissionTest extends PKPTestCase
         $this->assertEquals($this->version, $submission->getVersion());
     }
 
-    public function testHasEndorserName(): void
+    public function testHasEndorsers(): void
     {
         $submission = $this->getSubmissionForTests();
-        $this->assertEquals($this->endorserName, $submission->getEndorserName());
-    }
-
-    public function testHasEndorserOrcid(): void
-    {
-        $submission = $this->getSubmissionForTests();
-        $this->assertEquals($this->endorserOrcid, $submission->getEndorserOrcid());
+        $endorsers = $this->createTestEndorsers();
+        $this->assertEquals($endorsers, $submission->getEndorsers());
     }
 
     public function testHasVersionJustification(): void

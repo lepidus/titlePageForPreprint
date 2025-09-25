@@ -60,14 +60,9 @@ class SubmissionModel extends DataObject
         return $this->getData('version');
     }
 
-    public function getEndorserName(): ?string
+    public function getEndorsers(): ?array
     {
-        return $this->getData('endorserName');
-    }
-
-    public function getEndorserOrcid(): ?string
-    {
-        return $this->getData('endorserOrcid');
+        return $this->getData('endorsers');
     }
 
     public function getVersionJustification(): ?string

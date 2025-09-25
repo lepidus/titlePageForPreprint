@@ -10,7 +10,7 @@ class SubmissionFileUpdater
     public function updateRevisions($submissionFileId, $newRevisionId, $hasTitlePage)
     {
         $submissionFile = Repo::submissionFile()->get($submissionFileId);
-        $revisions = !is_null($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : array();
+        $revisions = !is_null($submissionFile->getData('revisoes')) ? json_decode($submissionFile->getData('revisoes')) : [];
 
         if (!$hasTitlePage) {
             array_push($revisions, $newRevisionId);

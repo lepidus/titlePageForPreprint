@@ -19,6 +19,7 @@ use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
 use APP\core\Application;
 use APP\facades\Repo;
+use APP\submission\Submission;
 use Illuminate\Support\Facades\Event;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionPressFactory;
 use APP\plugins\generic\titlePageForPreprint\classes\SubmissionFileUpdater;
@@ -39,7 +40,7 @@ class TitlePageForPreprintPlugin extends GenericPlugin
             Event::subscribe(new TitlePageInsertOnPosting());
 
             Hook::add('Publication::edit', [$this, 'insertTitlePageWhenChangeRelation']);
-            Hook::add('Schema::get::submissionFile', array($this, 'modifySubmissionFileSchema'));
+            Hook::add('Schema::get::submissionFile', [$this, 'modifySubmissionFileSchema']);
         }
 
         return $success;
@@ -90,7 +91,7 @@ class TitlePageForPreprintPlugin extends GenericPlugin
             $params = $arguments[2];
             $publication = $arguments[0];
 
-            if (array_key_exists('relationStatus', $params) && ($publication->getData('status') == STATUS_PUBLISHED)) {
+            if (array_key_exists('relationStatus', $params) && ($publication->getData('status') == Submission::STATUS_PUBLISHED)) {
                 $this->insertTitlePageInPreprint($publication);
             }
         }
