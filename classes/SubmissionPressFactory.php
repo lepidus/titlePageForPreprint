@@ -75,7 +75,7 @@ class SubmissionPressFactory
 
     private function getDataForPress($submission, $publication)
     {
-        $data = array();
+        $data = [];
 
         $data['title'] = $publication->getTitles();
         $data['doi'] = $publication->getStoredPubId('doi');
@@ -92,11 +92,11 @@ class SubmissionPressFactory
         $data['isTranslation'] = !is_null($publication->getData('originalDocumentDoi'));
         $data['citation'] = ($data['isTranslation'] ? $this->getSubmissionCitation($submission) : '');
 
-        $data['endorserName'] = $publication->getData('endorserName');
-        $data['endorserOrcid'] = $publication->getData('endorserOrcid');
+        $titlePageDao = new TitlePageDAO();
+        $data['endorsers'] = $titlePageDao->getEndorsersBySubmission($submission);
 
         $status = $publication->getData('relationStatus');
-        $relation = array(Publication::PUBLICATION_RELATION_NONE => 'publication.relation.none', Publication::PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published');
+        $relation = [Publication::PUBLICATION_RELATION_NONE => 'publication.relation.none', Publication::PUBLICATION_RELATION_PUBLISHED => 'publication.relation.published'];
         $data['status'] = ($status) ? ($relation[$status]) : ("");
 
         return $data;
