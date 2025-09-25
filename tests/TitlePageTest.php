@@ -206,8 +206,12 @@ class TitlePageTest extends PdfHandlingTest
         $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
 
         foreach ($this->endorsers as $endorser) {
-            $this->assertTrue($this->searchForTextInPdf($pdf, $endorser['name']));
-            $this->assertTrue($this->searchForTextInPdf($pdf, $endorser['orcid']));
+            $expectedEndorserLine = __(
+                'plugins.generic.titlePageForPreprint.endorserLine',
+                ['endorserName' => $endorser['name'], 'endorserOrcid' => $endorser['orcid']],
+                $this->locale
+            );
+            $this->assertTrue($this->searchForTextInPdf($pdf, $expectedEndorserLine));
         }
     }
 

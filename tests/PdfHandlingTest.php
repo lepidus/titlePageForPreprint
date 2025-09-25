@@ -30,7 +30,7 @@ class PdfHandlingTest extends PKPTestCase
     protected $authors = "Cleide Silva; João Carlos";
     protected $submissionDate = "31/06/2020";
     protected $publicationDate = "02/07/2020";
-    private $endorsers = [
+    protected $endorsers = [
         ['name' => 'Carl Sagan', 'orcid' => 'https://orcid.org/0123-4567-89AB-CDEF'],
         ['name' => 'Marie Curie', 'orcid' => 'https://orcid.org/0123-4567-89AB-RDIO']
     ];
