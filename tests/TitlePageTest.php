@@ -195,7 +195,7 @@ class TitlePageTest extends PdfHandlingTest
         $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
     }
 
-    public function testInsertingInExistingPdfStampsEndorsement(): void
+    public function testInsertingInExistingPdfStampsEndorsers(): void
     {
         $titlePage = $this->getTitlePageForTests();
         $pdf = new Pdf($this->pathOfTestPdf);
@@ -204,6 +204,11 @@ class TitlePageTest extends PdfHandlingTest
 
         $expectedText = __('plugins.generic.titlePageForPreprint.endorsement', [], $this->locale);
         $this->assertTrue($this->searchForTextInPdf($pdf, $expectedText));
+
+        foreach ($this->endorsers as $endorser) {
+            $this->assertTrue($this->searchForTextInPdf($pdf, $endorser['name']));
+            $this->assertTrue($this->searchForTextInPdf($pdf, $endorser['orcid']));
+        }
     }
 
     public function testInsertingInExistingPdfStampsCitation(): void
