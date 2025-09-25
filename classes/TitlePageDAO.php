@@ -14,6 +14,7 @@ namespace APP\plugins\generic\titlePageForPreprint\classes;
 use PKP\db\DAO;
 use APP\submission\Submission;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use APP\plugins\generic\titlePageForPreprint\classes\Endorser;
 
 class TitlePageDAO extends DAO
@@ -29,8 +30,12 @@ class TitlePageDAO extends DAO
         return $numberOfRevisions;
     }
 
-    public function getEndorsersBySubmission(Submission $submission)
+    public function getEndorsersBySubmission(Submission $submission): array
     {
+        if (!Schema::hasTable('endorsements')) {
+            return [];
+        }
+
         $publications = $submission->getData('publications')->toArray();
         $publicationsIds = array_map(fn ($publication) => $publication->getId(), $publications);
 
