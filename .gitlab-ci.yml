@@ -11,6 +11,7 @@ include:
 
 .unit_test_template:
   before_script:
+    - php -v
     - apt update && apt install poppler-utils imagemagick php8.2-imagick xmlstarlet -yqq
     - composer install
     - sed -i 's/stealth="true"\/>/stealth="true"\/> -->/' /etc/ImageMagick-6/policy.xml
