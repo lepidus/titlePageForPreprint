@@ -87,7 +87,9 @@ describe('Title Page for Preprint Plugin - Title page stamping on preprint posti
         cy.contains('h1', 'Submission complete');
     });
     it('Moderator posts submission. Title page is stamped on PDF', function () {
-        cy.findSubmissionAsEditor('dbarnes', null, 'Ostrom');
+        cy.login('dbarnes', null, 'publicknowledge');
+        cy.openSubmission('Active submissions', submissionData.title);
+        
         cy.get('#publication-button').click();
 		cy.get('.pkpHeader__actions button:contains("Post")').click();
         cy.get('.pkp_modal_panel button:contains("Post")').click();
@@ -100,7 +102,9 @@ describe('Title Page for Preprint Plugin - Title page stamping on preprint posti
         });
     });
     it('Title page updating', function () {
-        cy.findSubmissionAsEditor('dbarnes', null, 'Ostrom');
+        cy.login('dbarnes', null, 'publicknowledge');
+        cy.openSubmission('Published', submissionData.title);
+        
         cy.get('#publication-button').click();
 		cy.get('.pkpHeader__actions button:contains("Unpost")').click();
         cy.get('.modal__panel button:contains("Unpost")').click();
