@@ -13,8 +13,7 @@ include:
   before_script:
     - apt update && apt install poppler-utils imagemagick php8.4-imagick xmlstarlet -yqq
     - composer install
-    - sed -i 's/stealth="true"\/>/stealth="true"\/> -->/' /etc/ImageMagick-6/policy.xml
-    - xmlstarlet edit --inplace -u "policymap/policy[@pattern='PDF']/@rights" -v 'read|write' /etc/ImageMagick-6/policy.xml
+    - xmlstarlet edit --inplace -s "/policymap" -t elem -n "newpolicy" -i "//newpolicy" -t attr -n "domain" -v "coder" -i "//newpolicy" -t attr -n "rights" -v "read|write" -i "//newpolicy" -t attr -n "pattern" -v "PDF" -r "//newpolicy" -v "policy" /etc/ImageMagick-7/policy.xml
     - wget https://github.com/coherentgraphics/cpdf-binaries/blob/master/Linux-Intel-64bit/cpdf?raw=true -O /usr/local/bin/cpdf
     - chmod +x /usr/local/bin/cpdf
 
