@@ -74,6 +74,7 @@ describe('Title Page for Preprint Plugin - Title page stamping on preprint posti
         cy.get('.DialogContent:visible').within(() => {
             cy.contains('button', 'Unpost').click();
         });
+        cy.wait(1000);
         
         cy.openWorkflowMenu('Title & Abstract');
         submissionData.title = 'A new nightmare';
