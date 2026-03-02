@@ -21,16 +21,18 @@ describe('Title Page for Preprint Plugin - Title page update on relation changin
     });
     
     it('Moderator changes submission relations after it has been posted', function() {
-        cy.findSubmissionAsEditor('dbarnes', null, 'Ostrom');
-        cy.get('#publication-button').click();
+        cy.login('dbarnes', null, 'publicknowledge');
+        cy.openSubmission('Published', submissionData.title);
 
         cy.contains('button', 'Relations').click();
         cy.get('input[name="relationStatus"][value="3"]').check();
         cy.get('input[name="vorDoi"]').type(submissionData.vorDoi, {delay: 0});
-        cy.get('.pkpWorkflow__relateForm button:contains("Save")').click();
-        cy.waitJQuery();
+        cy.get('.pkpWorkflow__publicationRelation button:contains("Save")').click();
+        cy.wait(1000);
 
-        cy.contains('a', 'View').click();
+        cy.get('.DialogContent:visible').within(() => {
+            cy.contains('button', 'View').click();
+        });
         cy.contains('a', 'PDF').click();
         cy.get('a.download').invoke('attr', 'href').then(pdfUrl => {
             cy.performTitlePageCheckings(submissionData, pdfUrl);
