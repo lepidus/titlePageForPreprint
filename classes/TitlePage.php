@@ -18,7 +18,7 @@ class TitlePage
     private $locale;
     private $fontName;
     private $titlePageRequirements;
-    
+
     public const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
     private const ORIGINAL_FILE_COPY = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
     private const AUX_FILE = self::OUTPUT_DIRECTORY . "aux_file.pdf";
