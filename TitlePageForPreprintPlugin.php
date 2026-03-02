@@ -67,7 +67,7 @@ class TitlePageForPreprintPlugin extends GenericPlugin
 
     public function modifySubmissionFileSchema($hookName, $params)
     {
-        $schema = & $params[0];
+        $schema = &$params[0];
 
         $schema->properties->{'folhaDeRosto'} = (object) [
             'type' => 'string',
@@ -100,7 +100,7 @@ class TitlePageForPreprintPlugin extends GenericPlugin
     public function insertTitlePageInPreprint($publication)
     {
         $submission = Repo::submission()->get($publication->getData('submissionId'));
-        $context = Application::getContextDAO()->getById($submission->getContextId());
+        $context = Application::getContextDAO()->getById($submission->getData('contextId'));
         $this->addLocaleData("pt_BR");
         $this->addLocaleData("en");
         $this->addLocaleData("es");
