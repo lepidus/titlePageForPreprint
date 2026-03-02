@@ -60,6 +60,6 @@ Since this plugin uses the CPDF library, make sure to check [its license](https:
 
 __This plugin is licensed under the GNU General Public License v3.0__
 
-__Copyright (c) 2020-2024 Lepidus Tecnologia__
+__Copyright (c) 2020-2026 Lepidus Tecnologia__
 
-__Copyright (c) 2020-2024 SciELO__
+__Copyright (c) 2020-2026 SciELO__

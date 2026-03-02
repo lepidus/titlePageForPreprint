@@ -3,8 +3,8 @@
 /**
  * @file plugins/generic/TitlePageForPreprint/TitlePageForPreprintPlugin.inc.php
  *
- * Copyright (c) 2020-2024 Lepidus Tecnologia
- * Copyright (c) 2020-2024 SciELO
+ * Copyright (c) 2020-2026 Lepidus Tecnologia
+ * Copyright (c) 2020-2026 SciELO
  * Distributed under the GNU GPL v3. For full terms see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt
  *
  * @class TitlePageForPreprintPlugin
