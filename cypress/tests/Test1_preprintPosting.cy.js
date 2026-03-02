@@ -75,10 +75,11 @@ describe('Title Page for Preprint Plugin - Title page stamping on preprint posti
             cy.contains('button', 'Unpost').click();
         });
         
+        cy.openWorkflowMenu('Title & Abstract');
         submissionData.title = 'A new nightmare';
         cy.setTinyMceContent('titleAbstract-title-control-en', submissionData.title);
-        cy.get('button:visible:contains("Save")').click();
-        cy.waitJQuery();
+        cy.get('button').contains('Save').click();
+		cy.get('[role="status"]').contains('Saved');
 
         cy.contains('button', 'Post').click();
         cy.contains('All requirements have been met');
