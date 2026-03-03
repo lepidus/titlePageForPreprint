@@ -15,9 +15,7 @@ class SubmissionPressTest extends PdfHandlingTest
             ->onlyMethods(['getFullFilePath'])
             ->getMock();
 
-        $mockGalley->expects($this->any())
-            ->method('getFullFilePath')
-            ->will($this->returnValue($args[0]));
+        $mockGalley->method('getFullFilePath')->willReturn($args[0]);
 
         return $mockGalley;
     }
@@ -34,7 +32,7 @@ class SubmissionPressTest extends PdfHandlingTest
     public function testInsertsCorrectlySingleGalley(): void
     {
         $galleyPath = $this->pathOfTestPdf;
-        $galley = $this->buildMockGalleyAdapter(array($galleyPath, $this->locale, 1, 2));
+        $galley = $this->buildMockGalleyAdapter([$galleyPath, $this->locale, 1, 2]);
         $submission = $this->getSubmissionForTests();
         $submission->setData('galleys', [$galley]);
         $press = new SubmissionPress($submission, $this->checklist, $this->logo);

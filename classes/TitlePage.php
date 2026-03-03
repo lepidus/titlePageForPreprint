@@ -18,7 +18,10 @@ class TitlePage
     private $locale;
     private $fontName;
     private $titlePageRequirements;
+
     public const OUTPUT_DIRECTORY = DIRECTORY_SEPARATOR . "tmp" .  DIRECTORY_SEPARATOR;
+    private const ORIGINAL_FILE_COPY = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
+    private const AUX_FILE = self::OUTPUT_DIRECTORY . "aux_file.pdf";
 
     public function __construct(SubmissionModel $submission, array $checklist, string $logo, string $locale)
     {
@@ -172,8 +175,9 @@ class TitlePage
     {
         $linkDOI = "https://doi.org/" . $this->submission->getDOI();
         $headerText = __('plugins.generic.titlePageForPreprint.headerText', ['doiPreprint' => $linkDOI], $this->locale);
-        $addHeaderCommand = "cpdf -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf} -o {$pdf}";
+        $addHeaderCommand = "cpdf -add-text \"{$headerText}\" -top 15pt -font \"Helvetica\" -font-size 8 {$pdf} -o " . self::AUX_FILE;
         exec($addHeaderCommand, $output, $resultCode);
+        rename(self::AUX_FILE, $pdf);
 
         if ($resultCode != 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.addDocumentHeaderMissing');
@@ -183,8 +187,9 @@ class TitlePage
 
     private function concatenateTitlePage($pdf, $titlePage): void
     {
-        $uniteCommand = "cpdf -merge {$titlePage} {$pdf} -o {$pdf}";
+        $uniteCommand = "cpdf -merge {$titlePage} {$pdf} -o " . self::AUX_FILE;
         exec($uniteCommand, $output, $resultCode);
+        rename(self::AUX_FILE, $pdf);
 
         if ($resultCode != 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.concatenateTitlePageMissing');
@@ -194,8 +199,9 @@ class TitlePage
 
     public function concatenateChecklistPage($pdf, $checklistPage): void
     {
-        $uniteCommand = "cpdf -merge {$pdf} {$checklistPage} -o {$pdf}";
+        $uniteCommand = "cpdf -merge {$pdf} {$checklistPage} -o " . self::AUX_FILE;
         exec($uniteCommand, $output, $resultCode);
+        rename(self::AUX_FILE, $pdf);
 
         if ($resultCode != 0) {
             $this->titlePageRequirements->showMissingRequirementNotification('plugins.generic.titlePageForPreprint.requirements.concatenateChecklistPageMissing');
@@ -206,31 +212,29 @@ class TitlePage
     public function insertTitlePageFirstTime(pdf $pdf)
     {
         $originalFile = $pdf->getPath();
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
-        copy($originalFile, $originalFileCopy);
+        copy($originalFile, self::ORIGINAL_FILE_COPY);
 
-        $this->addDocumentHeader($originalFileCopy);
+        $this->addDocumentHeader(self::ORIGINAL_FILE_COPY);
 
         $titlePage = $this->generateTitlePage();
-        $this->concatenateTitlePage($originalFileCopy, $titlePage);
+        $this->concatenateTitlePage(self::ORIGINAL_FILE_COPY, $titlePage);
 
         $checklistPage = $this->generateChecklistPage();
-        $this->concatenateChecklistPage($originalFileCopy, $checklistPage);
+        $this->concatenateChecklistPage(self::ORIGINAL_FILE_COPY, $checklistPage);
 
-        rename($originalFileCopy, $originalFile);
+        rename(self::ORIGINAL_FILE_COPY, $originalFile);
     }
 
     public function updateTitlePage(pdf $pdf)
     {
         $originalFile = $pdf->getPath();
-        $originalFileCopy = self::OUTPUT_DIRECTORY . "original_file_copy.pdf";
-        copy($originalFile, $originalFileCopy);
+        copy($originalFile, self::ORIGINAL_FILE_COPY);
 
-        $this->removeTitlePage($originalFileCopy);
+        $this->removeTitlePage(self::ORIGINAL_FILE_COPY);
 
         $titlePage = $this->generateTitlePage();
-        $this->concatenateTitlePage($originalFileCopy, $titlePage);
+        $this->concatenateTitlePage(self::ORIGINAL_FILE_COPY, $titlePage);
 
-        rename($originalFileCopy, $originalFile);
+        rename(self::ORIGINAL_FILE_COPY, $originalFile);
     }
 }

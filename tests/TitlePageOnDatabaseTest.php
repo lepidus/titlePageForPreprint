@@ -29,7 +29,7 @@ class TitlePageOnDatabaseTest extends DatabaseTestCase
 
         $submissionFileRepo->expects($this->any())
             ->method('getRevisions')
-            ->will($this->returnValue(new \Illuminate\Support\Collection([$obj])));
+            ->willReturn(new \Illuminate\Support\Collection([$obj]));
 
         return $submissionFileRepo;
     }
